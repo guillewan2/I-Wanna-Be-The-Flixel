@@ -1,15 +1,15 @@
 package leveldata.events;
 
-import main.PlayerData;
+import flixel.addons.editors.tiled.TiledLayer;
 import flixel.addons.editors.tiled.TiledMap;
 import flixel.addons.editors.tiled.TiledObjectLayer;
-import flixel.addons.editors.tiled.TiledLayer;
 import leveldata.blockdata.*;
+import leveldata.deco.*;
 import leveldata.events.*;
 import leveldata.hazards.*;
 import leveldata.misc.*;
-import leveldata.deco.*;
 import main.ChapterState;
+import main.PlayerData;
 
 class ObjectLoader
 {
@@ -84,34 +84,6 @@ class ObjectLoader
                             } 
                             var sSpike = new SwitchSpike(spawnX, spawnY, localID, status);
                             state.dangerObjects.add(sSpike);
-
-                        case "dj-switch-spike":
-                            var localID:Int = 0;
-                            var status:String = "none";
-                            if (obj.properties.contains("status"))
-                            {
-                                status = obj.properties.get("status");
-                            }
-                            if (obj.properties.contains("id")) 
-                            {
-                                localID = Std.parseInt(obj.properties.get("id"));
-                            } 
-                            var djSpike = new DJSwitchSpike(spawnX, spawnY, localID, status);
-                            state.dangerObjects.add(djSpike);
-
-                        case "all-switch-spike":
-                            var localID:Int = 0;
-                            var status:String = "none";
-                            if (obj.properties.contains("status"))
-                            {
-                                status = obj.properties.get("status");
-                            }
-                            if (obj.properties.contains("id")) 
-                            {
-                                localID = Std.parseInt(obj.properties.get("id"));
-                            } 
-                            var allSpike = new AllSwitchSpike(spawnX, spawnY, localID, status);
-                            state.dangerObjects.add(allSpike);
 
                         case "save":
                             var save = new SavePoint(spawnX, spawnY);

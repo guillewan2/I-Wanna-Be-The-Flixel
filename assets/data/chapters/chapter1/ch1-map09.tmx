@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="20" nextobjectid="232">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="21" nextobjectid="232">
  <properties>
   <property name="songName" value="rain"/>
  </properties>
@@ -82,6 +82,11 @@
   <object id="180" name="light" gid="111" x="922" y="633.333" width="200" height="200"/>
  </objectgroup>
  <objectgroup id="7" name="trampoline"/>
+ <objectgroup id="20" name="doubleEffect">
+  <properties>
+   <property name="doubleEffectType" value="redMist"/>
+  </properties>
+ </objectgroup>
  <objectgroup id="9" name="spike-normal">
   <object id="214" name="spike" gid="88" x="950" y="500" width="50" height="50">
    <properties>

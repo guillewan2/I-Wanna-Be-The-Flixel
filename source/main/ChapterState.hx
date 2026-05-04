@@ -1,29 +1,29 @@
 package main;
 
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
-import leveldata.background.AcidFluid;
-import flixel.ui.FlxVirtualPad;
-import flixel.effects.particles.FlxEmitter;
-import gui.DeathState;
-import flixel.text.FlxText;
-import flixel.util.FlxColor;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
-import flixel.addons.editors.tiled.*;
-import flixel.addons.editors.tiled.TiledLayer;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.group.FlxGroup;
-import flixel.tile.FlxTilemap;
-import flixel.util.FlxDirectionFlags;
 import flixel.addons.display.FlxBackdrop;
+import flixel.addons.editors.tiled.*;
+import flixel.addons.editors.tiled.TiledLayer;
+import flixel.effects.particles.FlxEmitter;
+import flixel.group.FlxGroup;
+import flixel.text.FlxText;
+import flixel.tile.FlxTilemap;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.ui.FlxVirtualPad;
+import flixel.util.FlxColor;
+import flixel.util.FlxDirectionFlags;
+import gui.DeathState;
+import leveldata.background.AcidFluid;
+import leveldata.blockdata.*;
 import leveldata.deco.*;
 import leveldata.events.*;
-import leveldata.misc.*;
 import leveldata.hazards.*;
-import leveldata.blockdata.*;
+import leveldata.misc.*;
 
 @:allow(main.RoomLoader)
 @:allow(leveldata.events.EventLoader)

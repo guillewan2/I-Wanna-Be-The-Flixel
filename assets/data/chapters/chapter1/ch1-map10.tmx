@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="23" nextobjectid="433">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="24" nextobjectid="433">
  <properties>
   <property name="songName" value="none"/>
  </properties>
@@ -94,6 +94,11 @@
  </objectgroup>
  <objectgroup id="7" name="trampoline"/>
  <objectgroup id="9" name="spike-normal"/>
+ <objectgroup id="23" name="doubleEffect">
+  <properties>
+   <property name="doubleEffectType" value="none"/>
+  </properties>
+ </objectgroup>
  <objectgroup id="21" name="topEffect">
   <properties>
    <property name="topEffectType" value="none"/>

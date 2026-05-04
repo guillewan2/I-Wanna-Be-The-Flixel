@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="28" nextobjectid="61">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="29" nextobjectid="61">
  <tileset firstgid="1" source="ch1-tiles.tsx"/>
  <tileset firstgid="81" source="../../textures/spike.tsx"/>
  <tileset firstgid="89" source="../../textures/save.tsx"/>
@@ -64,6 +64,11 @@
  <objectgroup id="25" name="topEffect">
   <properties>
    <property name="topEffectType" value="wind"/>
+  </properties>
+ </objectgroup>
+ <objectgroup id="28" name="doubleEffect">
+  <properties>
+   <property name="doubleEffectType" value="redMist"/>
   </properties>
  </objectgroup>
  <objectgroup id="9" name="camera"/>
