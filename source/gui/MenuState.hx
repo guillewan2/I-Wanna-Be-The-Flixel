@@ -1,22 +1,22 @@
 package gui;
 
-import main.ChapterState;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.addons.display.FlxBackdrop;
 import flixel.addons.effects.chainable.FlxEffectSprite;
-import flixel.ui.FlxButton;
 import flixel.addons.effects.chainable.FlxGlitchEffect;
-import main.PlayerData;
-import leveldata.misc.SaveManager;
+import flixel.system.scaleModes.RatioScaleMode;
 import flixel.text.FlxText;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
-import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase;
+import leveldata.misc.SaveManager;
+import main.ChapterState;
+import main.PlayerData;
 import openfl.ui.MouseCursor;
-import flixel.system.scaleModes.RatioScaleMode;
 
 class MenuState extends FlxState
 {
@@ -180,6 +180,7 @@ class MenuState extends FlxState
     {
         super.update(elapsed);
 
+        #if !mobile
         if (FlxG.mouse.overlaps(btnSpriteNew))
         {
             btnSpriteNew.animation.play("hover");
@@ -200,7 +201,6 @@ class MenuState extends FlxState
             btnSpriteCont.animation.play("idle");
         }
 
-        #if !mobile
         if (FlxG.keys.justPressed.F11)
         {
             if (FlxG.fullscreen == false) FlxG.fullscreen = true;

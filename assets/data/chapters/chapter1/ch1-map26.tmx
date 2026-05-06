@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="28" nextobjectid="904">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="50" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="28" nextobjectid="904">
  <properties>
   <property name="songName" value="rain"/>
  </properties>
@@ -14,6 +14,7 @@
  <tileset firstgid="126" source="../../textures/small-spike.tsx"/>
  <tileset firstgid="130" source="../../textures/spikes/alljump_spikes.tsx"/>
  <tileset firstgid="138" source="../../textures/spikes/doublejump_spikes.tsx"/>
+ <tileset firstgid="146" source="../../textures/double_jump.tsx"/>
  <layer id="1" name="tiles-main" width="50" height="18">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,4,4,0,0,33,0,33,0,0,0,0,0,0,33,0,0,33,0,0,33,0,0,33,0,0,0,0,33,0,0,33,0,0,0,0,0,0,0,

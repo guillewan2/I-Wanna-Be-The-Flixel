@@ -7,13 +7,16 @@
 
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="I Wanna Be The Flixel v.015" file="IWBTF v.015" main="Main" version="0.15" company="darkuganda" package="com.darkuganda.iwbtf"/>
+	<app title="I Wanna Be The Flixel v.015" file="IWBTF" main="Main" version="0.15" company="darkuganda" package="com.darkuganda.iwbtf"/>
 	<certificate path="release.keystore" alias="release" password="123456" if="android" />
 	<set name="ANDROID_NDK_ROOT" value="C:\Users\darku\AppData\Local\Android\Sdk\ndk\21.4.7075529" force="true" />
 	<set name="no-debug" value="1" />
 	<set name="debug" value="false" unless="debug" />
 	<set name="ANDROID_DEBUGGABLE" value="false" />
 	<haxedef name="no_debug" />
+
+	<icon path="assets/images/shared/icon.png" if="windows"/>
+	<icon path="assets/images/shared/icon-mobile.png" if="android"/>
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
@@ -41,8 +44,6 @@
 	<set name="BUILD_DIR" value="export" />
 	<source path="source" />
 	<assets path="assets" />
-	<assets path="assets/images" rename="assets/images" />
-	<assets path="assets/data" rename="assets/data" />
 	<assets path="assets/data/chapters_mobile" />
 	
 	<template path="templates" />
@@ -95,9 +96,6 @@
 	<haxedef name="message.reporting" value="pretty" />
 
 	<!-- _________________________________ Custom _______________________________ -->
-
-	<icon path="assets/images/shared/icon.png" if="!mobile"/>
-	<icon path="assets/images/shared/icon-mobile.png" if="android"/>
 
 	<haxedef name="no_pch" />
 </project>

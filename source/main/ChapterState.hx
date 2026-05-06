@@ -266,7 +266,6 @@ override public function update(elapsed:Float):Void
                     p.velocity.x = 800;
                     p.velocity.y = -600;
                     p.canDoubleJump = true;
-                    p.canDash = true;
                     trampMini.launch();
                     FlxG.sound.play(AssetPaths.big_bounce__ogg, 0.5);
                     FlxG.sound.play(AssetPaths.lateral_bounce__ogg, 0.5);
@@ -279,7 +278,6 @@ override public function update(elapsed:Float):Void
                     p.velocity.x = -800; 
                     p.velocity.y = -600;
                     p.canDoubleJump = true;
-                    p.canDash = true;
                     trampMini.launch();
                     FlxG.sound.play(AssetPaths.big_bounce__ogg, 0.5);
                     FlxG.sound.play(AssetPaths.lateral_bounce__ogg, 0.5);
@@ -351,6 +349,7 @@ override public function update(elapsed:Float):Void
         if (FlxG.keys.justPressed.ESCAPE)
         {
             isPaused = true;
+            this.persistentUpdate = false;
             openSubState(new gui.PauseState());
         }
     #end
@@ -409,7 +408,6 @@ override public function update(elapsed:Float):Void
         }
     #end
 
-
 }
 
 function imgCache():Void
@@ -424,7 +422,6 @@ function sfxCache():Void
 {
     FlxG.sound.cache(AssetPaths.jump__ogg);
     FlxG.sound.cache(AssetPaths.doublejump__ogg);
-    FlxG.sound.cache(AssetPaths.dash__ogg);
     FlxG.sound.cache(AssetPaths.break_block__ogg);
     FlxG.sound.cache(AssetPaths.savedgame__ogg);
     FlxG.sound.cache(AssetPaths.lateral_bounce__ogg);
@@ -618,7 +615,7 @@ function PortalWarpLogic(portalLogic:PortalWarp):Void
 
 function killPlayer():Void
 {
-    if (player.exists)
+		if (player != null && player.exists && player.alive)
     {
         if (FlxG.sound.music != null)
         {
@@ -631,10 +628,15 @@ function killPlayer():Void
         PlayerData.deathX = player.x; PlayerData.deathY = player.y;
         PlayerData.totalDeaths++;
         playerGlow.visible = false;
-        remove(player);
+		player.kill();
+		if (playerTrail != null)
+		{
+			playerTrail.kill();
+		}
 
         if (FlxG.sound.music != null) FlxG.sound.music.stop();
-        openSubState(new DeathState());
+		this.persistentUpdate = true;
+		openSubState(new DeathState());
     }
 
 }

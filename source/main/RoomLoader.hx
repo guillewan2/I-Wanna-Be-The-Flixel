@@ -1,16 +1,16 @@
 package main;
 
-import leveldata.background.BackgroundManager;
-import flixel.effects.particles.FlxEmitter;
-import leveldata.events.SavePoint;
-import leveldata.events.ObjectLoader;
-import leveldata.events.EventLoader;
-import main.ChapterState;
-import main.PlayerData;
 import flixel.FlxG;
-import flixel.tile.FlxTilemap;
 import flixel.addons.editors.tiled.TiledMap;
 import flixel.addons.editors.tiled.TiledTileLayer;
+import flixel.effects.particles.FlxEmitter;
+import flixel.tile.FlxTilemap;
+import leveldata.background.BackgroundManager;
+import leveldata.events.EventLoader;
+import leveldata.events.ObjectLoader;
+import leveldata.events.SavePoint;
+import main.ChapterState;
+import main.PlayerData;
 
 class RoomLoader 
 {
@@ -100,18 +100,17 @@ class RoomLoader
 
         ObjectLoader.loadEverything(state.tiledData, state, state.map.x, state.map.y);
         EventLoader.loadEvents(state.tiledData, state);
+		state.add(state.slabs);
         state.add(state.playerGlow);
         state.add(state.playerTrail);
         state.add(state.player);
         state.add(state.dangerObjects);
         state.add(state.player.doubleJumpEffect);
         state.add(state.doubleJumpGroup);
-        state.add(state.player.dashEffect);
         state.add(state.saveParticlesGroup);
         state.add(state.savesGroup);
         state.add(state.popups);
-        state.add(state.warpsGroup);
-        state.add(state.slabs);
+		state.add(state.warpsGroup);
         state.add(state.platforms);
         state.add(state.fallingBlock);
         state.add(state.flipGroup);
@@ -156,18 +155,19 @@ class RoomLoader
         state.hudGroup.add(state.playerDeaths);
         state.add(state.hudGroup);
         state.layoutVirtualPad();
-        state.player.pad = state.virtualPad;
+        state.virtualPad.active = false;
+        state.virtualPad.visible = false;
 
-        #if !mobile
-            state.virtualPad.visible = false;
-            state.virtualPad.active = false;
-        #else
-            state.player.pad.alpha = padAlpha;
+        #if mobile
+            state.virtualPad.visible = true;
+            state.virtualPad.active = true;
+            state.player.pad = state.virtualPad;
+            state.player.pad.alpha = state.padAlpha;
         #end
 
         if (state.currentChapter != null) state.currentChapter.text = "Chapter: " + PlayerData.currentChapter;
         #if mobile
-            if (playerDeaths != null) playerDeaths.text = "Total Deaths: " + PlayerData.totalDeaths;
+            // if (playerDeaths != null) playerDeaths.text = "Total Deaths: " + PlayerData.totalDeaths;
         #else
             if (state.playerDeaths != null) state.playerDeaths.text = "Total Resets: " + PlayerData.totalDeaths;
         #end

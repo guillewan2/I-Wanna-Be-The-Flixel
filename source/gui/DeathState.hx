@@ -1,12 +1,12 @@
 package gui;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
-import flixel.effects.particles.FlxEmitter;
-import flixel.FlxState;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.FlxState;
 import flixel.FlxSubState;
+import flixel.effects.particles.FlxEmitter;
 import flixel.text.FlxText;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import main.PlayerData;
 
@@ -73,8 +73,8 @@ class DeathState extends FlxSubState
         var proTip:String = FlxG.random.getObject(tips);
         FlxG.sound.play(AssetPaths.death_bgm__ogg, 0.5, false);
 
-        blood = new FlxEmitter(PlayerData.deathX, PlayerData.deathY, 150);
-        blood.makeParticles(3, 3, FlxColor.RED, 150);
+        blood = new FlxEmitter(PlayerData.deathX, PlayerData.deathY, 250);
+        blood.makeParticles(3, 3, FlxColor.RED, 250);
         blood.launchMode = CIRCLE;
         blood.speed.set(300, 700); 
         blood.acceleration.set(0, 1200); 
@@ -83,7 +83,7 @@ class DeathState extends FlxSubState
         
         blood.scale.set(0.5, 0.5, 1.5, 1.5);
         add(blood);
-        blood.start(true, 0, 150);
+        blood.start(true, 0, 250);
 
         bg = new FlxSprite();
         bg.makeGraphic(FlxG.width + 1, FlxG.height, FlxColor.BLACK);
@@ -133,7 +133,7 @@ class DeathState extends FlxSubState
 
         if (bg.alpha < 1)
         {
-            bg.alpha += 0.005; 
+            bg.alpha += 0.0025; 
         }
 
         #if !mobile
@@ -150,6 +150,15 @@ class DeathState extends FlxSubState
 
     }
 
+	override public function destroy():Void
+	{
+		if (maintext != null)
+		{
+			FlxTween.cancelTweensOf(maintext);
+		}
+
+		super.destroy();
+	}
     function restartLevel():Void
     {
         if (FlxG.sound.music != null) FlxG.sound.music.stop();

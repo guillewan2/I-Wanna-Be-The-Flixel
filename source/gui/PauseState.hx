@@ -1,24 +1,22 @@
 package gui;
 
-import flixel.ui.FlxButton;
-import flixel.group.FlxGroup;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
+import flixel.group.FlxGroup;
 import flixel.text.FlxText;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import main.ChapterState;
 
 class PauseState extends FlxSubState
 {
-
     var bg:FlxSprite;
     var assetsGroup:FlxGroup;
     var pauseText:FlxText;
-    var bgFadeTimer:Float = 0.005;
-    // var btnTitle:FlxButton;
+	var bgFadeTimer:Float = 0.005;
 
     override public function create()
     {

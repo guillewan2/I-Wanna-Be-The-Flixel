@@ -60,7 +60,7 @@
  </objectgroup>
  <objectgroup id="19" name="doubleEffect">
   <properties>
-   <property name="doubleEffect" value="redMist"/>
+   <property name="doubleEffectType" value="redMist"/>
   </properties>
  </objectgroup>
  <objectgroup id="7" name="laser">

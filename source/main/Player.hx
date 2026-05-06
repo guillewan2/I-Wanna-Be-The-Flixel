@@ -1,30 +1,25 @@
 package main;
 
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.util.FlxDirectionFlags;
 import flixel.effects.particles.FlxEmitter;
-import flixel.util.FlxColor;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.ui.FlxVirtualPad;
+import flixel.util.FlxColor;
+import flixel.util.FlxDirectionFlags;
 
 class Player extends FlxSprite
 {
     public var canDoubleJump:Bool = true;
     public var doubleJumpEffect:FlxEmitter;
-    public var dashEffect:FlxEmitter;
 
     var safeJump:Float = 0;
     var safeJumpMax:Float = 0.1;
     public var mapMaxSpeed:Float = 400;
     public var currentOffsetY:Float = 20;
 
-    public var canDash:Bool = false;
     public var isFlipped:Bool = false; 
-    var dashTimer:Float = 0;
-    var dashDirection:Int = 0;
-    var isDashing:Bool = false;
     var tapTimer:Float = 0;
     var tapCount:Int = 0;
 
@@ -35,7 +30,6 @@ class Player extends FlxSprite
     public var inputRight:Bool = false;
     public var inputJump:Bool = false;
     public var inputJumpReleased:Bool = false;
-    public var inputDash:Bool = false;
 
     public var pad:FlxVirtualPad;
 
@@ -70,16 +64,6 @@ class Player extends FlxSprite
         doubleJumpEffect.scale.set(1.2, 1.2, 1.2, 1.2);
         doubleJumpEffect.alpha.set(1, 1, 0, 0);
         doubleJumpEffect.launchMode = CIRCLE;
-
-        dashEffect = new FlxEmitter(-10, -10, 5);
-        dashEffect.makeParticles(4, 4, FlxColor.WHITE, 5);
-        dashEffect.color.set(FlxColor.RED, FlxColor.YELLOW, 0xFF820000, 0xFFC92727);
-        dashEffect.lifespan.set(0.4, 0.8);
-        dashEffect.velocity.set(-100, -50, 100, 50);
-        dashEffect.scale.set(1.2, 1.2, 1.2, 1.2);
-        dashEffect.alpha.set(1, 1, 0, 0);
-        dashEffect.launchMode = CIRCLE;
-        dashEffect.angularVelocity.set(-300, 300);
     }
 
     public function flipGravity():Void
@@ -117,7 +101,6 @@ class Player extends FlxSprite
             safeJump = safeJumpMax;
             canDoubleJump = true;
             drag.x = 4000;
-            canDash = true;
             animationJumpUp = false;
             animationJumpDown = false;
         }
@@ -127,7 +110,6 @@ class Player extends FlxSprite
         }
 
         var jumpPressed = inputJump;
-        var dashPressed = inputDash;
         var left = inputLeft;
         var right = inputRight;
 
@@ -146,71 +128,36 @@ class Player extends FlxSprite
             isFacingRIGHT = true;
         }
 
-        if (dashPressed && canDash && !isDashing && !isTouching(floorDir))
-        {
-            isDashing = true;
-            canDash = false;
-            dashTimer = 0.05;
+         acceleration.y = 2000 * gravMult;
             
-            if (left) dashDirection = -1;
-            else if (right) dashDirection = 1;
-            else dashDirection = (facing == LEFT) ? -1 : 1;
-            
-            maxVelocity.x = 800;
-            dashEffect.setPosition(x + (width / 2), y + (height / 2));
-            if (left) dashEffect.acceleration.set(200, 0);
-            if (right) dashEffect.acceleration.set(-200, 0); 
-            dashEffect.start(true, 0, 5);
-            FlxG.sound.play(AssetPaths.dash__ogg, 0.5);
-        }
+        if (left) { acceleration.x = -4000; facing = LEFT; }
+        else if (right) { acceleration.x = 4000; facing = RIGHT; }
 
-        if (dashTimer > 0)
+        if (jumpPressed)
         {
-            dashTimer -= elapsed;
-            velocity.x = 800 * dashDirection;
-            velocity.y = 0;
-            acceleration.y = 0;
-        }
-        else 
-        {
-            if (isDashing) 
+            if (safeJump > 0) 
             {
-                isDashing = false;
-                maxVelocity.x = mapMaxSpeed;
+                velocity.y = -650 * gravMult; 
+                safeJump = 0;
+                FlxG.sound.play(AssetPaths.jump__ogg, 1);
+                animationJumpUp = true;
+                animationJumpDown = false;
+                    
+				leveldata.hazards.SwitchSpike.toggleAll();
             }
 
-            acceleration.y = 2000 * gravMult;
-            
-            if (left) { acceleration.x = -4000; facing = LEFT; }
-            else if (right) { acceleration.x = 4000; facing = RIGHT; }
-
-            if (jumpPressed)
+            else if (canDoubleJump) 
             {
-                if (safeJump > 0) 
-                {
-                    velocity.y = -650 * gravMult; 
-                    safeJump = 0;
-                    FlxG.sound.play(AssetPaths.jump__ogg, 1);
-                    animationJumpUp = true;
-                    animationJumpDown = false;
-                    
-                    leveldata.hazards.SwitchSpike.toggleAll();
-                    leveldata.hazards.AllSwitchSpike.toggleAll();
-                }
-                else if (canDoubleJump) 
-                {
                     doubleJumpEffect.setPosition(x + (width / 2), y + (isFlipped ? 0 : height));
                     doubleJumpEffect.start(true, 0, 10);
                     canDoubleJump = false;
                     velocity.y = -600 * gravMult;
                     FlxG.sound.play(AssetPaths.doublejump__ogg, 1);
                     animationJumpUp = true;
-                    animationJumpDown = false;
-                    leveldata.hazards.DJSwitchSpike.toggleAll();
-                    leveldata.hazards.AllSwitchSpike.toggleAll();
-                }
+					animationJumpDown = false;
             }
         }
+        
 
         if (maxVelocity.x > 400)
         {
@@ -235,7 +182,6 @@ class Player extends FlxSprite
             animationJumpUp = false;
         }
 
-        if (isDashing) animation.play("walking");
         else if (!isTouching(DOWN) && Math.abs(velocity.y) > 50) 
         {
             if (isMovingUp) animation.play("jumpUp");
@@ -254,14 +200,12 @@ class Player extends FlxSprite
         inputRight = false;
         inputJump = false;
         inputJumpReleased = false;
-        inputDash = false;
 
         #if !mobile
         inputLeft = FlxG.keys.anyPressed([LEFT, A]);
         inputRight = FlxG.keys.anyPressed([RIGHT, D]);
         inputJump = FlxG.keys.anyJustPressed([SPACE, UP, W]) || FlxG.mouse.justPressed;
         inputJumpReleased = FlxG.keys.anyJustReleased([SPACE, UP, W]) || FlxG.mouse.justReleased;
-        // inputDash = FlxG.keys.anyJustPressed([SHIFT, TAB, F]) || FlxG.mouse.justPressedRight;
         #else
         if (pad != null)
         {
@@ -287,12 +231,6 @@ class Player extends FlxSprite
                     tapTimer = 0.125;
                     inputJump = true;
                     tapCount++;
-                    
-                    if (tapCount == 2 && tapTimer > 0)
-                    {
-                        inputDash = true;
-                        tapCount = 0;
-                    }
                    
                 }
             }
