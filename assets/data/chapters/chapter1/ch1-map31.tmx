@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="26" nextobjectid="1098">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="50" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="29" nextobjectid="1184">
  <properties>
   <property name="songName" value="rain"/>
  </properties>
@@ -12,70 +12,70 @@
  <tileset firstgid="112" source="../../textures/trampoline-mini.tsx"/>
  <tileset firstgid="121" source="../../textures/transition-tiles.tsx"/>
  <tileset firstgid="126" source="../../textures/small-spike.tsx"/>
- <layer id="1" name="tiles-main" width="28" height="18">
+ <layer id="1" name="tiles-main" width="50" height="18">
   <data encoding="csv">
-0,0,0,0,33,0,0,0,0,0,33,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,0,
-0,0,0,0,33,0,0,0,0,0,33,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,0,
-0,0,0,0,33,0,0,0,0,0,33,0,0,0,0,0,0,0,0,0,0,0,35,0,0,33,0,0,
-36,36,36,36,35,0,0,0,0,0,33,0,0,0,0,0,0,0,0,0,0,0,33,0,0,35,36,36,
-0,0,0,0,0,0,0,0,0,0,33,0,0,0,0,0,0,0,0,35,0,0,35,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,33,0,0,35,0,0,0,0,0,0,0,0,0,0,0,35,36,36,
-0,0,0,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,0,
-0,0,0,0,0,0,35,36,35,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,0,
-0,0,0,0,0,0,33,0,33,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,33,0,0,
-36,36,36,36,36,36,35,35,33,0,0,35,0,0,0,0,33,0,0,0,0,0,0,0,0,33,0,0,
-0,0,0,0,0,0,0,0,33,0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,33,0,0,
-0,0,0,0,0,0,0,0,33,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,0,
-0,0,0,0,0,0,0,0,33,0,0,0,0,0,0,0,0,0,0,35,36,36,35,0,0,33,0,0,
-0,0,0,0,0,0,0,0,33,0,0,0,0,0,0,0,0,0,0,33,0,0,33,0,0,33,0,0,
-0,0,0,0,0,0,0,0,33,0,0,0,0,0,0,0,0,0,0,33,0,37,33,0,0,33,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,0,33,0,0,33,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,0,33,0,0,33,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,0,33,0,0,33,0,0
+0,0,0,0,0,33,0,33,0,0,0,0,33,0,33,0,33,0,33,0,0,0,33,0,33,0,0,33,0,33,0,0,33,0,33,0,33,0,33,0,33,0,33,0,33,0,0,33,0,0,
+0,0,0,0,0,33,0,33,0,0,0,0,33,0,33,0,33,0,33,0,0,0,33,0,33,0,0,33,0,33,0,0,33,0,33,0,33,0,33,0,33,0,33,0,33,0,0,33,0,0,
+0,0,0,0,0,33,0,33,0,0,0,0,33,0,33,0,33,0,33,36,36,36,33,0,33,0,0,33,0,33,0,0,33,0,33,0,33,0,33,0,33,0,33,0,33,0,0,33,0,0,
+0,0,0,0,0,33,0,33,0,0,0,0,33,0,33,0,33,0,33,0,0,0,33,0,33,0,0,33,0,33,0,0,33,0,35,0,33,0,33,0,33,0,33,0,33,0,0,33,0,0,
+0,0,0,0,0,33,0,33,0,0,0,0,33,0,33,0,35,36,35,0,35,0,33,0,35,0,0,33,0,33,0,0,33,0,0,0,33,0,33,0,33,0,33,0,33,0,0,33,0,0,
+36,36,36,36,36,35,0,35,36,36,36,36,35,0,35,0,0,0,0,0,33,0,33,0,0,0,0,33,0,33,0,0,35,36,36,36,35,0,33,0,33,0,33,0,33,0,0,33,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,35,0,35,0,33,0,35,0,35,0,0,33,0,33,0,0,0,0,0,0,0,0,33,0,35,36,35,0,33,0,0,35,36,36,
+36,36,36,36,36,36,36,36,36,36,36,36,36,36,35,0,33,0,33,0,33,0,0,0,33,0,0,33,0,35,0,0,35,0,0,0,35,0,33,0,0,0,0,0,33,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,33,0,33,0,33,0,35,0,33,0,0,33,0,0,0,0,0,0,0,0,33,0,35,36,36,36,36,36,35,0,0,0,0,0,
+36,36,36,36,36,35,0,35,36,36,35,0,0,0,35,36,33,0,33,0,33,0,33,0,33,0,0,33,0,35,0,0,35,0,0,0,33,0,0,0,0,0,0,0,0,0,0,35,36,36,
+0,0,0,0,0,33,0,33,0,0,33,0,0,0,33,0,33,0,33,0,33,0,33,0,35,36,0,35,0,33,0,0,33,0,0,0,33,0,0,0,0,0,0,0,0,0,0,33,0,0,
+36,36,36,35,0,35,0,35,0,35,36,36,36,36,35,0,33,0,33,0,33,0,33,0,0,0,0,0,0,33,0,0,33,0,0,0,33,0,0,35,36,36,36,36,36,35,0,33,0,0,
+0,0,0,33,0,33,0,33,0,33,0,0,0,0,0,0,33,0,33,0,33,0,35,36,36,35,0,0,36,35,0,0,33,36,36,36,33,0,0,33,0,0,0,0,0,33,0,33,0,0,
+0,0,0,33,0,33,0,33,0,33,0,35,36,36,35,0,33,0,33,0,33,0,0,0,0,0,0,0,0,0,0,0,33,0,0,0,33,0,0,33,0,35,36,35,0,33,0,33,0,0,
+0,0,0,33,0,33,0,33,0,33,0,33,0,0,33,0,33,0,33,0,33,0,0,0,0,0,0,0,0,0,0,0,33,0,35,0,33,0,0,33,0,33,0,33,0,33,0,33,0,0,
+0,0,0,33,0,33,0,33,0,33,0,33,0,0,33,0,33,0,33,0,33,0,0,0,0,0,0,0,0,0,0,0,33,0,33,0,33,0,0,33,0,33,0,33,0,33,0,33,0,0,
+0,0,0,33,0,33,0,33,0,33,0,33,0,0,33,0,33,0,33,0,33,0,0,0,0,0,0,0,0,0,0,0,33,0,33,0,33,0,0,33,0,33,0,33,0,33,0,33,0,0,
+0,0,0,33,0,33,0,33,0,33,0,33,0,0,33,0,33,0,33,0,33,0,0,0,0,0,0,0,0,0,0,0,33,0,33,0,33,0,0,33,0,33,0,33,0,33,0,33,0,0
 </data>
  </layer>
- <layer id="5" name="tiles-deco" width="28" height="18">
+ <layer id="5" name="tiles-deco" width="50" height="18">
   <data encoding="csv">
-41,41,41,41,0,0,0,0,0,0,0,0,0,45,0,0,0,0,0,45,0,0,0,0,0,0,41,41,
-41,37,37,41,0,0,0,0,0,0,0,0,0,45,0,0,0,0,0,45,0,0,0,0,0,0,37,41,
-41,41,41,41,0,0,0,0,0,0,0,0,0,45,0,0,0,0,0,45,0,0,0,0,0,0,41,41,
-0,0,0,0,0,0,0,0,0,0,0,0,0,45,0,0,0,0,0,45,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,45,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,41,41,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,37,41,
-0,0,0,0,0,0,0,41,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,41,41,
-0,0,0,0,0,0,0,37,0,32,32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,41,41,
-41,41,41,41,41,41,41,37,0,0,0,45,0,0,0,0,0,0,0,0,0,0,0,0,0,0,41,37,
-37,41,41,41,37,41,41,41,0,0,0,45,0,0,0,0,45,0,0,0,0,0,0,0,0,0,37,41,
-37,37,41,37,41,37,41,37,0,0,0,45,0,0,0,0,45,0,0,0,0,0,0,0,0,0,41,41,
-41,41,41,37,41,41,37,41,0,0,0,45,0,0,0,0,45,0,0,0,41,41,0,0,0,0,41,41,
-41,41,41,41,41,41,41,37,0,0,0,45,0,0,0,0,45,0,0,0,41,37,0,0,0,0,37,41,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,41,41,0,0,0,0,37,41,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,41,37,0,0,0,0,41,41,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,41,41,0,0,0,0,41,41
+0,0,0,0,0,0,34,0,0,0,0,0,0,34,0,0,0,34,0,41,41,41,0,34,0,34,34,0,34,0,0,0,0,34,0,34,0,0,0,34,0,0,0,34,0,0,0,0,37,41,
+0,0,0,0,0,0,34,0,0,0,0,0,0,34,0,0,0,34,0,41,37,41,0,34,0,34,34,0,34,0,0,0,0,34,0,34,0,0,0,34,0,0,0,34,0,0,0,0,41,41,
+0,0,0,0,0,0,34,0,0,0,0,0,0,34,0,0,0,34,0,0,0,0,0,34,0,34,34,0,34,0,0,0,0,34,0,34,0,0,0,34,0,0,0,34,0,0,0,0,41,37,
+0,0,0,0,0,0,34,0,0,0,0,0,0,34,0,0,0,34,0,0,0,0,0,34,0,34,34,0,34,0,0,0,0,34,0,34,0,0,0,34,0,0,0,34,0,0,0,0,41,41,
+0,0,0,0,0,0,34,0,0,0,0,0,0,34,0,0,0,0,0,0,0,0,0,34,0,34,34,0,34,0,0,0,0,56,56,56,0,0,0,34,0,0,0,34,0,0,0,0,37,41,
+0,0,0,0,0,0,34,0,0,0,0,0,0,34,0,0,0,0,0,0,0,0,0,34,34,34,34,0,34,0,0,0,0,0,0,0,0,0,0,34,0,0,0,34,0,0,0,0,41,41,
+56,56,56,56,56,56,56,56,56,56,56,56,56,56,0,0,0,0,0,0,0,0,0,34,0,34,34,0,34,0,0,0,34,34,34,34,34,0,0,34,0,0,0,34,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,34,34,0,34,34,0,34,0,0,0,0,34,34,34,0,0,0,56,56,56,56,56,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,34,0,34,34,0,34,34,0,0,34,34,34,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,34,0,34,34,0,34,0,0,0,0,34,34,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+56,56,56,56,56,0,0,0,56,56,0,0,0,0,0,34,0,0,0,0,0,0,0,34,0,0,56,0,34,0,0,0,0,34,34,34,0,0,0,0,0,0,0,0,0,0,0,0,37,41,
+0,0,0,0,34,0,0,0,34,0,0,0,0,0,0,34,0,0,0,0,0,0,0,56,56,56,56,56,56,0,0,0,0,34,34,34,0,0,0,0,0,0,0,0,0,0,0,0,41,41,
+0,0,0,0,34,0,0,0,34,0,56,56,56,56,56,34,0,0,0,0,0,0,0,0,0,0,56,56,0,0,0,0,0,0,0,0,0,0,0,0,56,56,56,56,56,0,0,0,41,41,
+0,0,0,0,34,0,0,0,34,0,34,0,0,0,0,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,56,56,56,0,0,0,0,34,0,0,0,34,0,0,0,37,41,
+0,0,0,0,34,0,0,0,34,0,34,0,0,0,0,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,34,0,34,0,0,0,0,34,0,34,0,34,0,0,0,41,41,
+0,0,0,0,34,0,0,0,34,0,34,0,0,0,0,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,34,0,34,0,0,0,0,34,0,34,0,34,0,0,0,41,41,
+0,0,0,0,34,0,0,0,34,0,34,0,0,0,0,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,34,0,34,0,0,0,0,34,0,34,0,34,0,0,0,41,41,
+0,0,0,0,34,0,0,0,34,0,34,0,0,0,0,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,34,0,34,0,0,0,0,34,0,34,0,34,0,0,0,41,41
 </data>
  </layer>
- <layer id="18" name="tiles-deco2" width="28" height="18">
+ <layer id="18" name="tiles-deco2" width="50" height="18">
   <data encoding="csv">
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
  <objectgroup id="16" name="falling">
@@ -83,311 +83,309 @@
    <property name="direction" value="down"/>
   </properties>
  </objectgroup>
+ <objectgroup id="28" name="camera">
+  <properties>
+   <property name="cameraType" value="unlockX"/>
+  </properties>
+ </objectgroup>
  <objectgroup id="13" name="platform"/>
- <objectgroup id="7" name="trampoline">
-  <object id="1027" name="trampoline" gid="81" x="1000" y="600" width="50" height="50"/>
-  <object id="1028" name="trampoline" gid="81" x="1050" y="600" width="50" height="50"/>
-  <object id="1085" name="trampoline" gid="81" x="900" y="700" width="50" height="50"/>
- </objectgroup>
- <objectgroup id="25" name="slab">
-  <object id="1081" name="slab" gid="48" x="800" y="650" width="50" height="50"/>
- </objectgroup>
+ <objectgroup id="7" name="trampoline"/>
+ <objectgroup id="25" name="slab"/>
  <objectgroup id="19" name="trampoline-mini"/>
- <objectgroup id="9" name="spike-normal">
-  <object id="991" name="spike" gid="91" x="450" y="760" width="50" height="50">
+ <objectgroup id="9" name="spike-normal"/>
+ <objectgroup id="8" name="save"/>
+ <objectgroup id="21" name="acidlayer"/>
+ <objectgroup id="27" name="solid_block">
+  <object id="1144" name="solid_block" gid="35" x="250" y="500" width="50" height="50"/>
+  <object id="1147" name="solid_block" gid="36" x="350" y="400" width="50" height="50"/>
+  <object id="1148" name="solid_block" gid="36" x="500" y="400" width="50" height="50"/>
+  <object id="1149" name="solid_block" gid="35" x="700" y="400" width="50" height="50"/>
+  <object id="1150" name="solid_block" gid="33" x="700" y="350" width="50" height="50"/>
+  <object id="1151" name="solid_block" gid="35" x="800" y="250" width="50" height="50"/>
+  <object id="1152" name="solid_block" gid="35" x="900" y="250" width="50" height="50"/>
+  <object id="1153" name="solid_block" gid="35" x="1200" y="350" width="50" height="50"/>
+  <object id="1154" name="solid_block" gid="35" x="1100" y="350" width="50" height="50"/>
+  <object id="1155" name="solid_block" gid="35" x="1350" y="550" width="50" height="50"/>
+  <object id="1156" name="solid_block" gid="35" x="1450" y="500" width="50" height="50"/>
+  <object id="1157" name="solid_block" gid="35" x="1600" y="400" width="50" height="50"/>
+  <object id="1158" name="solid_block" gid="35" x="1800" y="400" width="50" height="50"/>
+  <object id="1159" name="solid_block" gid="36" x="2000" y="600" width="50" height="50"/>
+  <object id="1160" name="solid_block" gid="36" x="2050" y="450" width="50" height="50"/>
+  <object id="1161" name="solid_block" gid="36" x="2100" y="600" width="50" height="50"/>
+  <object id="1162" name="solid_block" gid="36" x="2150" y="450" width="50" height="50"/>
+  <object id="1163" name="solid_block" gid="36" x="2200" y="600" width="50" height="50"/>
+  <object id="1166" name="solid_block" gid="33" x="1000" y="500" width="50" height="50"/>
+  <object id="1169" name="solid_block" gid="35" x="700" y="500" width="50" height="50"/>
+  <object id="1170" name="solid_block" gid="35" x="1000" y="250" width="50" height="50"/>
+  <object id="1171" name="solid_block" gid="33" x="1100" y="250" width="50" height="50"/>
+  <object id="1182" name="solid_block" gid="33" x="1200" y="400" width="50" height="50"/>
+  <object id="1183" name="solid_block" gid="33" x="1350" y="400" width="50" height="50"/>
+ </objectgroup>
+ <objectgroup id="10" name="laser">
+  <object id="1102" name="laser" gid="93" x="1700" y="550" width="50" height="50">
    <properties>
-    <property name="id" value="6"/>
+    <property name="direction" value="h"/>
    </properties>
   </object>
-  <object id="992" name="spike" gid="91" x="500" y="760" width="50" height="50">
+  <object id="1103" name="laser" gid="93" x="1650" y="550" width="50" height="50">
    <properties>
-    <property name="id" value="6"/>
+    <property name="direction" value="h"/>
    </properties>
   </object>
-  <object id="993" name="spike" gid="91" x="550" y="760" width="50" height="50">
+  <object id="1104" name="laser" gid="93" x="1750" y="550" width="50" height="50">
    <properties>
-    <property name="id" value="6"/>
+    <property name="direction" value="h"/>
    </properties>
   </object>
-  <object id="994" name="spike" gid="91" x="600" y="760" width="50" height="50">
+  <object id="1109" name="laser" gid="93" x="600" y="500" width="50" height="50">
    <properties>
-    <property name="id" value="6"/>
+    <property name="direction" value="h"/>
    </properties>
   </object>
-  <object id="995" name="spike" gid="91" x="650" y="760" width="50" height="50">
+  <object id="1110" name="laser" gid="93" x="550" y="500" width="50" height="50">
    <properties>
-    <property name="id" value="6"/>
+    <property name="direction" value="h"/>
    </properties>
   </object>
-  <object id="996" name="spike" gid="91" x="700" y="760" width="50" height="50">
+  <object id="1111" name="laser" gid="93" x="650" y="500" width="50" height="50">
    <properties>
-    <property name="id" value="6"/>
+    <property name="direction" value="h"/>
    </properties>
   </object>
-  <object id="997" name="spike" gid="91" x="750" y="760" width="50" height="50">
-   <properties>
-    <property name="id" value="6"/>
-   </properties>
-  </object>
-  <object id="998" name="spike" gid="91" x="800" y="760" width="50" height="50">
-   <properties>
-    <property name="id" value="6"/>
-   </properties>
-  </object>
-  <object id="999" name="spike" gid="91" x="850" y="760" width="50" height="50">
-   <properties>
-    <property name="id" value="6"/>
-   </properties>
-  </object>
-  <object id="1000" name="spike" gid="91" x="900" y="760" width="50" height="50">
-   <properties>
-    <property name="id" value="6"/>
-   </properties>
-  </object>
-  <object id="1005" name="spike" gid="91" x="1150" y="760" width="50" height="50">
-   <properties>
-    <property name="id" value="6"/>
-   </properties>
-  </object>
-  <object id="1006" name="spike" gid="91" x="1200" y="760" width="50" height="50">
-   <properties>
-    <property name="id" value="6"/>
-   </properties>
-  </object>
-  <object id="1074" name="spike" gid="87" x="500" y="400" width="50" height="50">
+  <object id="1114" name="switch-spike" gid="87" x="800" y="300" width="50" height="50">
    <properties>
     <property name="id" value="2"/>
+    <property name="status" value="disabled"/>
    </properties>
   </object>
-  <object id="1089" name="spike" gid="88" x="250" y="400" width="50" height="50">
+  <object id="1116" name="laser" gid="93" x="850" y="400" width="50" height="50">
    <properties>
-    <property name="id" value="3"/>
+    <property name="direction" value="h"/>
    </properties>
   </object>
-  <object id="1090" name="spike" gid="92" x="250" y="450" width="50" height="50">
+  <object id="1117" name="laser" gid="93" x="950" y="450" width="50" height="50">
    <properties>
-    <property name="id" value="7"/>
+    <property name="direction" value="h"/>
    </properties>
   </object>
-  <object id="1091" name="spike" gid="86" x="450" y="550" width="50" height="50">
+  <object id="1120" name="laser" gid="93" x="1150" y="450" width="50" height="50">
+   <properties>
+    <property name="direction" value="h"/>
+   </properties>
+  </object>
+  <object id="1127" name="switch-spike" gid="87" x="1350" y="600" width="50" height="50">
+   <properties>
+    <property name="id" value="2"/>
+    <property name="status" value="disabled"/>
+   </properties>
+  </object>
+  <object id="1128" name="laser" gid="93" x="1050" y="750" width="50" height="50">
+   <properties>
+    <property name="direction" value="h"/>
+   </properties>
+  </object>
+  <object id="1129" name="laser" gid="93" x="1100" y="750" width="50" height="50">
+   <properties>
+    <property name="direction" value="h"/>
+   </properties>
+  </object>
+  <object id="1130" name="laser" gid="93" x="1500" y="400" width="50" height="50">
+   <properties>
+    <property name="direction" value="h"/>
+   </properties>
+  </object>
+  <object id="1131" name="laser" gid="93" x="1550" y="400" width="50" height="50">
+   <properties>
+    <property name="direction" value="h"/>
+   </properties>
+  </object>
+  <object id="1137" name="laser" gid="93" x="1850" y="650" width="50" height="50">
+   <properties>
+    <property name="direction" value="h"/>
+   </properties>
+  </object>
+  <object id="1138" name="laser" gid="93" x="1900" y="650" width="50" height="50">
+   <properties>
+    <property name="direction" value="h"/>
+   </properties>
+  </object>
+  <object id="1173" name="laser" gid="93" x="1150" y="750" width="50" height="50">
+   <properties>
+    <property name="direction" value="h"/>
+   </properties>
+  </object>
+  <object id="1174" name="laser" gid="93" x="1200" y="750" width="50" height="50">
+   <properties>
+    <property name="direction" value="h"/>
+   </properties>
+  </object>
+  <object id="1175" name="laser" gid="93" x="1250" y="750" width="50" height="50">
+   <properties>
+    <property name="direction" value="h"/>
+   </properties>
+  </object>
+  <object id="1176" name="laser" gid="93" x="1300" y="750" width="50" height="50">
+   <properties>
+    <property name="direction" value="h"/>
+   </properties>
+  </object>
+  <object id="1177" name="laser" gid="93" x="1350" y="750" width="50" height="50">
+   <properties>
+    <property name="direction" value="h"/>
+   </properties>
+  </object>
+  <object id="1178" name="laser" gid="93" x="1400" y="750" width="50" height="50">
+   <properties>
+    <property name="direction" value="h"/>
+   </properties>
+  </object>
+  <object id="1179" name="laser" gid="93" x="1450" y="750" width="50" height="50">
+   <properties>
+    <property name="direction" value="h"/>
+   </properties>
+  </object>
+  <object id="1180" name="laser" gid="93" x="1500" y="750" width="50" height="50">
+   <properties>
+    <property name="direction" value="h"/>
+   </properties>
+  </object>
+  <object id="1181" name="laser" gid="93" x="1550" y="750" width="50" height="50">
+   <properties>
+    <property name="direction" value="h"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="26" name="switch-spike">
+  <object id="1105" name="switch-spike" gid="85" x="250" y="450" width="50" height="50">
+   <properties>
+    <property name="id" value="0"/>
+    <property name="status" value="disabled"/>
+   </properties>
+  </object>
+  <object id="1106" name="switch-spike" gid="87" x="350" y="450" width="50" height="50">
+   <properties>
+    <property name="id" value="2"/>
+    <property name="status" value="active"/>
+   </properties>
+  </object>
+  <object id="1107" name="switch-spike" gid="85" x="700" y="450" width="50" height="50">
+   <properties>
+    <property name="id" value="0"/>
+    <property name="status" value="active"/>
+   </properties>
+  </object>
+  <object id="1108" name="switch-spike" gid="87" x="500" y="450" width="50" height="50">
+   <properties>
+    <property name="id" value="2"/>
+    <property name="status" value="disabled"/>
+   </properties>
+  </object>
+  <object id="1112" name="switch-spike" gid="86" x="750" y="350" width="50" height="50">
    <properties>
     <property name="id" value="1"/>
+    <property name="status" value="disabled"/>
    </properties>
   </object>
-  <object id="1092" name="small-spike" gid="126" x="650" y="250" width="25" height="25">
+  <object id="1113" name="switch-spike" gid="88" x="1050" y="250" width="50" height="50">
+   <properties>
+    <property name="id" value="3"/>
+    <property name="status" value="active"/>
+   </properties>
+  </object>
+  <object id="1115" name="switch-spike" gid="87" x="900" y="300" width="50" height="50">
+   <properties>
+    <property name="id" value="2"/>
+    <property name="status" value="active"/>
+   </properties>
+  </object>
+  <object id="1118" name="switch-spike" gid="85" x="1000" y="200" width="50" height="50">
    <properties>
     <property name="id" value="0"/>
+    <property name="status" value="disabled"/>
    </properties>
   </object>
-  <object id="1093" name="small-spike" gid="126" x="975" y="200" width="25" height="25">
+  <object id="1119" name="switch-spike" gid="86" x="1050" y="500" width="50" height="50">
+   <properties>
+    <property name="id" value="1"/>
+    <property name="status" value="active"/>
+   </properties>
+  </object>
+  <object id="1123" name="switch-spike" gid="87" x="1100" y="400" width="50" height="50">
+   <properties>
+    <property name="id" value="2"/>
+    <property name="status" value="active"/>
+   </properties>
+  </object>
+  <object id="1124" name="switch-spike" gid="85" x="1200" y="300" width="50" height="50">
    <properties>
     <property name="id" value="0"/>
+    <property name="status" value="disabled"/>
    </properties>
   </object>
- </objectgroup>
- <objectgroup id="8" name="save">
-  <object id="1075" name="save" gid="84" x="350" y="250" width="50" height="50"/>
- </objectgroup>
- <objectgroup id="21" name="acidlayer"/>
- <objectgroup id="10" name="laser">
-  <object id="1029" name="laser" gid="99" x="950" y="300" width="50" height="50">
+  <object id="1125" name="switch-spike" gid="86" x="1250" y="400" width="50" height="50">
    <properties>
-    <property name="direction" value="v"/>
+    <property name="id" value="1"/>
+    <property name="status" value="disabled"/>
    </properties>
   </object>
-  <object id="1030" name="laser" gid="99" x="950" y="350" width="50" height="50">
+  <object id="1126" name="switch-spike" gid="88" x="1300" y="400" width="50" height="50">
    <properties>
-    <property name="direction" value="v"/>
+    <property name="id" value="3"/>
+    <property name="status" value="disable"/>
    </properties>
   </object>
-  <object id="1031" name="laser" gid="99" x="950" y="400" width="50" height="50">
+  <object id="1132" name="switch-spike" gid="85" x="1450" y="450" width="50" height="50">
    <properties>
-    <property name="direction" value="v"/>
+    <property name="id" value="0"/>
+    <property name="status" value="active"/>
    </properties>
   </object>
-  <object id="1033" name="laser" gid="99" x="950" y="500" width="50" height="50">
+  <object id="1134" name="switch-spike" gid="87" x="1600" y="450" width="50" height="50">
    <properties>
-    <property name="direction" value="v"/>
+    <property name="id" value="2"/>
+    <property name="status" value="disabled"/>
    </properties>
   </object>
-  <object id="1034" name="laser" gid="99" x="950" y="550" width="50" height="50">
+  <object id="1135" name="switch-spike" gid="85" x="1800" y="350" width="50" height="50">
    <properties>
-    <property name="direction" value="v"/>
+    <property name="id" value="0"/>
+    <property name="status" value="active"/>
    </properties>
   </object>
-  <object id="1036" name="laser" gid="99" x="950" y="450" width="50" height="50">
+  <object id="1136" name="switch-spike" gid="85" x="1600" y="350" width="50" height="50">
    <properties>
-    <property name="direction" value="v"/>
+    <property name="id" value="0"/>
+    <property name="status" value="active"/>
    </properties>
   </object>
-  <object id="1037" name="laser" gid="99" x="950" y="550" width="50" height="50">
+  <object id="1139" name="switch-spike" gid="85" x="2000" y="550" width="50" height="50">
    <properties>
-    <property name="direction" value="v"/>
+    <property name="id" value="0"/>
+    <property name="status" value="disabled"/>
    </properties>
   </object>
-  <object id="1039" name="laser" gid="99" x="950" y="600" width="50" height="50">
+  <object id="1140" name="switch-spike" gid="85" x="2100" y="550" width="50" height="50">
    <properties>
-    <property name="direction" value="v"/>
+    <property name="id" value="0"/>
+    <property name="status" value="active"/>
    </properties>
   </object>
-  <object id="1043" name="laser" gid="99" x="1100" y="500" width="50" height="50">
+  <object id="1141" name="switch-spike" gid="85" x="2200" y="550" width="50" height="50">
    <properties>
-    <property name="direction" value="v"/>
+    <property name="id" value="0"/>
+    <property name="status" value="active"/>
    </properties>
   </object>
-  <object id="1044" name="laser" gid="99" x="1100" y="550" width="50" height="50">
+  <object id="1142" name="switch-spike" gid="87" x="2050" y="500" width="50" height="50">
    <properties>
-    <property name="direction" value="v"/>
+    <property name="id" value="2"/>
+    <property name="status" value="active"/>
    </properties>
   </object>
-  <object id="1046" name="laser" gid="99" x="1100" y="450" width="50" height="50">
+  <object id="1143" name="switch-spike" gid="87" x="2150" y="500" width="50" height="50">
    <properties>
-    <property name="direction" value="v"/>
-   </properties>
-  </object>
-  <object id="1047" name="laser" gid="99" x="1100" y="550" width="50" height="50">
-   <properties>
-    <property name="direction" value="v"/>
-   </properties>
-  </object>
-  <object id="1048" name="laser" gid="99" x="1100" y="600" width="50" height="50">
-   <properties>
-    <property name="direction" value="v"/>
-   </properties>
-  </object>
-  <object id="1050" name="laser" gid="105" x="1100" y="300" width="50" height="50">
-   <properties>
-    <property name="direction" value="voff"/>
-   </properties>
-  </object>
-  <object id="1051" name="laser" gid="99" x="1100" y="400" width="50" height="50">
-   <properties>
-    <property name="direction" value="v"/>
-   </properties>
-  </object>
-  <object id="1052" name="laser" gid="105" x="1100" y="350" width="50" height="50">
-   <properties>
-    <property name="direction" value="voff"/>
-   </properties>
-  </object>
-  <object id="1053" name="laser" gid="99" x="800" y="350" width="50" height="50">
-   <properties>
-    <property name="direction" value="v"/>
-   </properties>
-  </object>
-  <object id="1054" name="laser" gid="99" x="800" y="300" width="50" height="50">
-   <properties>
-    <property name="direction" value="v"/>
-   </properties>
-  </object>
-  <object id="1055" name="laser" gid="99" x="800" y="250" width="50" height="50">
-   <properties>
-    <property name="direction" value="v"/>
-   </properties>
-  </object>
-  <object id="1056" name="laser" gid="105" x="800" y="150" width="50" height="50">
-   <properties>
-    <property name="direction" value="voff"/>
-   </properties>
-  </object>
-  <object id="1057" name="laser" gid="105" x="800" y="200" width="50" height="50">
-   <properties>
-    <property name="direction" value="voff"/>
-   </properties>
-  </object>
-  <object id="1058" name="laser" gid="99" x="800" y="100" width="50" height="50">
-   <properties>
-    <property name="direction" value="v"/>
-   </properties>
-  </object>
-  <object id="1059" name="laser" gid="99" x="800" y="50" width="50" height="50">
-   <properties>
-    <property name="direction" value="v"/>
-   </properties>
-  </object>
-  <object id="1060" name="laser" gid="99" x="650" y="400" width="50" height="50">
-   <properties>
-    <property name="direction" value="v"/>
-   </properties>
-  </object>
-  <object id="1061" name="laser" gid="99" x="650" y="350" width="50" height="50">
-   <properties>
-    <property name="direction" value="v"/>
-   </properties>
-  </object>
-  <object id="1063" name="laser" gid="99" x="650" y="550" width="50" height="50">
-   <properties>
-    <property name="direction" value="v"/>
-   </properties>
-  </object>
-  <object id="1064" name="laser" gid="99" x="650" y="500" width="50" height="50">
-   <properties>
-    <property name="direction" value="v"/>
-   </properties>
-  </object>
-  <object id="1065" name="laser" gid="99" x="650" y="450" width="50" height="50">
-   <properties>
-    <property name="direction" value="v"/>
-   </properties>
-  </object>
-  <object id="1066" name="laser" gid="99" x="650" y="700" width="50" height="50">
-   <properties>
-    <property name="direction" value="v"/>
-   </properties>
-  </object>
-  <object id="1069" name="laser" gid="99" x="650" y="750" width="50" height="50">
-   <properties>
-    <property name="direction" value="v"/>
-   </properties>
-  </object>
-  <object id="1070" name="laser" gid="105" x="650" y="600" width="50" height="50">
-   <properties>
-    <property name="direction" value="voff"/>
-   </properties>
-  </object>
-  <object id="1071" name="laser" gid="105" x="650" y="650" width="50" height="50">
-   <properties>
-    <property name="direction" value="voff"/>
-   </properties>
-  </object>
-  <object id="1073" name="laser" gid="105" x="800" y="400" width="50" height="50">
-   <properties>
-    <property name="direction" value="voff"/>
-   </properties>
-  </object>
-  <object id="1076" name="laser" gid="93" x="250" y="150" width="50" height="50">
-   <properties>
-    <property name="direction" value="h"/>
-   </properties>
-  </object>
-  <object id="1077" name="laser" gid="93" x="300" y="150" width="50" height="50">
-   <properties>
-    <property name="direction" value="h"/>
-   </properties>
-  </object>
-  <object id="1078" name="laser" gid="93" x="350" y="150" width="50" height="50">
-   <properties>
-    <property name="direction" value="h"/>
-   </properties>
-  </object>
-  <object id="1079" name="laser" gid="93" x="400" y="150" width="50" height="50">
-   <properties>
-    <property name="direction" value="h"/>
-   </properties>
-  </object>
-  <object id="1080" name="laser" gid="93" x="450" y="150" width="50" height="50">
-   <properties>
-    <property name="direction" value="h"/>
-   </properties>
-  </object>
-  <object id="1086" name="laser" gid="99" x="1100" y="100" width="50" height="50">
-   <properties>
-    <property name="direction" value="v"/>
-   </properties>
-  </object>
-  <object id="1087" name="laser" gid="99" x="1100" y="50" width="50" height="50">
-   <properties>
-    <property name="direction" value="v"/>
+    <property name="id" value="2"/>
+    <property name="status" value="disabled"/>
    </properties>
   </object>
  </objectgroup>
@@ -412,37 +410,19 @@
   </properties>
  </objectgroup>
  <objectgroup id="20" name="warps">
-  <object id="961" name="warp" gid="124" x="0" y="250" width="50" height="50">
+  <object id="1099" name="warp" gid="124" x="0" y="450" width="50" height="50">
    <properties>
     <property name="direction" value="left"/>
     <property name="target" value="map30"/>
    </properties>
   </object>
-  <object id="962" name="warp" gid="124" x="0" y="300" width="50" height="50">
+  <object id="1100" name="warp" gid="122" x="2450" y="400" width="50" height="50">
    <properties>
-    <property name="direction" value="left"/>
-    <property name="target" value="map30"/>
+    <property name="direction" value="right"/>
+    <property name="target" value="map32"/>
    </properties>
   </object>
-  <object id="963" name="warp" gid="124" x="0" y="350" width="50" height="50">
-   <properties>
-    <property name="direction" value="left"/>
-    <property name="target" value="map30"/>
-   </properties>
-  </object>
-  <object id="964" name="warp" gid="124" x="0" y="400" width="50" height="50">
-   <properties>
-    <property name="direction" value="left"/>
-    <property name="target" value="map30"/>
-   </properties>
-  </object>
-  <object id="965" name="warp" gid="124" x="0" y="450" width="50" height="50">
-   <properties>
-    <property name="direction" value="left"/>
-    <property name="target" value="map30"/>
-   </properties>
-  </object>
-  <object id="1094" name="warp" gid="123" x="1350" y="250" width="50" height="50">
+  <object id="1101" name="warp" gid="122" x="2450" y="450" width="50" height="50">
    <properties>
     <property name="direction" value="right"/>
     <property name="target" value="map32"/>

@@ -72,6 +72,7 @@ class RoomLoader
         state.trampolinesMini.clear();
         state.lightsGroup.clear();
         state.fallingBlock.clear();
+        state.solidBlock.clear();
         state.slabs.clear();
         state.popups.clear();
         state.saveParticlesGroup.clear();
@@ -101,7 +102,6 @@ class RoomLoader
         ObjectLoader.loadEverything(state.tiledData, state, state.map.x, state.map.y);
         EventLoader.loadEvents(state.tiledData, state);
 		state.add(state.slabs);
-        state.add(state.playerGlow);
         state.add(state.playerTrail);
         state.add(state.player);
         state.add(state.dangerObjects);
@@ -112,11 +112,13 @@ class RoomLoader
         state.add(state.popups);
 		state.add(state.warpsGroup);
         state.add(state.platforms);
+        state.add(state.solidBlock);
         state.add(state.fallingBlock);
         state.add(state.flipGroup);
         state.add(state.portalGroup);
         state.add(state.trampolines);
         state.add(state.trampolinesMini);
+        state.add(state.playerGlow);
         state.add(state.eventEffectGroup);
         state.add(state.hud);
 
@@ -162,7 +164,7 @@ class RoomLoader
             state.virtualPad.visible = true;
             state.virtualPad.active = true;
             state.player.pad = state.virtualPad;
-            state.player.pad.alpha = state.padAlpha;
+            // state.player.pad.alpha = state.padAlpha;
         #end
 
         if (state.currentChapter != null) state.currentChapter.text = "Chapter: " + PlayerData.currentChapter;

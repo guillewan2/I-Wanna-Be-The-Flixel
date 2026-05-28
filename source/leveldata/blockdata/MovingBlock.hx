@@ -57,9 +57,9 @@ class MovingBlock extends FlxSprite
             stopMovement();
         }
 
-        if (x < -100 || x > 2000 || y < -100 || y > 2000) { kill(); }
+        if (x < -500 || x > FlxG.worldBounds.width + 100 || y < -100 || y > FlxG.worldBounds.height + 100) { kill(); }
 
-        
+    
         touching = FlxDirectionFlags.NONE;
     }
 }

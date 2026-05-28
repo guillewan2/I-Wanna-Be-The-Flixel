@@ -148,6 +148,12 @@ class ObjectLoader
                             var localID:Int = obj.gid - tileset.firstGID;
                             var slab = new NormalSlab(spawnX, spawnY, localID);
                             state.slabs.add(slab);
+
+                        case "solid_block":
+                            var tileset = tiledData.getGidOwner(obj.gid);
+                            var localID:Int = obj.gid - tileset.firstGID;
+                            var solid = new SolidBlock(spawnX, spawnY, localID);
+                            state.solidBlock.add(solid);
                     }
                 }
             }

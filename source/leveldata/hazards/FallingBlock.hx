@@ -28,24 +28,27 @@ class FallingBlock extends FlxSprite
     {
         if (!activeMoving && touching.has(FlxDirectionFlags.UP))
         {
+            FlxG.sound.play(AssetPaths.break_block__ogg, 0.5, false);
             activeMoving = true;
         }
 
         if (activeMoving)
         {
+
             switch (moveDir)
             {
-                case "up":    velocity.y = -700;
+                case "up":    velocity.y = -700; 
                 case "down":  velocity.y = 700;
                 case "left":  velocity.x = -700;
                 case "right": velocity.x = 700;
             }
         }
 
-        if (x < -100 || x > 2000 || y < -100 || y > 2000) { kill(); }
-
         super.update(elapsed);
+
+        if (x < -500 || x > FlxG.worldBounds.width + 100 || y < -100 || y > FlxG.worldBounds.height + 100) { kill(); }
         
         touching = FlxDirectionFlags.NONE;
+
     }
 }

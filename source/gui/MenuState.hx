@@ -122,7 +122,7 @@ class MenuState extends FlxState
         FlxTween.tween(logo, {y: logo.y - 3}, 0.8, {type: PINGPONG, ease: FlxEase.sineInOut});
         add(logo);
 
-        versionText = new FlxText(0, 0, FlxG.width, "v.0.15");
+        versionText = new FlxText(0, 0, FlxG.width, "v.0.20");
         versionText.setFormat(null, 24, FlxColor.WHITE, CENTER);
         versionText.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
         versionText.x = 350;
@@ -152,19 +152,13 @@ class MenuState extends FlxState
         customizeButton(btnNewGame);
         add(btnNewGame);
 
-        #if mobile
-            btnContinue = new FlxButton(150, 450, "Continue", clickContinue);
-        #else
-            btnContinue = new FlxButton(150, 400, "Continue", clickContinue);
-        #end
+        btnContinue = new FlxButton(150, 450, "Continue", clickContinue);
+        btnContinue = new FlxButton(150, 400, "Continue", clickContinue);
         customizeButton(btnContinue);
         add(btnContinue);
 
-        #if mobile
-            btnExit = new FlxButton(1050, 640, "Quit Game", clickQuit);
-        #else
-            btnExit = new FlxButton(1020, 650, "Quit Game", clickQuit);
-        #end
+        btnExit = new FlxButton(1050, 640, "Quit Game", clickQuit);
+        btnExit = new FlxButton(1020, 650, "Quit Game", clickQuit);
         customizeButton(btnExit);
 
         #if !html5
@@ -228,11 +222,7 @@ class MenuState extends FlxState
 
         if (btn.label != null) 
         {
-            #if mobile
-                btn.label.setFormat(null, 36, FlxColor.WHITE, CENTER);
-            #else
-                btn.label.setFormat(null, 28, FlxColor.WHITE, CENTER);
-            #end
+            btn.label.setFormat(null, 28, FlxColor.WHITE, CENTER);
 
             btn.label.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 

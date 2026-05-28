@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="33" nextobjectid="69">
+ <properties>
+  <property name="doubleEffectType" value="dark-cloud"/>
+ </properties>
+ <tileset firstgid="1" source="ch1-tiles.tsx"/>
+ <tileset firstgid="81" source="../../textures/light.tsx"/>
+ <tileset firstgid="82" source="../../textures/spike.tsx"/>
+ <tileset firstgid="90" source="../../textures/transition-tiles.tsx"/>
+ <tileset firstgid="95" source="../../textures/double_jump.tsx"/>
+ <tileset firstgid="96" source="../../textures/misc/portal.tsx"/>
+ <tileset firstgid="97" source="../../textures/flip.tsx"/>
+ <tileset firstgid="98" source="../../textures/small-spike.tsx"/>
+ <layer id="1" name="tiles-main" width="28" height="18">
+  <data encoding="csv">
+9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
+9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
+9,9,9,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,9,9,9,
+9,9,9,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,9,9,9,
+9,9,9,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,9,9,9,
+9,9,9,8,0,0,0,0,0,0,0,0,49,50,50,50,50,50,50,50,51,0,0,0,8,9,9,9,
+9,9,9,8,0,0,0,0,0,0,0,0,57,58,58,58,58,58,58,58,59,0,0,0,8,9,9,9,
+9,9,9,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,9,9,9,
+9,9,9,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,9,9,9,
+9,9,9,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,9,9,9,
+9,9,9,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,9,9,9,
+9,9,9,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,9,9,9,
+9,9,9,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,9,9,9,
+9,9,9,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,9,9,9,
+9,9,9,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,9,9,9,
+9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
+9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
+9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9
+</data>
+ </layer>
+ <layer id="8" name="tiles-deco" width="28" height="18">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <objectgroup id="17" name="warps">
+  <properties>
+   <property name="direction" value="right"/>
+   <property name="target" value="map02"/>
+  </properties>
+ </objectgroup>
+ <objectgroup id="9" name="bg">
+  <properties>
+   <property name="bgName" value="bgMountains"/>
+  </properties>
+ </objectgroup>
+ <objectgroup id="10" name="mapEffect">
+  <properties>
+   <property name="effectType" value="fog"/>
+  </properties>
+ </objectgroup>
+ <objectgroup id="25" name="foregroundEffect">
+  <properties>
+   <property name="foregroundEffectType" value="rain"/>
+  </properties>
+ </objectgroup>
+ <objectgroup id="26" name="topEffect">
+  <properties>
+   <property name="topEffectType" value="wind"/>
+  </properties>
+ </objectgroup>
+ <objectgroup id="32" name="falling">
+  <object id="58" name="falling" gid="1" x="450" y="600" width="50" height="50">
+   <properties>
+    <property name="direction" value="down"/>
+   </properties>
+  </object>
+  <object id="59" name="falling" gid="5" x="550" y="600" width="50" height="50">
+   <properties>
+    <property name="direction" value="down"/>
+   </properties>
+  </object>
+  <object id="60" name="falling" gid="7" x="700" y="600" width="50" height="50">
+   <properties>
+    <property name="direction" value="down"/>
+   </properties>
+  </object>
+  <object id="61" name="falling" gid="8" x="750" y="600" width="50" height="50">
+   <properties>
+    <property name="direction" value="down"/>
+   </properties>
+  </object>
+  <object id="62" name="falling" gid="9" x="800" y="600" width="50" height="50">
+   <properties>
+    <property name="direction" value="down"/>
+   </properties>
+  </object>
+  <object id="63" name="falling" gid="33" x="850" y="600" width="50" height="50">
+   <properties>
+    <property name="direction" value="down"/>
+   </properties>
+  </object>
+  <object id="64" name="falling" gid="35" x="900" y="600" width="50" height="50">
+   <properties>
+    <property name="direction" value="down"/>
+   </properties>
+  </object>
+  <object id="65" name="falling" gid="39" x="950" y="600" width="50" height="50">
+   <properties>
+    <property name="direction" value="down"/>
+   </properties>
+  </object>
+  <object id="66" name="falling" gid="40" x="1000" y="600" width="50" height="50">
+   <properties>
+    <property name="direction" value="down"/>
+   </properties>
+  </object>
+  <object id="67" name="falling" gid="41" x="1050" y="600" width="50" height="50">
+   <properties>
+    <property name="direction" value="down"/>
+   </properties>
+  </object>
+  <object id="68" name="falling" gid="42" x="1100" y="600" width="50" height="50">
+   <properties>
+    <property name="direction" value="down"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup id="27" name="slab"/>
+ <objectgroup id="28" name="doubleEffect">
+  <properties>
+   <property name="doubleEffectType" value="redMist"/>
+  </properties>
+ </objectgroup>
+ <objectgroup id="29" name="flip"/>
+ <objectgroup id="30" name="small-spike"/>
+ <objectgroup id="7" name="spike-normal"/>
+ <objectgroup id="11" name="music">
+  <properties>
+   <property name="songName" value="rain"/>
+  </properties>
+ </objectgroup>
+ <objectgroup id="21" name="portal"/>
+</map>

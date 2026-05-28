@@ -17,6 +17,7 @@ class DeathState extends FlxSubState
     var maintext:FlxText;
     var subtext:FlxText;
     var blood:FlxEmitter;
+    var timerTip:Float = 1;
 
     override public function create():Void
     {
@@ -109,6 +110,7 @@ class DeathState extends FlxSubState
         subtext.screenCenter();
 		subtext.y = 450;
         subtext.scrollFactor.set(0, 0);
+        subtext.visible = false;
         FlxTween.tween(subtext, {y: subtext.y - 5}, 1, {type: PINGPONG, ease: FlxEase.sineInOut});
 		add(subtext);
         
@@ -135,6 +137,11 @@ class DeathState extends FlxSubState
         {
             bg.alpha += 0.0025; 
         }
+
+        if (timerTip > 0) { timerTip -= 0.0075; }
+        if (timerTip <= 0) { subtext.visible = true; }
+
+
 
         #if !mobile
         if (FlxG.keys.justPressed.R)

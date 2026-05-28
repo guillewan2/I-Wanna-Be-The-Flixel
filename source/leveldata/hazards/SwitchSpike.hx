@@ -17,11 +17,11 @@ class SwitchSpike extends FlxSprite
 
     var activeTween:FlxTween;
 
-    public function new(X:Float, Y:Float, LocalID:Int, status:String = "none")
+    public function new(X:Float, Y:Float, LocalID:Int, status:String = "disabled")
     {
         super(X, Y);
         loadGraphic(AssetPaths.spikes__png, true, 50, 50);
-        this.animation.frameIndex = LocalID;
+        frame = frames.frames[LocalID];
 
         setupHitbox(LocalID);
 

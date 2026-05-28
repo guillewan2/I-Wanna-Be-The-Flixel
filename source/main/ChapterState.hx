@@ -24,13 +24,14 @@ import leveldata.deco.*;
 import leveldata.events.*;
 import leveldata.hazards.*;
 import leveldata.misc.*;
+import flixel.addons.effects.FlxTrail;
 
 @:allow(main.RoomLoader)
 @:allow(leveldata.events.EventLoader)
 class ChapterState extends FlxState
 {
     var player:Player;
-    var playerTrail:flixel.addons.effects.FlxTrail;
+    var playerTrail:FlxTrail;
     var virtualPad:FlxVirtualPad;
     var padScale:Float = 2.5;
     var targetAlpha:Float = 0.5;
@@ -46,6 +47,7 @@ class ChapterState extends FlxState
     public var bg:FlxSprite;
     public var currentBGName:String = "";
     public var mainTilesPath:String = "assets/images/levels/tiles/ch" + PlayerData.currentChapter + "tiles.png";
+    public var currentConfig:ChapterConfig;
     var map:FlxTilemap;
     var mapDeco:FlxTilemap;
     var mapDeco2:FlxTilemap;
@@ -92,6 +94,7 @@ class ChapterState extends FlxState
     public var lightsGroup:FlxTypedGroup<LightTorch>;
     public var dangerObjects:FlxGroup;
     public var slabs:FlxTypedGroup<NormalSlab>;
+    public var solidBlock:FlxTypedGroup<SolidBlock>;
     public var hud:FlxGroup;
 
     var spikes:FlxGroup;
@@ -140,6 +143,7 @@ override public function create():Void
     fallingBlock = new FlxTypedGroup<FallingBlock>();
     lightsGroup = new FlxTypedGroup<LightTorch>();
     slabs = new FlxTypedGroup<NormalSlab>();
+    solidBlock = new FlxTypedGroup<SolidBlock>();
     bullets = new FlxTypedGroup<FlxSprite>();
     hud = new FlxGroup();
 
@@ -150,7 +154,7 @@ override public function create():Void
 
     warpsGroup = new FlxTypedGroup<WarpTrigger>(); add(warpsGroup);
     player = new Player(PlayerData.spawnX, PlayerData.spawnY);
-    playerTrail = new flixel.addons.effects.FlxTrail(player, null, 24, 0, 0.2, 0.02);
+    playerTrail = new FlxTrail(player, null, 24, 0, 0.2, 0.02);
     playerTrail.alpha = 0;
 
     vignite = new FlxSprite();
@@ -165,18 +169,18 @@ override public function create():Void
     saveAnimation.alpha = 0;
     saveAnimation.scrollFactor.set(0,0);
     
-    // MapPacker.loadChapter(PlayerData.currentChapter);
     RoomLoader.loadRoom(this, PlayerData.currentRoom);
 
-    #if debug
-        FlxG.camera.follow(player, FlxCameraFollowStyle.LOCKON);
-    #end
+    // FlxG.camera.follow(player, FlxCameraFollowStyle.LOCKON);
 
     switch(PlayerData.currentChapter)
     {
         case 1: chapter1Cache();
-        case 2: chapter2Cache();
+        case 2: currentConfig = new ChapterConfig(2, "");
+        default: currentConfig = new ChapterConfig(0, "");
     }
+
+    // currentConfig.cacheAssets();
 
     super.create();
 
@@ -224,6 +228,7 @@ override public function update(elapsed:Float):Void
 
     FlxG.collide(player, map);
     FlxG.collide(player, slabs);
+    FlxG.collide(player, solidBlock);
 
     FlxG.overlap(player, warpsGroup, (p, w) -> { HandleWarp(cast w); });
     FlxG.overlap(player, savesGroup, (p, s) -> { SaveLogicSprite(cast s); });
@@ -306,7 +311,7 @@ override public function update(elapsed:Float):Void
     {
         if (p.touching.has(FlxDirectionFlags.DOWN) && plat.touching.has(FlxDirectionFlags.UP))
         {
-            FlxG.sound.play(AssetPaths.break_block__ogg, 0.5, false);
+            
             if (plat.velocity.y != 0)
             {
                 p.y = plat.y - p.height;
@@ -346,7 +351,7 @@ override public function update(elapsed:Float):Void
             FlxG.collide(bullets, map, (bullet, wall) -> { bullet.kill(); });
         }
 
-        if (FlxG.keys.justPressed.ESCAPE)
+        if (FlxG.keys.justPressed.ESCAPE && player.exists)
         {
             isPaused = true;
             this.persistentUpdate = false;
@@ -391,7 +396,8 @@ override public function update(elapsed:Float):Void
 
     #if !mobile
         if (FlxG.keys.justPressed.ONE) RoomLoader.loadRoom(this, "cameratest");
-        if (FlxG.keys.justPressed.TWO) RoomLoader.loadRoom(this, "map26");
+        if (FlxG.keys.justPressed.TWO) RoomLoader.loadRoom(this, "map25");
+        if (FlxG.keys.justPressed.THREE) RoomLoader.loadRoom(this, "testing");
         if (FlxG.keys.justPressed.I) spawnTimer = 9999;
         if (FlxG.keys.justPressed.M)
         {
@@ -413,7 +419,6 @@ override public function update(elapsed:Float):Void
 function imgCache():Void
 {
     FlxG.bitmap.add(AssetPaths.save__png);
-    FlxG.bitmap.add(AssetPaths.transitionTiles__png);
     FlxG.bitmap.add(AssetPaths.playerGlow__png);
 
 }
@@ -424,32 +429,17 @@ function sfxCache():Void
     FlxG.sound.cache(AssetPaths.doublejump__ogg);
     FlxG.sound.cache(AssetPaths.break_block__ogg);
     FlxG.sound.cache(AssetPaths.savedgame__ogg);
-    FlxG.sound.cache(AssetPaths.lateral_bounce__ogg);
-    FlxG.sound.cache(AssetPaths.platform_activated__ogg);
     FlxG.sound.cache(AssetPaths.death_bgm__ogg);
-    FlxG.sound.cache(AssetPaths.trampoline_bounce__ogg);
 }
 
 function chapter1Cache():Void
 {
     FlxG.bitmap.add(AssetPaths.ch1tiles__png);
-    FlxG.bitmap.add(AssetPaths.spikes__png);
-    FlxG.bitmap.add(AssetPaths.laser__png);
-    FlxG.bitmap.add(AssetPaths.trampoline_mini__png);
-    FlxG.bitmap.add(AssetPaths.trampoline__png);
-    FlxG.bitmap.add(AssetPaths.light__png);
-    FlxG.bitmap.add(AssetPaths.acid__png);
 }
 
 function chapter2Cache():Void
 {
-    FlxG.bitmap.add(AssetPaths.ch2tiles__png);
-    FlxG.bitmap.add(AssetPaths.laser__png);
-    FlxG.bitmap.add(AssetPaths.trampoline_mini__png);
-    FlxG.bitmap.add(AssetPaths.trampoline__png);
-    FlxG.bitmap.add(AssetPaths.spikes__png);
-    FlxG.bitmap.add(AssetPaths.sandstorm__png);
-    FlxG.bitmap.add(AssetPaths.double_jump__png);
+    // TODO:
 }
 
 function PlayerShoot():Void
@@ -490,7 +480,7 @@ function HandleWarp(w:WarpTrigger):Void
     {
         case "up":    player.y = FlxG.height - player.height - 10;
         case "down":  player.y = 10;
-        case "left":  player.x = 1265;
+        case "left":  player.x = map.width - 140;
         case "right": player.x = 10;
     }
 
@@ -519,19 +509,19 @@ function setupHUD():Void
     currentChapter = new FlxText(50, FlxG.height - 90, 0, "Chapter: ", 18);
     currentChapter.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
     currentChapter.scrollFactor.set(0, 0);
-    currentChapter.alpha = 0.65;
+    currentChapter.alpha = 0.5;
     add(hud);
 
     lastSave = new FlxText(50, FlxG.height - 60, 0, "Last Save: ", 18);
     lastSave.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
     lastSave.scrollFactor.set(0, 0);
-    lastSave.alpha = 0.65;
+    lastSave.alpha = 0.5;
     add(hud);
 
     playerDeaths = new FlxText(FlxG.width - 260, FlxG.height - 80, 0, "Total Resets: ", 22);
     playerDeaths.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
     playerDeaths.scrollFactor.set(0, 0);
-    playerDeaths.alpha = 0.65;
+    playerDeaths.alpha = 0.5;
     add(hud);
     #end
 
@@ -539,7 +529,7 @@ function setupHUD():Void
     playerDeaths = new FlxText(FlxG.width - 260, 30, 0, "Total Deaths: ", 22);
     playerDeaths.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
     playerDeaths.scrollFactor.set(0, 0);
-    playerDeaths.alpha = 0.65;
+    playerDeaths.alpha = 0.5;
     add(hud);
     #end
 
