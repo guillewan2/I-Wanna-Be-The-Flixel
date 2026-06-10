@@ -21,22 +21,24 @@ class SwitchSpike extends FlxSprite
     {
         super(X, Y);
         loadGraphic(AssetPaths.spikes__png, true, 50, 50);
-        frame = frames.frames[LocalID];
+        animation.frameIndex = LocalID;
 
-        setupHitbox(LocalID);
+        // Reset Hitbox to full size for Pixel Perfect detection
+        width = 50;
+        height = 50;
+        offset.set(0, 0);
 
         homeX = x;
         homeY = y;
-
         shiftedX = homeX;
         shiftedY = homeY;
 
         switch (LocalID)
         {
-            case 0, 4: shiftedY += 50; 
-            case 1, 5: shiftedX -= 50; 
-            case 2, 6: shiftedY -= 50; 
-            case 3, 7: shiftedX += 50; 
+            case 0, 4: shiftedY += 50; // Down
+            case 1, 5: shiftedX -= 50; // Left
+            case 2, 6: shiftedY -= 50; // Up
+            case 3, 7: shiftedX += 50; // Right
         }
 
         immovable = true;
@@ -63,10 +65,7 @@ class SwitchSpike extends FlxSprite
         var destX = shouldBeRetracted ? shiftedX : homeX;
         var destY = shouldBeRetracted ? shiftedY : homeY;
 
-        if (activeTween != null)
-        {
-            activeTween.cancel();
-        }
+        if (activeTween != null) activeTween.cancel();
 
         activeTween = FlxTween.num(0.0, 1.0, 0.15, {ease: FlxEase.linear}, function(v:Float)
         {
@@ -78,13 +77,10 @@ class SwitchSpike extends FlxSprite
     public static function toggleAll():Void
     {
         spikesCurrentlyShifted = !spikesCurrentlyShifted;
-        
         for (spike in allSpikes)
         {
             if (spike != null && spike.exists && spike.alive)
-            {
                 spike.toggle(spikesCurrentlyShifted);
-            }
         }
     }
 
@@ -96,28 +92,8 @@ class SwitchSpike extends FlxSprite
 
     override public function destroy():Void
     {
-        if (activeTween != null)
-        {
-            activeTween.cancel();
-        }
+        if (activeTween != null) activeTween.cancel();
         allSpikes.remove(this);
         super.destroy();
-    }
-
-    function setupHitbox(LocalID:Int):Void
-    {
-        switch (LocalID)
-        {
-            case 0: width = 45; height = 25; offset.set(2, 25); 
-            case 1: width = 35; height = 35; offset.set(0, 8);
-            case 2: width = 40; height = 40; offset.set(6, 0);
-            case 3: width = 35; height = 35; offset.set(12, 10);
-            case 4: width = 30; height = 15; offset.set(10, 32);
-            case 5: width = 15; height = 30; offset.set(0, 10);
-            case 6: width = 30; height = 15; offset.set(10, 0);
-            case 7: width = 15; height = 30; offset.set(33, 10);
-        }
-        x += offset.x;
-        y += offset.y;
     }
 }

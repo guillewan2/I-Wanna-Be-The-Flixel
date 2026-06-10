@@ -6,7 +6,12 @@ class PlayerData
     public static var lastSaveRoom:String;
     public static var currentRoom:String = "";
     public static var currentSong:String = "";
-    public static var timeElapsed:String = "00:00:00";
+    public static var totalSeconds:Float = 0;
+    public static var collectedCoins:Array<String> = []; 
+    public static var currentSkin:String = "thekid";
+    public static var antialiasing:Bool = false;
+    public static var vSync:Bool = false;
+    public static var showFPS:Bool = true;
 
     public static var spawnX:Float;
     public static var spawnY:Float;
@@ -18,5 +23,29 @@ class PlayerData
     public static var lastMusicTime:Float = 0;
     public static var isRespawning:Bool = false;
     public static var saveCooldown:Float = 0;
+
+    public static function isCoinCollected(id:String):Bool
+    {
+        return collectedCoins.indexOf(id) != -1;
+    }
+
+    public static function getCoinCount():Int
+    {
+        return collectedCoins.length;
+    }
+
+    public static function formatTime():String
+    {
+        var seconds:Int = Math.floor(totalSeconds);
+        var h:Int = Math.floor(seconds / 3600);
+        var m:Int = Math.floor((seconds % 3600) / 60);
+        var s:Int = Math.floor(seconds % 60);
+
+        var hh = (h < 10) ? "0" + h : "" + h;
+        var mm = (m < 10) ? "0" + m : "" + m;
+        var ss = (s < 10) ? "0" + s : "" + s;
+
+        return hh + ":" + mm + ":" + ss;
+    }
 
 }

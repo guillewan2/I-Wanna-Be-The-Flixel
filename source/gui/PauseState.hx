@@ -1,5 +1,6 @@
 package gui;
 
+import openfl.filters.BlurFilter;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
@@ -10,147 +11,247 @@ import flixel.tweens.FlxTween;
 import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import main.ChapterState;
+import flixel.FlxCamera;
 
 class PauseState extends FlxSubState
 {
     var bg:FlxSprite;
     var assetsGroup:FlxGroup;
     var pauseText:FlxText;
-	var bgFadeTimer:Float = 0.005;
+    var alphaText:Float = 0;
+    var bgFadeTimer:Float = 0.0025;
     var btnTitle:FlxButton;
+    var optionsBtn:FlxButton;
+    var btnStages:FlxButton;
+    var respawnBtn:FlxButton;
+    var statsText:FlxText;
+    var originalVolume:Float = 1.0;
+
+    // Store references to stop them later
     var activeTweens:Map<FlxButton, FlxTween> = new Map();
     var activeLabelTweens:Map<FlxText, FlxTween> = new Map();
-
-
+    var pauseTween:FlxTween; // Added reference
+    
+    var uiCamera:FlxCamera;
 
     override public function create()
     {
         super.create();
         openfl.ui.Mouse.show();
 
+        originalVolume = FlxG.sound.volume;
+        FlxG.sound.volume = originalVolume * 0.3;
+
+        uiCamera = new FlxCamera(0, 0, FlxG.width, FlxG.height);
+        uiCamera.bgColor = FlxColor.TRANSPARENT;
+        FlxG.cameras.add(uiCamera, false);
+
+        FlxG.camera.filters = [new BlurFilter(2, 2, 2)];
         assetsGroup = new FlxGroup();
 
         bg = new FlxSprite();
-        bg.makeGraphic(1300,800, FlxColor.BLACK, false);
+        bg.makeGraphic(1300, 800, FlxColor.BLACK, false);
         bg.screenCenter();
         bg.alpha = 0;
         assetsGroup.add(bg);
 
         pauseText = new FlxText("Game Paused");
-		pauseText.size = 80;
-		pauseText.color = FlxColor.WHITE;
-		pauseText.setBorderStyle(OUTLINE, FlxColor.BLACK, 3);
-		pauseText.screenCenter();
-		pauseText.y -= 240;
+        pauseText.size = 80;
+        pauseText.color = FlxColor.WHITE;
+        pauseText.setBorderStyle(OUTLINE, FlxColor.BLACK, 3);
+        pauseText.screenCenter();
+        pauseText.y -= 240;
         pauseText.scrollFactor.set(0, 0);
-        FlxTween.angle(pauseText, -10, 10, 1, {type: PINGPONG, ease: FlxEase.sineInOut});
-		assetsGroup.add(pauseText);
+        assetsGroup.add(pauseText);
 
+        pauseTween = FlxTween.tween(pauseText, {y: pauseText.y - 3}, 0.8, {type: PINGPONG, ease: FlxEase.sineInOut});
+
+        
         add(assetsGroup);
 
-        btnTitle = new FlxButton(0, 0, "Return to Menu", clickMainMenu);
-        btnTitle.screenCenter();
-        btnTitle.y += 200;
-        customizeButton(btnTitle);
-        add(btnTitle);
+        respawnBtn = new FlxButton(0, 0, "Respawn", clickRespawn);
+        setupButtonPosition(respawnBtn, 350, -120);
+
+        optionsBtn = new FlxButton(0, 0, "Options", clickOptions);
+        setupButtonPosition(optionsBtn, 350, -20);
+
+        btnTitle = new FlxButton(0, 0, "Main Menu", clickMainMenu);
+        setupButtonPosition(btnTitle, 350, 80);
+
+        btnStages = new FlxButton(0, 0, "Stages", clickStages);
+        setupButtonPosition(btnStages, 350, 180);
+
+        // Assign Cameras
+        assetsGroup.cameras = [uiCamera];
+        respawnBtn.cameras = [uiCamera];
+        optionsBtn.cameras = [uiCamera];
+        btnTitle.cameras = [uiCamera];
+        btnStages.cameras = [uiCamera];
+
+        var statsStr:String =
+                        "Red Coins: " + main.PlayerData.collectedCoins.length + "\n" +
+                        "\nChapter: " + main.PlayerData.currentChapter + "\n" +
+                      "\nDeaths: " + main.PlayerData.totalDeaths + "\n" +
+                      "\nTime: " + main.PlayerData.formatTime();
+
+        statsText = new FlxText(40, FlxG.height - 250, 0, statsStr);
+        statsText.setFormat(null, 24, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
+        statsText.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
+        statsText.scrollFactor.set(0, 0);
+        statsText.alpha = 0;
+        assetsGroup.add(statsText);
     }
 
-	override public function update(elapsed:Float)
-	{
+    function cleanup():Void
+    {
+        if (pauseTween != null) pauseTween.cancel();
 
+        for (btn in activeTweens.keys())
+        {
+            if (activeTweens.get(btn) != null) activeTweens.get(btn).cancel();
+        }
+        for (txt in activeLabelTweens.keys())
+        {
+            if (activeLabelTweens.get(txt) != null) activeLabelTweens.get(txt).cancel();
+        }
+        
+        // 3. Force stop any other tweens on these objects
+        FlxTween.globalManager.cancelTweensOf(pauseText);
+        FlxTween.globalManager.cancelTweensOf(respawnBtn);
+        FlxTween.globalManager.cancelTweensOf(optionsBtn);
+        FlxTween.globalManager.cancelTweensOf(btnTitle);
+        FlxTween.globalManager.cancelTweensOf(btnStages);
+        FlxTween.globalManager.cancelTweensOf(statsText);
+
+        FlxG.sound.volume = originalVolume;
+
+        FlxG.camera.filters = [];
+        if (uiCamera != null) FlxG.cameras.remove(uiCamera);
+        openfl.ui.Mouse.hide();
+    }
+
+    // Override destroy to catch any closing situation
+    override public function destroy():Void
+    {
+        cleanup();
+        super.destroy();
+    }
+
+    function setupButtonPosition(btn:FlxButton, xOff:Float, yOff:Float)
+    {
+        btn.screenCenter();
+        btn.x += xOff;
+        btn.y += yOff;
+        customizeButton(btn);
+        add(btn);
+    }
+
+    override public function update(elapsed:Float)
+    {
         super.update(elapsed);
 
-        if (bg.alpha < 0.50)
+        if (alphaText < 1)
         {
-            bg.alpha += bgFadeTimer;
+            alphaText += elapsed;
+            if (alphaText > 1) alphaText = 1;
         }
+
+        statsText.alpha = alphaText;
+
+        if (bg.alpha < 0.65) bg.alpha += bgFadeTimer;
 
         if (FlxG.keys.justPressed.ESCAPE)
         {
-            remove(assetsGroup, true);
-            openfl.ui.Mouse.hide();
+            cleanup();
             close();
-
         }
-
     }
 
     function clickMainMenu():Void
     {
-        remove(assetsGroup, true);
+        if (FlxG.sound.music != null) FlxG.sound.music.stop();        
+        cleanup();
         FlxG.switchState(MenuState.new);
-        close();
+    }
 
+    function clickRespawn():Void
+    {
+        main.PlayerData.totalDeaths++;
+        cleanup();
+        FlxG.resetState();
+    }
+
+    function clickStages():Void
+    {
+        setUIEnabled(false);
+        var stageSub = new gui.StageSelectSubState();
+        stageSub.cameras = [uiCamera]; 
+        stageSub.closeCallback = function() { setUIEnabled(true); };
+        openSubState(stageSub);
+    }
+
+    function clickOptions():Void
+    {
+        setUIEnabled(false);
+        var optionsSub = new gui.OptionsSubState();
+        optionsSub.cameras = [uiCamera];
+        optionsSub.closeCallback = function() { setUIEnabled(true); };
+        openSubState(optionsSub);
+    }
+
+    function setUIEnabled(state:Bool):Void
+    {
+        assetsGroup.visible = state;
+        respawnBtn.visible = state;
+        optionsBtn.visible = state;
+        btnTitle.visible = state;
+        btnStages.visible = state;
+        statsText.visible = state;        
+        respawnBtn.active = state;
+        optionsBtn.active = state;
+        btnTitle.active = state;
+        btnStages.active = state;
     }
 
     function customizeButton(btn:FlxButton):Void
     {
-        var w:Int = 400;
+        var w:Int = 250;
         var h:Int = 60;
-
         btn.loadGraphic(AssetPaths.buttonTitle__png, false, w, h);
-        // btn.makeGraphic(w, h, FlxColor.fromRGB(255, 255, 255, 128));
 
         if (btn.label != null) 
         {
             btn.label.setFormat(null, 28, FlxColor.WHITE, CENTER);
-
             btn.label.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
-
             btn.label.fieldWidth = w;
-            btn.label.alignment = CENTER;
-
-            for (offset in btn.labelOffsets)
-            {
-                offset.y += 10;
-            }
-
-            btn.label.centerOrigin();
-            btn.label.centerOffsets();
-
-            
+            for (offset in btn.labelOffsets) { offset.y += 10; }
         }
 
         btn.onOver.callback = function()
         {
             openfl.ui.Mouse.cursor = openfl.ui.MouseCursor.BUTTON;
+            FlxTween.tween(btn.label.scale, {x: 1.1, y: 1.1}, 0.05);
+            FlxTween.tween(btn.scale, {x: 1.1, y: 1.1}, 0.05);
 
-            FlxTween.tween(btn.label.scale, {x: 1.1, y: 1.1}, 0.05, {ease: FlxEase.quadOut});
-            FlxTween.tween(btn.scale, {x: 1.1, y: 1.1}, 0.05, {ease: FlxEase.quadOut});
-
-            var btnTwn = FlxTween.angle(btn, -5, 5, 0.6, {type: PINGPONG, ease: FlxEase.sineInOut});
-            var txtTwn = FlxTween.angle(btn.label, -5, 5, 0.6, {type: PINGPONG, ease: FlxEase.sineInOut});
-
-            activeTweens.set(btn, btnTwn);
-            activeLabelTweens.set(btn.label, txtTwn);
+            activeTweens.set(btn, FlxTween.angle(btn, -5, 5, 0.6, {type: PINGPONG, ease: FlxEase.sineInOut}));
+            activeLabelTweens.set(btn.label, FlxTween.angle(btn.label, -5, 5, 0.6, {type: PINGPONG, ease: FlxEase.sineInOut}));
             FlxG.sound.play(AssetPaths.trigger__ogg, 0.1, false);
         };
 
         btn.onOut.callback = function()
         {
             openfl.ui.Mouse.cursor = openfl.ui.MouseCursor.ARROW;
+            FlxTween.tween(btn.label.scale, {x: 1.0, y: 1.0}, 0.05);
+            FlxTween.tween(btn.scale, {x: 1.0, y: 1.0}, 0.05);
 
-            FlxTween.tween(btn.label.scale, {x: 1.0, y: 1.0}, 0.05, {ease: FlxEase.quadIn});
-            FlxTween.tween(btn.scale, {x: 1.0, y: 1.0}, 0.05, {ease: FlxEase.quadIn});
-
-            if (activeTweens.exists(btn))
-            {
+            if (activeTweens.exists(btn) && activeTweens.get(btn) != null)
                 activeTweens.get(btn).cancel();
-                activeTweens.remove(btn);
-            }
-
-            if (activeLabelTweens.exists(btn.label))
-            {
-                activeLabelTweens.get(btn.label).cancel();
-                activeLabelTweens.remove(btn.label);
-            }
-
-            FlxTween.tween(btn, {angle: 0}, 0.1, {ease: FlxEase.quadOut});
-            FlxTween.tween(btn.label, {angle: 0}, 0.1, {ease: FlxEase.quadOut});
             
+            if (activeLabelTweens.exists(btn.label) && activeLabelTweens.get(btn.label) != null)
+                activeLabelTweens.get(btn.label).cancel();
+
+            btn.angle = 0;
+            btn.label.angle = 0;
         };
     }
-
-    
-
 }

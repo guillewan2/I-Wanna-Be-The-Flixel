@@ -22,6 +22,7 @@ class Player extends FlxSprite
     public var isFlipped:Bool = false; 
     var tapTimer:Float = 0;
     var tapCount:Int = 0;
+    var idleTimer:Float = 1;
 
     var animationJumpUp:Bool = false;
     var animationJumpDown:Bool = false;
@@ -39,8 +40,9 @@ class Player extends FlxSprite
     public function new(x:Float, y:Float)
     {
         super(x, y);
+        var skinPath = "assets/images/skins/" + PlayerData.currentSkin + ".png";
 
-        loadGraphic(AssetPaths.thekid__png, true, 50, 50);
+        loadGraphic(skinPath, true, 50, 50);
         animation.add("idle", [0, 1, 2, 3], 11, true);
         animation.add("jumpUp", [6], 16, false);
         animation.add("jumpDown", [7], 1, false);
@@ -172,6 +174,11 @@ class Player extends FlxSprite
         }
 
         super.update(elapsed);
+
+        if (idleTimer != 0)
+        {
+            idleTimer -= 0.05;
+        }
 
         var isMovingUp = isFlipped ? (velocity.y > 0) : (velocity.y < 0);
 

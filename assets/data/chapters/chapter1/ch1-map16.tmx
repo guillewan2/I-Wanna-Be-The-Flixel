@@ -92,12 +92,12 @@
     <property name="direction" value="right"/>
    </properties>
   </object>
-  <object id="561" name="platform" gid="30" x="1250" y="551" width="50" height="50">
+  <object id="561" name="platform" gid="30" x="1250" y="549" width="50" height="50">
    <properties>
     <property name="direction" value="left"/>
    </properties>
   </object>
-  <object id="564" name="platform" gid="28" x="500" y="801" width="50" height="50">
+  <object id="564" name="platform" gid="28" x="500" y="799" width="50" height="50">
    <properties>
     <property name="direction" value="right"/>
    </properties>

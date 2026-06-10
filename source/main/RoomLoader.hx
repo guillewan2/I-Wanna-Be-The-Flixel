@@ -20,15 +20,16 @@ class RoomLoader
 
         if (state.roomAcid != null) 
         {
-        state.remove(state.roomAcid);
-        state.roomAcid.destroy();
-        state.roomAcid = null;
+            state.remove(state.roomAcid);
+            state.roomAcid.destroy();
+            state.roomAcid = null;
         }
         #if !linux
             var chartPath = "assets/data/chapters/chapter" + PlayerData.currentChapter + "/ch" + PlayerData.currentChapter + "-" + roomName + ".tmx";
         #else
             var chartPath = "assets/data/chapters_mobile/chapter" + PlayerData.currentChapter + "/ch" + PlayerData.currentChapter + "-" + roomName + "-mobile" + ".tmx";
         #end
+
         state.currentRoomName = roomName;
         state.tiledData = new TiledMap(chartPath);
 
@@ -62,6 +63,8 @@ class RoomLoader
         }
 
         FlxG.bitmap.clearUnused();
+        state.redCoinsGroup.clear();
+        state.redCoinParticlesGroup.clear();
         state.dangerObjects.clear();
         state.doubleJumpGroup.clear();
         state.flipGroup.clear();
@@ -76,6 +79,7 @@ class RoomLoader
         state.slabs.clear();
         state.popups.clear();
         state.saveParticlesGroup.clear();
+        state.redCoinParticlesGroup.clear();
         state.hud.clear();
         leveldata.hazards.SwitchSpike.clear();
 
@@ -90,6 +94,26 @@ class RoomLoader
         state.saveParticlesGroup.clear();
         }
 
+        if (state.redCoinParticlesGroup != null)
+        {
+            state.redCoinParticlesGroup.forEachExists(function(p:FlxEmitter)
+        {
+            p.active = false;
+            p.visible = false;
+            p.exists = false;
+        });
+        state.redCoinParticlesGroup.clear();
+        }
+
+        if (state.redCoinsGroup != null)
+        {
+            state.redCoinsGroup.forEach(function(c:leveldata.collectibles.RedCoin)
+            {
+                c.destroy();
+            });
+            state.redCoinsGroup.clear();
+        }
+
         if (state.savesGroup != null)
         {
             state.savesGroup.forEachExists(function(s:SavePoint)
@@ -99,8 +123,15 @@ class RoomLoader
         state.savesGroup.clear();
         }
 
+        state.bullets.forEachAlive((bullet) ->
+        {
+            bullet.kill();
+        });        
+
         ObjectLoader.loadEverything(state.tiledData, state, state.map.x, state.map.y);
         EventLoader.loadEvents(state.tiledData, state);
+        state.add(state.redCoinsGroup);
+        state.add(state.redCoinParticlesGroup);
 		state.add(state.slabs);
         state.add(state.playerTrail);
         state.add(state.player);
@@ -133,7 +164,6 @@ class RoomLoader
         {
             if (state.members.contains(state.vignite))
             state.remove(state.vignite);
-            state.add(state.vignite);
         }
         state.add(state.vignite);
         state.setupHUD();

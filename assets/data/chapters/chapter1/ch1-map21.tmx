@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="21" nextobjectid="494">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="21" nextobjectid="495">
  <properties>
   <property name="songName" value="rain"/>
  </properties>
@@ -105,7 +105,6 @@
     <property name="direction" value="right"/>
    </properties>
   </object>
-  <object id="416" name="trampoline" gid="81" x="100" y="700" width="50" height="50"/>
   <object id="417" name="trampoline-mini" gid="112" x="200" y="700" width="50" height="50">
    <properties>
     <property name="direction" value="up"/>
@@ -228,6 +227,11 @@
   <object id="455" name="laser" gid="93" x="300" y="800" width="50" height="50">
    <properties>
     <property name="direction" value="h"/>
+   </properties>
+  </object>
+  <object id="494" name="spike" gid="85" x="100" y="700" width="50" height="50">
+   <properties>
+    <property name="id" value="0"/>
    </properties>
   </object>
  </objectgroup>

@@ -1,4 +1,5 @@
 package gui;
+import main.ChapterState;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -166,9 +167,13 @@ class DeathState extends FlxSubState
 
 		super.destroy();
 	}
+    
     function restartLevel():Void
     {
         if (FlxG.sound.music != null) FlxG.sound.music.stop();
+        PlayerData.totalDeaths++;
+        leveldata.misc.SaveManager.saveGameRestart();
+        leveldata.misc.SaveManager.loadGame();
         FlxG.resetState();
     }
 }

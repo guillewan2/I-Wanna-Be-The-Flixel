@@ -37,8 +37,11 @@ class MenuState extends FlxState
 
     var btnNewGame:FlxButton;
     var btnContinue:FlxButton;
+    var btnStages:FlxButton;
     var btnSpriteNew:FlxSprite;
     var btnSpriteCont:FlxSprite;
+    var btnOptions:FlxButton;
+    var btnSkins:FlxButton;
     var btnExit:FlxButton;
 
     var activeTweens:Map<FlxButton, FlxTween> = new Map();
@@ -51,7 +54,11 @@ class MenuState extends FlxState
 
     override public function create():Void
     {
+        openfl.ui.Mouse.cursor = openfl.ui.MouseCursor.ARROW;
         FlxG.scaleMode = new RatioScaleMode();
+        FlxG.mouse.visible = true;
+        FlxG.mouse.useSystemCursor = true;
+        SaveManager.loadGame();
 
         #if !mobile
         FlxG.mouse.visible = true;
@@ -59,13 +66,13 @@ class MenuState extends FlxState
         #end
 
         bg = new FlxSprite();
-        bg.makeGraphic(1280, 720, 0xFF1B76FF, false);
+        bg.makeGraphic(1280, 720, 0xFF62A1FF, false);
         bg.screenCenter();
-        bg.alpha = 0.25;
+        bg.alpha = 0.3;
         add(bg);
 
         player = new FlxSprite();
-        player.loadGraphic(AssetPaths.thekid__png, true, 50, 50);
+        player.loadGraphic("assets/images/skins/" + PlayerData.currentSkin + ".png", true, 50, 50);
         player.animation.add("walking", [8, 9, 10, 11, 12, 13], 14, true);
         player.animation.play("walking");
         player.scale.set(1.2, 1.2);
@@ -116,7 +123,7 @@ class MenuState extends FlxState
         vignite.alpha = 0.65;
         add(vignite);
 
-        logo = new FlxSprite(-50, 50);
+        logo = new FlxSprite(-50, 25);
         logo.loadGraphic(AssetPaths.logo__png, false);
         logo.scale.set(0.65, 0.65);
         FlxTween.tween(logo, {y: logo.y - 3}, 0.8, {type: PINGPONG, ease: FlxEase.sineInOut});
@@ -126,44 +133,37 @@ class MenuState extends FlxState
         versionText.setFormat(null, 24, FlxColor.WHITE, CENTER);
         versionText.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
         versionText.x = 350;
-        versionText.y = 160;
+        versionText.y = 140;
         add(versionText);
 
-
-        btnSpriteNew = new FlxSprite(200, 290);
-        btnSpriteNew.loadGraphic(AssetPaths.miniClickV2__png, true, 213);
-        btnSpriteNew.animation.add("idle", [0], false);
-        btnSpriteNew.animation.add("hover", [1], false);
-        btnSpriteNew.animation.play("idle");
-        btnSpriteNew.scale.set(1.15, 1.15);
-        btnSpriteNew.updateHitbox();
-        // add(btnSpriteNew);
-
-        btnSpriteCont = new FlxSprite(200, 390);
-        btnSpriteCont.loadGraphic(AssetPaths.miniClickV2__png, true, 213);
-        btnSpriteCont.animation.add("idle", [0], false);
-        btnSpriteCont.animation.add("hover", [1], false);
-        btnSpriteCont.animation.play("idle");
-        btnSpriteCont.scale.set(1.15, 1.15);
-        btnSpriteCont.updateHitbox();
-        // add(btnSpriteCont);
-
-        btnNewGame = new FlxButton(150, 300, "New Game", clickNewGame);
+        btnNewGame = new FlxButton(150, 250, "New Game", clickNewGame);
         customizeButton(btnNewGame);
         add(btnNewGame);
 
-        btnContinue = new FlxButton(150, 450, "Continue", clickContinue);
-        btnContinue = new FlxButton(150, 400, "Continue", clickContinue);
+        btnContinue = new FlxButton(150, 350, "Continue", clickContinue);
         customizeButton(btnContinue);
         add(btnContinue);
 
-        btnExit = new FlxButton(1050, 640, "Quit Game", clickQuit);
-        btnExit = new FlxButton(1020, 650, "Quit Game", clickQuit);
-        customizeButton(btnExit);
+        btnOptions = new FlxButton(150, 450, "Options", clickOptions);
+        customizeButton(btnOptions);
+        add(btnOptions);
 
-        #if !html5
-            add(btnExit);
-        #end
+        btnSkins = new FlxButton(150, 550, "Skins", function()
+        {
+            openSubState(new gui.SkinSelectorSubState());
+            
+        });
+        customizeButton(btnSkins);
+        add(btnSkins);
+
+        btnStages = new FlxButton(850, 550, "Stages", clickStages);
+        customizeButton(btnStages);
+        add(btnStages);
+
+        btnExit = new FlxButton(1020, 650, "Quit Game", clickQuit);
+        btnExit.color = FlxColor.RED;
+        customizeExit(btnExit);
+        #if !html5 add(btnExit); #end
 
         playMenuMusic();
 
@@ -175,26 +175,6 @@ class MenuState extends FlxState
         super.update(elapsed);
 
         #if !mobile
-        if (FlxG.mouse.overlaps(btnSpriteNew))
-        {
-            btnSpriteNew.animation.play("hover");
-        }
-
-        else
-        {
-            btnSpriteNew.animation.play("idle");
-        }
-
-        if (FlxG.mouse.overlaps(btnSpriteCont))
-        {
-            btnSpriteCont.animation.play("hover");
-        }
-
-        else
-        {
-            btnSpriteCont.animation.play("idle");
-        }
-
         if (FlxG.keys.justPressed.F11)
         {
             if (FlxG.fullscreen == false) FlxG.fullscreen = true;
@@ -223,7 +203,6 @@ class MenuState extends FlxState
         if (btn.label != null) 
         {
             btn.label.setFormat(null, 28, FlxColor.WHITE, CENTER);
-
             btn.label.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 
             btn.label.fieldWidth = w;
@@ -279,14 +258,68 @@ class MenuState extends FlxState
             
         };
     }
+    function customizeExit(btn:FlxButton):Void
+    {
+        var w:Int = 250;
+        var h:Int = 60;
 
+        btn.makeGraphic(w, h, FlxColor.TRANSPARENT);
+
+        if (btn.label != null) 
+        {
+            btn.label.setFormat(null, 28, FlxColor.WHITE, CENTER);
+            btn.label.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
+
+            btn.label.fieldWidth = w;
+            btn.label.alignment = CENTER;
+
+            for (offset in btn.labelOffsets)
+            {
+                offset.y += 10;
+            }
+
+            btn.label.centerOrigin();
+            btn.label.centerOffsets();
+
+            
+        }
+
+        btn.onOver.callback = function()
+        {
+            openfl.ui.Mouse.cursor = MouseCursor.BUTTON;
+
+            FlxTween.tween(btn.label.scale, {x: 1.1, y: 1.1}, 0.05, {ease: FlxEase.quadOut});
+            FlxTween.tween(btn.scale, {x: 1.1, y: 1.1}, 0.05, {ease: FlxEase.quadOut});
+            FlxG.sound.play(AssetPaths.trigger__ogg, 0.1, false);
+        };
+
+        btn.onOut.callback = function()
+        {
+            openfl.ui.Mouse.cursor = MouseCursor.ARROW;
+
+            FlxTween.tween(btn.label.scale, {x: 1.0, y: 1.0}, 0.05, {ease: FlxEase.quadIn});
+            FlxTween.tween(btn.scale, {x: 1.0, y: 1.0}, 0.05, {ease: FlxEase.quadIn});
+
+            if (activeTweens.exists(btn))
+            {
+                activeTweens.get(btn).cancel();
+                activeTweens.remove(btn);
+            }
+
+            if (activeLabelTweens.exists(btn.label))
+            {
+                activeLabelTweens.get(btn.label).cancel();
+                activeLabelTweens.remove(btn.label);
+            }
+
+            FlxTween.tween(btn, {angle: 0}, 0.1, {ease: FlxEase.quadOut});
+            FlxTween.tween(btn.label, {angle: 0}, 0.1, {ease: FlxEase.quadOut});
+            
+        };
+    }
     function clickNewGame():Void
     {
-        PlayerData.currentChapter = 1;
-        PlayerData.currentRoom = "map" + "01";
-        PlayerData.spawnX = 250;
-        PlayerData.spawnY = 450 + 5;
-        PlayerData.totalDeaths = 0;
+        leveldata.misc.SaveManager.clearSaveData();
         if (FlxG.sound.music != null) { FlxG.sound.music.stop(); }
         FlxG.switchState(ChapterState.new);
     }
@@ -299,12 +332,21 @@ class MenuState extends FlxState
             FlxG.switchState(ChapterState.new);
         }
             
-        else
+        else if (PlayerData.currentRoom != "map01" && PlayerData.currentChapter != 1)
         {
-            btnContinue.color = FlxColor.GRAY;
             FlxG.camera.shake(0.01, 0.05);
             FlxG.sound.play(AssetPaths.error__ogg, 1, false);
         }
+    }
+
+    function clickOptions():Void
+    {
+        openSubState(new gui.OptionsSubState());
+    }
+
+    function clickStages():Void
+    {
+        openSubState(new gui.StageSelectSubState());
     }
 
     function clickQuit():Void
@@ -322,5 +364,15 @@ class MenuState extends FlxState
             FlxG.sound.playMusic(AssetPaths.mainMenu__ogg, 0.7, true);
         }
             
+    }
+
+    override public function closeSubState():Void
+    {
+        super.closeSubState();
+
+        player.loadGraphic("assets/images/skins/" + PlayerData.currentSkin + ".png", true, 50, 50);
+
+        player.animation.add("walking", [8, 9, 10, 11, 12, 13], 14, true);
+        player.animation.play("walking");
     }
 }

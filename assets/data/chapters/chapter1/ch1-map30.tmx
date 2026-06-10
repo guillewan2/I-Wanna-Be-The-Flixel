@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="30" nextobjectid="1175">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="30" nextobjectid="1176">
  <properties>
   <property name="songName" value="rain"/>
  </properties>
@@ -86,7 +86,14 @@
  <objectgroup id="13" name="platform"/>
  <objectgroup id="7" name="trampoline"/>
  <objectgroup id="19" name="trampoline-mini"/>
- <objectgroup id="9" name="spike-normal"/>
+ <objectgroup id="9" name="spike-normal">
+  <object id="1175" name="spike" gid="85" x="100" y="550" width="50" height="50">
+   <properties>
+    <property name="id" value="0"/>
+    <property name="status" value="active"/>
+   </properties>
+  </object>
+ </objectgroup>
  <objectgroup id="27" name="switch-spike">
   <object id="1088" name="switch-spike" gid="85" x="300" y="450" width="50" height="50">
    <properties>

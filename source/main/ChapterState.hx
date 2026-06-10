@@ -24,6 +24,7 @@ import leveldata.deco.*;
 import leveldata.events.*;
 import leveldata.hazards.*;
 import leveldata.misc.*;
+import leveldata.collectibles.*;
 import flixel.addons.effects.FlxTrail;
 
 @:allow(main.RoomLoader)
@@ -31,6 +32,8 @@ import flixel.addons.effects.FlxTrail;
 class ChapterState extends FlxState
 {
     var player:Player;
+    var currentDeaths = PlayerData.totalDeaths;
+    var cameraSnapTimer:Int = 1;
     var playerTrail:FlxTrail;
     var virtualPad:FlxVirtualPad;
     var padScale:Float = 2.5;
@@ -83,6 +86,8 @@ class ChapterState extends FlxState
     public var savesGroup:FlxTypedGroup<SavePoint>;
     public var popups:FlxTypedGroup<FlxText>;
     public var saveParticlesGroup:FlxTypedGroup<FlxEmitter>;
+    public var redCoinParticlesGroup:FlxTypedGroup<FlxEmitter>;
+    public var redCoinsGroup:FlxTypedGroup<RedCoin>;
     public var doubleJumpGroup:FlxTypedGroup<DoubleJumpObj>;
     public var flipGroup:FlxTypedGroup<FlipSwitch>;
     public var portalGroup:FlxTypedGroup<PortalWarp>;
@@ -95,6 +100,7 @@ class ChapterState extends FlxState
     public var dangerObjects:FlxGroup;
     public var slabs:FlxTypedGroup<NormalSlab>;
     public var solidBlock:FlxTypedGroup<SolidBlock>;
+
     public var hud:FlxGroup;
 
     var spikes:FlxGroup;
@@ -133,6 +139,8 @@ override public function create():Void
     savesGroup = new FlxTypedGroup<SavePoint>();
     popups = new FlxTypedGroup<FlxText>();
     saveParticlesGroup = new FlxTypedGroup<FlxEmitter>();
+    redCoinsGroup = new FlxTypedGroup<RedCoin>();
+    redCoinParticlesGroup = new FlxTypedGroup<FlxEmitter>();
     doubleJumpGroup = new FlxTypedGroup<DoubleJumpObj>();
     eventEffectGroup = new FlxTypedGroup();
     flipGroup = new FlxTypedGroup<FlipSwitch>();
@@ -170,7 +178,6 @@ override public function create():Void
     saveAnimation.scrollFactor.set(0,0);
     
     RoomLoader.loadRoom(this, PlayerData.currentRoom);
-
     // FlxG.camera.follow(player, FlxCameraFollowStyle.LOCKON);
 
     switch(PlayerData.currentChapter)
@@ -181,6 +188,8 @@ override public function create():Void
     }
 
     // currentConfig.cacheAssets();
+
+    // FlxG.stage.addEventListener(openfl.events.Event.DEACTIVATE, onFocusLost);
 
     super.create();
 
@@ -224,6 +233,12 @@ override public function update(elapsed:Float):Void
     }
     #end
 
+    if (subState == null)
+    {
+        PlayerData.totalSeconds += elapsed;
+    }
+
+
     super.update(elapsed);
 
     FlxG.collide(player, map);
@@ -232,6 +247,7 @@ override public function update(elapsed:Float):Void
 
     FlxG.overlap(player, warpsGroup, (p, w) -> { HandleWarp(cast w); });
     FlxG.overlap(player, savesGroup, (p, s) -> { SaveLogicSprite(cast s); });
+    FlxG.overlap(player, redCoinsGroup, (p, c) -> { RedCoinLogic(cast c); });
     FlxG.overlap(player, doubleJumpGroup, (p, d) -> { DoubleJumpLogic(cast d); });
     FlxG.overlap(player, portalGroup, (p, pw) -> { PortalWarpLogic(cast pw); });
     FlxG.overlap(player, flipGroup, (p, sw) -> { FlipSwitchObjLogic(cast sw); });
@@ -324,12 +340,25 @@ override public function update(elapsed:Float):Void
     if (spawnTimer > 0) { spawnTimer -= elapsed; }
     
     else
-    { if (FlxG.overlap(player, dangerObjects)) { killPlayer(); } }
+    {
+        FlxG.overlap(player, dangerObjects, function(p:flixel.FlxObject, hazard:flixel.FlxObject)
+        {
+            if (FlxG.pixelPerfectOverlap(player, cast hazard))
+            {
+                killPlayer();
+            }
+        });
+    }
 
     if (PlayerData.saveCooldown > 0)
     {
         PlayerData.saveCooldown -= elapsed;
         if (PlayerData.saveCooldown < 0) PlayerData.saveCooldown = 0;
+    }
+
+    if (timeElapsed != null)
+    {
+        timeElapsed.text = "Time: " + PlayerData.formatTime();
     }
 
     #if !mobile
@@ -340,7 +369,11 @@ override public function update(elapsed:Float):Void
 
         if (FlxG.keys.justPressed.R)
         {
-            PlayerData.totalDeaths++;
+            var currentSeconds = PlayerData.totalSeconds;
+            PlayerData.totalDeaths++; 
+            leveldata.misc.SaveManager.saveGameRestart();
+            leveldata.misc.SaveManager.loadGame();
+            PlayerData.totalSeconds = currentSeconds;
             FlxG.resetState();
         }
 
@@ -396,8 +429,8 @@ override public function update(elapsed:Float):Void
 
     #if !mobile
         if (FlxG.keys.justPressed.ONE) RoomLoader.loadRoom(this, "cameratest");
-        if (FlxG.keys.justPressed.TWO) RoomLoader.loadRoom(this, "map25");
-        if (FlxG.keys.justPressed.THREE) RoomLoader.loadRoom(this, "testing");
+        if (FlxG.keys.justPressed.TWO) RoomLoader.loadRoom(this, "map34");
+        if (FlxG.keys.justPressed.THREE) RoomLoader.loadRoom(this, "map09");
         if (FlxG.keys.justPressed.I) spawnTimer = 9999;
         if (FlxG.keys.justPressed.M)
         {
@@ -414,7 +447,30 @@ override public function update(elapsed:Float):Void
         }
     #end
 
-}
+    if (FlxG.keys.justPressed.P)
+    {
+        trace("--- COIN STATUS ---");
+        trace("Total Coins: " + PlayerData.getCoinCount());
+        trace("IDs in memory: " + PlayerData.collectedCoins);
+    }
+
+    if (cameraType != "normal")
+    {
+            if (cameraSnapTimer >= 0)
+    {
+        if (cameraSnapTimer <= 0)
+        {
+            trace("shit");
+            FlxG.camera.follow(cameraTarget, PLATFORMER, 0.1);
+        }
+
+        trace("Reducing from: " + cameraSnapTimer);
+        cameraSnapTimer -= 1;
+
+    }
+    }
+
+}   
 
 function imgCache():Void
 {
@@ -499,13 +555,7 @@ function HandleWarp(w:WarpTrigger):Void
 function setupHUD():Void
 {
 
-    // timeElapsed = new FlxText(50, 20, 0, "Time: ", 22);
-    // timeElapsed.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
-    // timeElapsed.scrollFactor.set(0, 0);
-    // timeElapsed.scrollFactor.set(0, 0);
-    // add(timeElapsed);
-
-    #if !mobile
+    #if debug
     currentChapter = new FlxText(50, FlxG.height - 90, 0, "Chapter: ", 18);
     currentChapter.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
     currentChapter.scrollFactor.set(0, 0);
@@ -517,21 +567,29 @@ function setupHUD():Void
     lastSave.scrollFactor.set(0, 0);
     lastSave.alpha = 0.5;
     add(hud);
+    #end
 
-    playerDeaths = new FlxText(FlxG.width - 260, FlxG.height - 80, 0, "Total Resets: ", 22);
-    playerDeaths.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
-    playerDeaths.scrollFactor.set(0, 0);
-    playerDeaths.alpha = 0.5;
-    add(hud);
+    #if !mobile
+        playerDeaths = new FlxText(FlxG.width - 260, FlxG.height - 80, 0, "Total Resets: ", 22);
+        playerDeaths.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
+        playerDeaths.scrollFactor.set(0, 0);
+        playerDeaths.alpha = 0.5;
+        add(hud);
     #end
 
     #if mobile
-    playerDeaths = new FlxText(FlxG.width - 260, 30, 0, "Total Deaths: ", 22);
-    playerDeaths.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
-    playerDeaths.scrollFactor.set(0, 0);
-    playerDeaths.alpha = 0.5;
-    add(hud);
+        playerDeaths = new FlxText(FlxG.width - 260, 30, 0, "Total Deaths: ", 22);
+        playerDeaths.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
+        playerDeaths.scrollFactor.set(0, 0);
+        playerDeaths.alpha = 0.5;
+        add(hud);
     #end
+
+    timeElapsed = new FlxText(50, 20, 0, "Time: 00:00:00", 22);
+    timeElapsed.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
+    timeElapsed.scrollFactor.set(0, 0);
+    timeElapsed.visible = false;
+    add(timeElapsed);
 
 }
 
@@ -564,6 +622,24 @@ function SaveLogicSprite(saveObj:SavePoint):Void
     }
 }
 
+function RedCoinLogic(redCoin:RedCoin):Void
+{
+    if (redCoin == null || !redCoin.exists || !redCoin.alive) return;
+    if (redCoin.alive && redCoin.exists)
+    {
+        if (!PlayerData.isCoinCollected(redCoin.coinID))
+        {
+            trace("Pushing coin ID to memory: " + redCoin.coinID);
+            PlayerData.collectedCoins.push(redCoin.coinID);
+        }
+
+        saveAnimation.alpha = 0.5;
+        redCoin.pop(player);
+        trace("Collected coin with ID: " + redCoin.coinID);
+        FlxG.sound.play(AssetPaths.coin__ogg, 0.5, false);
+        redCoin.kill();
+    }
+}
 function DoubleJumpLogic(doublejObj:DoubleJumpObj):Void
 {
     if (doublejObj.alive)
@@ -595,7 +671,7 @@ function FlipSwitchObjLogic(flipSwitchObj:FlipSwitch):Void
 
 function PortalWarpLogic(portalLogic:PortalWarp):Void
 {
-    RoomLoader.loadRoom(this, "map25");
+    RoomLoader.loadRoom(this, "map33");
     FlxG.camera.shake(0.005, 0.25);
     saveAnimation.alpha = 0.5;
     FlxG.sound.play(AssetPaths.warp__ogg, 0.85, false);
@@ -616,7 +692,6 @@ function killPlayer():Void
         PlayerData.saveCooldown = 1.0;
 
         PlayerData.deathX = player.x; PlayerData.deathY = player.y;
-        PlayerData.totalDeaths++;
         playerGlow.visible = false;
 		player.kill();
 		if (playerTrail != null)
@@ -626,7 +701,8 @@ function killPlayer():Void
 
         if (FlxG.sound.music != null) FlxG.sound.music.stop();
 		this.persistentUpdate = true;
-		openSubState(new DeathState());
+        PlayerData.totalDeaths -= 1;
+        openSubState(new DeathState());
     }
 
 }
@@ -762,7 +838,6 @@ function cameraScroll():Void
     }
     else if (cameraType != "normal")
     {
-        FlxG.camera.follow(cameraTarget, PLATFORMER, 0.1);
 
         var cameraMarginX:Float = 0;
         var cameraMarginY:Float = 0;
@@ -802,48 +877,52 @@ function cameraScroll():Void
             FlxG.camera.scroll.set(-260, -265);
         }
     }
+
+    
 }
 
 function layoutVirtualPad():Void
 {
-    if (virtualPad == null) return;
-    var padScale:Float = 2.5;
-    var hitboxPadding:Float = 40;
+        if (virtualPad == null) return;
+        var padScale:Float = 2.5;
+        var hitboxPadding:Float = 40;
 
-    var allButtons = [ virtualPad.getButton(LEFT), virtualPad.getButton(RIGHT), virtualPad.getButton(A)];
-    
-    for (button in allButtons)
-    {
-        if (button == null) continue;
-        button.scale.set(padScale, padScale);
-        button.updateHitbox();
-        button.width += hitboxPadding;
-        button.height += hitboxPadding;
+        var allButtons = [ virtualPad.getButton(LEFT), virtualPad.getButton(RIGHT), virtualPad.getButton(A)];
+        
+        for (button in allButtons)
+        {
+            if (button == null) continue;
+            button.scale.set(padScale, padScale);
+            button.updateHitbox();
+            button.width += hitboxPadding;
+            button.height += hitboxPadding;
 
-        button.offset.x -= hitboxPadding / 2;
-        button.offset.y -= hitboxPadding / 2;
+            button.offset.x -= hitboxPadding / 2;
+            button.offset.y -= hitboxPadding / 2;
 
-        button.scrollFactor.set(0, 0);
-        button.alpha = targetAlpha;
-    }
+            button.scrollFactor.set(0, 0);
+            button.alpha = targetAlpha;
+        }
 
-    if (virtualPad.getButton(LEFT) != null)
-    {
-        virtualPad.getButton(LEFT).x = 100;
-        virtualPad.getButton(LEFT).y = FlxG.height - virtualPad.getButton(LEFT).height - 90;
-    }
+        if (virtualPad.getButton(LEFT) != null)
+        {
+            virtualPad.getButton(LEFT).x = 100;
+            virtualPad.getButton(LEFT).y = FlxG.height - virtualPad.getButton(LEFT).height - 90;
+        }
 
-    if (virtualPad.getButton(RIGHT) != null && virtualPad.getButton(LEFT) != null)
-    {
-        virtualPad.getButton(RIGHT).x = virtualPad.getButton(LEFT).x + virtualPad.getButton(LEFT).width + 40; 
-        virtualPad.getButton(RIGHT).y = virtualPad.getButton(LEFT).y;
-    }
+        if (virtualPad.getButton(RIGHT) != null && virtualPad.getButton(LEFT) != null)
+        {
+            virtualPad.getButton(RIGHT).x = virtualPad.getButton(LEFT).x + virtualPad.getButton(LEFT).width + 40; 
+            virtualPad.getButton(RIGHT).y = virtualPad.getButton(LEFT).y;
+        }
 
-    if (virtualPad.getButton(A) != null)
-    {
-        virtualPad.getButton(A).x = FlxG.width - virtualPad.getButton(A).width - 140;
-        virtualPad.getButton(A).y = FlxG.height - virtualPad.getButton(A).height - 200;
-    }
+        if (virtualPad.getButton(A) != null)
+        {
+            virtualPad.getButton(A).x = FlxG.width - virtualPad.getButton(A).width - 140;
+            virtualPad.getButton(A).y = FlxG.height - virtualPad.getButton(A).height - 200;
+        }
 }
+
+
 
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="29" nextobjectid="1001">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="30" nextobjectid="1015">
  <properties>
   <property name="songName" value="rain"/>
  </properties>
@@ -12,6 +12,7 @@
  <tileset firstgid="112" source="../../textures/trampoline-mini.tsx"/>
  <tileset firstgid="121" source="../../textures/transition-tiles.tsx"/>
  <tileset firstgid="126" source="../../textures/small-spike.tsx"/>
+ <tileset firstgid="130" source="../../textures/coins.tsx"/>
  <layer id="1" name="tiles-main" width="28" height="18">
   <data encoding="csv">
 0,0,0,0,33,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -139,6 +140,15 @@
   <object id="989" name="solid_block" gid="35" x="950" y="250" width="50" height="50"/>
   <object id="990" name="solid_block" gid="35" x="750" y="550" width="50" height="50"/>
   <object id="991" name="solid_block" gid="35" x="1000" y="550" width="50" height="50"/>
+  <object id="1013" name="solid_block" gid="36" x="900" y="250" width="50" height="50"/>
+  <object id="1014" name="solid_block" gid="36" x="850" y="250" width="50" height="50"/>
+ </objectgroup>
+ <objectgroup id="29" name="redCoin">
+  <object id="1001" name="redCoin" gid="134" x="875" y="150" width="50" height="50">
+   <properties>
+    <property name="id" value="TEST4"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="27" name="switch-spike">
   <object id="945" name="switch-spike" gid="85" x="500" y="500" width="50" height="50">
@@ -187,6 +197,54 @@
    <properties>
     <property name="id" value="0"/>
     <property name="status" value="disabled"/>
+   </properties>
+  </object>
+  <object id="1002" name="switch-spike" gid="87" x="500" y="600" width="50" height="50">
+   <properties>
+    <property name="id" value="2"/>
+    <property name="status" value="disabled"/>
+   </properties>
+  </object>
+  <object id="1003" name="switch-spike" gid="87" x="650" y="550" width="50" height="50">
+   <properties>
+    <property name="id" value="2"/>
+    <property name="status" value="active"/>
+   </properties>
+  </object>
+  <object id="1006" name="switch-spike" gid="85" x="650" y="250" width="50" height="50">
+   <properties>
+    <property name="id" value="0"/>
+    <property name="status" value="disabled"/>
+   </properties>
+  </object>
+  <object id="1007" name="switch-spike" gid="85" x="500" y="300" width="50" height="50">
+   <properties>
+    <property name="id" value="0"/>
+    <property name="status" value="active"/>
+   </properties>
+  </object>
+  <object id="1008" name="switch-spike" gid="85" x="850" y="200" width="50" height="50">
+   <properties>
+    <property name="id" value="0"/>
+    <property name="status" value="disabled"/>
+   </properties>
+  </object>
+  <object id="1009" name="switch-spike" gid="85" x="900" y="200" width="50" height="50">
+   <properties>
+    <property name="id" value="0"/>
+    <property name="status" value="disabled"/>
+   </properties>
+  </object>
+  <object id="1010" name="switch-spike" gid="89" x="800" y="200" width="50" height="50">
+   <properties>
+    <property name="id" value="4"/>
+    <property name="status" value="active"/>
+   </properties>
+  </object>
+  <object id="1011" name="switch-spike" gid="89" x="950" y="200" width="50" height="50">
+   <properties>
+    <property name="id" value="4"/>
+    <property name="status" value="active"/>
    </properties>
   </object>
  </objectgroup>

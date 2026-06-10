@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="32" nextobjectid="58">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="34" nextobjectid="71">
  <properties>
   <property name="doubleEffectType" value="dark-cloud"/>
  </properties>
@@ -11,6 +11,8 @@
  <tileset firstgid="96" source="../../textures/misc/portal.tsx"/>
  <tileset firstgid="97" source="../../textures/flip.tsx"/>
  <tileset firstgid="98" source="../../textures/small-spike.tsx"/>
+ <tileset firstgid="102" source="../../textures/coins.tsx"/>
+ <tileset firstgid="110" source="../../textures/save.tsx"/>
  <layer id="1" name="tiles-main" width="28" height="18">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,
@@ -108,6 +110,11 @@
    <property name="effectType" value="fog"/>
   </properties>
  </objectgroup>
+ <objectgroup id="32" name="redCoin">
+  <properties>
+   <property name="id" value="test"/>
+  </properties>
+ </objectgroup>
  <objectgroup id="25" name="foregroundEffect">
   <properties>
    <property name="foregroundEffectType" value="rain"/>
@@ -124,6 +131,7 @@
    <property name="doubleEffectType" value="redMist"/>
   </properties>
  </objectgroup>
+ <objectgroup id="33" name="save"/>
  <objectgroup id="29" name="flip"/>
  <objectgroup id="30" name="small-spike"/>
  <objectgroup id="7" name="spike-normal"/>
@@ -132,7 +140,5 @@
    <property name="songName" value="rain"/>
   </properties>
  </objectgroup>
- <objectgroup id="21" name="portal">
-  <object id="30" name="portal" gid="96" x="810" y="1088" width="128" height="128"/>
- </objectgroup>
+ <objectgroup id="21" name="portal"/>
 </map>

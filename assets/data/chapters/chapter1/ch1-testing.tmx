@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="33" nextobjectid="69">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="34" nextobjectid="83">
  <properties>
   <property name="doubleEffectType" value="dark-cloud"/>
  </properties>
@@ -18,8 +18,8 @@
 9,9,9,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,9,9,9,
 9,9,9,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,9,9,9,
 9,9,9,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,9,9,9,
-9,9,9,8,0,0,0,0,0,0,0,0,49,50,50,50,50,50,50,50,51,0,0,0,8,9,9,9,
-9,9,9,8,0,0,0,0,0,0,0,0,57,58,58,58,58,58,58,58,59,0,0,0,8,9,9,9,
+9,9,9,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,9,9,9,
+9,9,9,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,9,9,9,
 9,9,9,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,9,9,9,
 9,9,9,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,9,9,9,
 9,9,9,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,9,9,9,
@@ -144,7 +144,24 @@
    <property name="doubleEffectType" value="redMist"/>
   </properties>
  </objectgroup>
- <objectgroup id="29" name="flip"/>
+ <objectgroup id="33" name="double_jump">
+  <object id="69" name="doubleJump" gid="95" x="300" y="400" width="32" height="32"/>
+  <object id="70" name="doubleJump" gid="95" x="300" y="550" width="32" height="32"/>
+  <object id="71" name="doubleJump" gid="95" x="400" y="500" width="32" height="32"/>
+  <object id="72" name="doubleJump" gid="95" x="400" y="400" width="32" height="32"/>
+  <object id="73" name="doubleJump" gid="95" x="450" y="400" width="32" height="32"/>
+  <object id="74" name="doubleJump" gid="95" x="400" y="300" width="32" height="32"/>
+  <object id="75" name="doubleJump" gid="95" x="500" y="250" width="32" height="32"/>
+  <object id="76" name="doubleJump" gid="95" x="550" y="350" width="32" height="32"/>
+  <object id="77" name="doubleJump" gid="95" x="550" y="500" width="32" height="32"/>
+  <object id="78" name="doubleJump" gid="95" x="650" y="500" width="32" height="32"/>
+  <object id="79" name="doubleJump" gid="95" x="700" y="400" width="32" height="32"/>
+  <object id="80" name="doubleJump" gid="95" x="900" y="450" width="32" height="32"/>
+  <object id="81" gid="95" x="300" y="0" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup id="29" name="flip">
+  <object id="82" name="flip" gid="97" x="200" y="600" width="32" height="32"/>
+ </objectgroup>
  <objectgroup id="30" name="small-spike"/>
  <objectgroup id="7" name="spike-normal"/>
  <objectgroup id="11" name="music">

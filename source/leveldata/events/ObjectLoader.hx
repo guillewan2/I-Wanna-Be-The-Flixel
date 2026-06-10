@@ -1,5 +1,6 @@
 package leveldata.events;
 
+import leveldata.collectibles.RedCoin;
 import flixel.addons.editors.tiled.TiledLayer;
 import flixel.addons.editors.tiled.TiledMap;
 import flixel.addons.editors.tiled.TiledObjectLayer;
@@ -92,6 +93,16 @@ class ObjectLoader
                                 state.savesGroup.add(save);
                             }
 
+                        case "redCoin":
+                            var id:String = obj.properties.get("id");
+
+                            if (!PlayerData.isCoinCollected(id))
+                            {
+                                var coin = new RedCoin(spawnX, spawnY, id);
+                                state.redCoinsGroup.add(coin);
+                                state.redCoinParticlesGroup.add(coin.particle);
+                            }
+
                         case "doubleJump":
                             var doubleJump = new DoubleJumpObj(spawnX, spawnY);
                             state.doubleJumpGroup.add(doubleJump);
@@ -154,6 +165,7 @@ class ObjectLoader
                             var localID:Int = obj.gid - tileset.firstGID;
                             var solid = new SolidBlock(spawnX, spawnY, localID);
                             state.solidBlock.add(solid);
+
                     }
                 }
             }

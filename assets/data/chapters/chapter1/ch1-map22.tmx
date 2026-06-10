@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="21" nextobjectid="628">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="21" nextobjectid="629">
  <properties>
   <property name="songName" value="rain"/>
  </properties>
@@ -438,11 +438,6 @@
     <property name="direction" value="hoff"/>
    </properties>
   </object>
-  <object id="615" name="laser" gid="107" x="400" y="350" width="50" height="50">
-   <properties>
-    <property name="direction" value="hoff"/>
-   </properties>
-  </object>
   <object id="616" name="laser" gid="107" x="150" y="350" width="50" height="50">
    <properties>
     <property name="direction" value="hoff"/>
@@ -479,6 +474,11 @@
    </properties>
   </object>
   <object id="627" name="laser" gid="93" x="200" y="550" width="50" height="50">
+   <properties>
+    <property name="direction" value="h"/>
+   </properties>
+  </object>
+  <object id="628" name="laser" gid="93" x="400" y="350" width="50" height="50">
    <properties>
     <property name="direction" value="h"/>
    </properties>
