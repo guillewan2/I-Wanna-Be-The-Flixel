@@ -65,7 +65,7 @@ class DeathState extends FlxSubState
         "The Guy deserved better.",
         "IDK just play Minecraft",
         "The Binding Of The Guy...",
-        "You're creepy",
+        "Focus, K",
         "You forgot to survive",
         "Try no hits next time!",
         "Are you sad?",
@@ -73,7 +73,22 @@ class DeathState extends FlxSubState
         ];
 
         var proTip:String = FlxG.random.getObject(tips);
-        FlxG.sound.play(AssetPaths.death_bgm__ogg, 0.5, false);
+
+        if (PlayerData.currentSkin == "boshy")
+        {
+            FlxG.sound.play(AssetPaths.lol_u_died__ogg, 0.75, false);
+        }
+
+        else if (PlayerData.currentSkin == "boyfriend")
+        {
+            FlxG.sound.play(AssetPaths.bf_death__ogg, 0.5, false);
+        }
+
+        else
+        {
+            FlxG.sound.play(AssetPaths.death_bgm__ogg, 0.5, false);
+        }
+
 
         blood = new FlxEmitter(PlayerData.deathX, PlayerData.deathY, 250);
         blood.makeParticles(3, 3, FlxColor.RED, 250);

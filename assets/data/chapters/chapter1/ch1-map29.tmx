@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="80" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="29" nextobjectid="1188">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="80" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="29" nextobjectid="1189">
  <properties>
   <property name="songName" value="rain"/>
  </properties>
@@ -221,6 +221,11 @@
     <property name="id" value="4"/>
    </properties>
   </object>
+  <object id="1188" name="spike" gid="85" x="2950" y="300" width="50" height="50">
+   <properties>
+    <property name="id" value="0"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="28" name="solid_block">
   <object id="1081" name="solid_block" gid="35" x="500" y="400" width="50" height="50"/>
@@ -374,12 +379,6 @@
    <properties>
     <property name="id" value="2"/>
     <property name="status" value="disabled"/>
-   </properties>
-  </object>
-  <object id="1185" name="switch-spike" gid="85" x="2950" y="300" width="50" height="50">
-   <properties>
-    <property name="id" value="0"/>
-    <property name="status" value="active"/>
    </properties>
   </object>
   <object id="1186" name="switch-spike" gid="85" x="3050" y="350" width="50" height="50">

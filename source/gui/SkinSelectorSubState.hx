@@ -18,6 +18,7 @@ typedef SkinData =
     var name:String;
     var assetName:String;
     var unlockAt:Int;
+    @:optional var milestone:String;
 }
 
 class SkinSelectorSubState extends FlxSubState
@@ -33,9 +34,9 @@ class SkinSelectorSubState extends FlxSubState
     var skins:Array<SkinData> =
     [
         {name: "The Kid", assetName: "thekid", unlockAt: 0},
+        {name: "Ginger", assetName: "ginger", unlockAt: 0, milestone: "sewers"},
         {name: "Boyfriend", assetName: "boyfriend", unlockAt: 0},
-        {name: "Ginger", assetName: "ginger", unlockAt: 0},
-        {name: "Boshy", assetName: "boshy", unlockAt: 10},
+        {name: "Boshy", assetName: "boshy", unlockAt: 0},
 
     ];
     
@@ -118,7 +119,15 @@ class SkinSelectorSubState extends FlxSubState
     function updateSelection()
     {
         var skin = skins[curSelected];
-        var isUnlocked = PlayerData.collectedCoins.length >= skin.unlockAt;
+        var isUnlocked:Bool = false;
+        if (skin.milestone != null)
+        {
+            if (skin.milestone == "sewers") isUnlocked = PlayerData.reachedSewers;
+        }
+        else
+        {
+            isUnlocked = PlayerData.collectedCoins.length >= skin.unlockAt;
+        }
 
         skinNameText.text = skin.name;
         skinPreview.loadGraphic("assets/images/skins/" + skin.assetName + ".png", true, 50, 50);
@@ -151,8 +160,19 @@ class SkinSelectorSubState extends FlxSubState
         }
         else
         {
+            trace(skin.milestone);
             skinPreview.color = FlxColor.BLACK;
-            unlockText.text = "Locked: Need " + skin.unlockAt + " Coins";
+
+            if (skin.milestone == "sewers")
+            {
+                unlockText.text = "Reach 'The Sewers'";
+            }
+
+            else
+            {
+                unlockText.text = "Locked: Need " + skin.unlockAt + " Coins";
+            }
+                
             unlockText.color = FlxColor.RED;
             applyBtn.visible = false;
             skinEmitter.visible = false;
@@ -161,43 +181,21 @@ class SkinSelectorSubState extends FlxSubState
         switch (skins[curSelected].assetName)
         {
             case "thekid":
-                skinEmitter.makeParticles(5, 5, FlxColor.WHITE, 50);
                 skinEmitter.color.set(FlxColor.BLUE, FlxColor.RED, FlxColor.BLUE, FlxColor.WHITE);
-                skinEmitter.lifespan.set(0.25, 0.5);
-                skinEmitter.speed.set(200, 500);
-                skinEmitter.launchMode = CIRCLE;
-                skinEmitter.acceleration.set(0, 0); 
-                skinEmitter.drag.set(40, 40);
-                skinEmitter.angularVelocity.set(-300, 300);
-
+                setupParticles();
             case "boyfriend":
-                skinEmitter.makeParticles(5, 5, FlxColor.WHITE, 50);
                 skinEmitter.color.set(FlxColor.BLUE, FlxColor.RED, FlxColor.BLUE, FlxColor.RED);
-                skinEmitter.lifespan.set(0.25, 0.5);
-                skinEmitter.speed.set(200, 500);
-                skinEmitter.launchMode = CIRCLE;
-                skinEmitter.acceleration.set(0, 0); 
-                skinEmitter.drag.set(40, 40);
-                skinEmitter.angularVelocity.set(-300, 300);
-
+                setupParticles();
             case "ginger":
-                skinEmitter.makeParticles(5, 5, FlxColor.WHITE, 50);
                 skinEmitter.color.set(FlxColor.ORANGE, FlxColor.YELLOW, FlxColor.ORANGE, FlxColor.WHITE);
-                skinEmitter.lifespan.set(0.25, 0.5);
-                skinEmitter.speed.set(200, 500);
-                skinEmitter.launchMode = CIRCLE;
-                skinEmitter.acceleration.set(0, 0); 
-                skinEmitter.drag.set(40, 40);
-                skinEmitter.angularVelocity.set(-300, 300);
+                setupParticles();
             case "boshy":
-                skinEmitter.makeParticles(5, 5, FlxColor.WHITE, 50);
                 skinEmitter.color.set(FlxColor.YELLOW, FlxColor.YELLOW, FlxColor.WHITE);
-                skinEmitter.lifespan.set(0.25, 0.5);
-                skinEmitter.speed.set(200, 500);
-                skinEmitter.launchMode = CIRCLE;
-                skinEmitter.acceleration.set(0, 0); 
-                skinEmitter.drag.set(40, 40);
-                skinEmitter.angularVelocity.set(-300, 300);
+                setupParticles();
+            default:
+                skinEmitter.color.set(FlxColor.WHITE);
+                setupParticles();
+
         }
 
         if (!skinEmitter.emitting) 
@@ -227,6 +225,16 @@ class SkinSelectorSubState extends FlxSubState
         for (offset in btn.labelOffsets) { offset.y += 10; }
     }
 
+    function setupParticles():Void
+    {
+        skinEmitter.makeParticles(5, 5, FlxColor.WHITE, 50);
+        skinEmitter.lifespan.set(0.25, 0.5);
+        skinEmitter.speed.set(200, 500);
+        skinEmitter.launchMode = CIRCLE;
+        skinEmitter.acceleration.set(0, 0); 
+        skinEmitter.drag.set(40, 40);
+        skinEmitter.angularVelocity.set(-300, 300);
+    }
     override public function update(elapsed:Float)
     {
         super.update(elapsed);

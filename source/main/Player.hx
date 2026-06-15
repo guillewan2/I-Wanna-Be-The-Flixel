@@ -8,6 +8,8 @@ import flixel.tweens.FlxTween;
 import flixel.ui.FlxVirtualPad;
 import flixel.util.FlxColor;
 import flixel.util.FlxDirectionFlags;
+import flixel.input.gamepad.FlxGamepad;
+import flixel.input.gamepad.FlxGamepadInputID;
 
 class Player extends FlxSprite
 {
@@ -207,6 +209,7 @@ class Player extends FlxSprite
         inputRight = false;
         inputJump = false;
         inputJumpReleased = false;
+        var gamepad:FlxGamepad = FlxG.gamepads.lastActive;
 
         #if !mobile
         inputLeft = FlxG.keys.anyPressed([LEFT, A]);
@@ -214,11 +217,23 @@ class Player extends FlxSprite
         inputJump = FlxG.keys.anyJustPressed([SPACE, UP, W]) || FlxG.mouse.justPressed;
         inputJumpReleased = FlxG.keys.anyJustReleased([SPACE, UP, W]) || FlxG.mouse.justReleased;
         #else
+
+        if (gamepad != null)
+        {
+            inputLeft = gamepad.pressed.DPAD_LEFT || gamepad.analog.value.LEFT_STICK_X < -0.25;
+            inputRight = gamepad.pressed.DPAD_RIGHT || gamepad.analog.value.LEFT_STICK_X > 0.25;
+
+            inputJump = gamepad.justPressed.A;
+            inputJumpReleased = gamepad.justReleased.A;
+
+        }
+        #if mobile
         if (pad != null)
         {
             inputLeft = pad.buttonLeft.pressed;
             inputRight = pad.buttonRight.pressed;
         }
+        #end
 
         for (touch in FlxG.touches.list)
         {

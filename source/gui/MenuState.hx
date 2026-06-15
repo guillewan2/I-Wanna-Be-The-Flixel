@@ -137,7 +137,7 @@ class MenuState extends FlxState
         add(versionText);
 
         btnNewGame = new FlxButton(150, 250, "New Game", clickNewGame);
-        customizeButton(btnNewGame);
+        customizeNewGame(btnNewGame);
         add(btnNewGame);
 
         btnContinue = new FlxButton(150, 350, "Continue", clickContinue);
@@ -258,6 +258,73 @@ class MenuState extends FlxState
             
         };
     }
+
+    function customizeNewGame(btn:FlxButton):Void
+    {
+        var w:Int = 250;
+        var h:Int = 60;
+
+        btn.loadGraphic(AssetPaths.buttonNewGame__png, false, w, h);
+
+        if (btn.label != null) 
+        {
+            btn.label.setFormat(null, 28, FlxColor.WHITE, CENTER);
+            btn.label.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
+
+            btn.label.fieldWidth = w;
+            btn.label.alignment = CENTER;
+
+            for (offset in btn.labelOffsets)
+            {
+                offset.y += 10;
+            }
+
+            btn.label.centerOrigin();
+            btn.label.centerOffsets();
+
+            
+        }
+
+        btn.onOver.callback = function()
+        {
+            openfl.ui.Mouse.cursor = MouseCursor.BUTTON;
+
+            FlxTween.tween(btn.label.scale, {x: 1.1, y: 1.1}, 0.05, {ease: FlxEase.quadOut});
+            FlxTween.tween(btn.scale, {x: 1.1, y: 1.1}, 0.05, {ease: FlxEase.quadOut});
+
+            var btnTwn = FlxTween.angle(btn, -5, 5, 0.6, {type: PINGPONG, ease: FlxEase.sineInOut});
+            var txtTwn = FlxTween.angle(btn.label, -5, 5, 0.6, {type: PINGPONG, ease: FlxEase.sineInOut});
+
+            activeTweens.set(btn, btnTwn);
+            activeLabelTweens.set(btn.label, txtTwn);
+            FlxG.sound.play(AssetPaths.trigger__ogg, 0.1, false);
+        };
+
+        btn.onOut.callback = function()
+        {
+            openfl.ui.Mouse.cursor = MouseCursor.ARROW;
+
+            FlxTween.tween(btn.label.scale, {x: 1.0, y: 1.0}, 0.05, {ease: FlxEase.quadIn});
+            FlxTween.tween(btn.scale, {x: 1.0, y: 1.0}, 0.05, {ease: FlxEase.quadIn});
+
+            if (activeTweens.exists(btn))
+            {
+                activeTweens.get(btn).cancel();
+                activeTweens.remove(btn);
+            }
+
+            if (activeLabelTweens.exists(btn.label))
+            {
+                activeLabelTweens.get(btn.label).cancel();
+                activeLabelTweens.remove(btn.label);
+            }
+
+            FlxTween.tween(btn, {angle: 0}, 0.1, {ease: FlxEase.quadOut});
+            FlxTween.tween(btn.label, {angle: 0}, 0.1, {ease: FlxEase.quadOut});
+            
+        };
+    }
+
     function customizeExit(btn:FlxButton):Void
     {
         var w:Int = 250;

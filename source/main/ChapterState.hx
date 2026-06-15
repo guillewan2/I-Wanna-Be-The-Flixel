@@ -429,7 +429,7 @@ override public function update(elapsed:Float):Void
 
     #if !mobile
         if (FlxG.keys.justPressed.ONE) RoomLoader.loadRoom(this, "cameratest");
-        if (FlxG.keys.justPressed.TWO) RoomLoader.loadRoom(this, "map34");
+        if (FlxG.keys.justPressed.TWO) RoomLoader.loadRoom(this, "map35");
         if (FlxG.keys.justPressed.THREE) RoomLoader.loadRoom(this, "map09");
         if (FlxG.keys.justPressed.I) spawnTimer = 9999;
         if (FlxG.keys.justPressed.M)
@@ -456,18 +456,19 @@ override public function update(elapsed:Float):Void
 
     if (cameraType != "normal")
     {
-            if (cameraSnapTimer >= 0)
-    {
-        if (cameraSnapTimer <= 0)
+        if (cameraSnapTimer >= 0)
         {
-            trace("shit");
-            FlxG.camera.follow(cameraTarget, PLATFORMER, 0.1);
+            if (cameraSnapTimer <= 0)
+            {
+                FlxG.camera.follow(cameraTarget, PLATFORMER, 0.1);
+                return;
+            }
+
+            FlxG.camera.follow(cameraTarget, PLATFORMER, 1);
+            trace("Reducing from: " + cameraSnapTimer);
+            cameraSnapTimer -= 1;
+
         }
-
-        trace("Reducing from: " + cameraSnapTimer);
-        cameraSnapTimer -= 1;
-
-    }
     }
 
 }   

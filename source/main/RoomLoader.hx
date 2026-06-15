@@ -31,6 +31,19 @@ class RoomLoader
         #end
 
         state.currentRoomName = roomName;
+
+        /* Character Unlocks */
+        if (roomName == "map25" && PlayerData.currentChapter == 1)
+        {
+            if (!PlayerData.reachedSewers)
+            {
+                PlayerData.reachedSewers = true;
+                trace("Sewers reached! Skin Unlocked.");
+            }
+        }
+
+        // ##########################
+
         state.tiledData = new TiledMap(chartPath);
 
         if (state.map != null) { state.remove(state.map); state.map.destroy(); }
@@ -152,6 +165,7 @@ class RoomLoader
         state.add(state.playerGlow);
         state.add(state.eventEffectGroup);
         state.add(state.hud);
+        state.cameraSnapTimer = 1;
 
         state.savesGroup.forEach(function(save:SavePoint)
         {

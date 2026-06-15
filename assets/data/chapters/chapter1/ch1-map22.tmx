@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="21" nextobjectid="629">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="21" nextobjectid="630">
  <properties>
   <property name="songName" value="rain"/>
  </properties>
@@ -18,9 +18,9 @@
 0,0,7,0,0,0,7,0,0,7,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,4,26,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,4,26,26,4,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,4,26,26,4,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,7,0,0,0,7,0,0,7,26,26,4,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,7,6,6,7,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,
+0,0,0,0,0,0,0,0,0,4,26,26,4,1,1,1,0,1,1,1,0,0,0,0,0,0,0,0,
+0,0,7,0,0,0,7,0,0,7,26,26,4,0,0,1,1,1,0,1,1,0,1,1,1,0,0,0,
+0,0,0,0,0,0,0,0,0,7,6,6,7,0,0,0,0,0,0,0,1,1,1,0,1,1,1,1,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,7,5,5,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,7,0,0,0,7,0,0,7,26,26,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -40,8 +40,8 @@
 0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,9,9,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,9,9,9,9,9,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,9,9,9,9,9,9,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,9,9,9,9,9,9,9,9,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,9,9,9,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,26,26,26,26,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -143,11 +143,6 @@
     <property name="id" value="6"/>
    </properties>
   </object>
-  <object id="578" name="spike" gid="91" x="1150" y="450" width="50" height="50">
-   <properties>
-    <property name="id" value="6"/>
-   </properties>
-  </object>
   <object id="579" name="spike" gid="91" x="1300" y="450" width="50" height="50">
    <properties>
     <property name="id" value="6"/>
@@ -163,11 +158,6 @@
     <property name="id" value="6"/>
    </properties>
   </object>
-  <object id="582" name="spike" gid="91" x="900" y="400" width="50" height="50">
-   <properties>
-    <property name="id" value="6"/>
-   </properties>
-  </object>
   <object id="583" name="spike" gid="91" x="700" y="350" width="50" height="50">
    <properties>
     <property name="id" value="6"/>
@@ -175,6 +165,11 @@
   </object>
   <object id="609" name="trampoline" gid="81" x="900" y="550" width="50" height="50"/>
   <object id="625" name="trampoline" gid="81" x="1250" y="650" width="50" height="50"/>
+  <object id="629" name="spike" gid="91" x="1150" y="400" width="50" height="50">
+   <properties>
+    <property name="id" value="6"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup id="8" name="save"/>
  <objectgroup id="10" name="laser">

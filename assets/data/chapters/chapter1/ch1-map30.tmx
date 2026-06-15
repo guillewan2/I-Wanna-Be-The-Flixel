@@ -175,11 +175,6 @@
     <property name="direction" value="hoff"/>
    </properties>
   </object>
-  <object id="1158" name="laser" gid="107" x="750" y="100" width="50" height="50">
-   <properties>
-    <property name="direction" value="hoff"/>
-   </properties>
-  </object>
   <object id="1161" name="laser" gid="107" x="750" y="550" width="50" height="50">
    <properties>
     <property name="direction" value="hoff"/>

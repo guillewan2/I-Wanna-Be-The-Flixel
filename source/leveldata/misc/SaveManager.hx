@@ -24,6 +24,9 @@ class SaveManager
         save.data.vSync = PlayerData.vSync;
         save.data.showFPS = PlayerData.showFPS;
 
+        /* Character Unlocks */
+        save.data.reachedSewers = PlayerData.reachedSewers;
+
         if (PlayerData.collectedCoins != null)
         {
             save.data.collectedCoins = [for (coin in PlayerData.collectedCoins) coin];
@@ -59,10 +62,14 @@ class SaveManager
             PlayerData.totalDeaths = save.data.deaths;
             PlayerData.spawnX = save.data.spawnX;
             PlayerData.spawnY = save.data.spawnY;
+            
 
             if (save.data.antialiasing != null) PlayerData.antialiasing = save.data.antialiasing;
             if (save.data.vSync != null) PlayerData.vSync = save.data.vSync;
             if (save.data.showFPS != null) PlayerData.showFPS = save.data.showFPS;
+
+            /* Character Unlock */
+            if (save.data.reachedSewers != null) PlayerData.reachedSewers = save.data.reachedSewers;
 
             if (save.data == null) 
             {
@@ -114,6 +121,9 @@ class SaveManager
         PlayerData.collectedCoins = [];
         PlayerData.totalSeconds = 0;
         PlayerData.currentSkin = "thekid";
+
+        /* Character Unlocks */
+        PlayerData.reachedSewers = false;
         saveGame(); 
     }
 }

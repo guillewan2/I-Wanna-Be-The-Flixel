@@ -24,6 +24,10 @@ class PlayerData
     public static var isRespawning:Bool = false;
     public static var saveCooldown:Float = 0;
 
+    /* Character Unlocks */
+    public static var reachedSewers:Bool = false;
+
+
     public static function isCoinCollected(id:String):Bool
     {
         return collectedCoins.indexOf(id) != -1;

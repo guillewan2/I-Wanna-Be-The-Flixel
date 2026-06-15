@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="40" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="30" nextobjectid="1224">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="40" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="30" nextobjectid="1229">
  <properties>
   <property name="songName" value="rain"/>
  </properties>
@@ -160,17 +160,6 @@
     <property name="status" value="active"/>
    </properties>
   </object>
-  <object id="1142" name="spike" gid="91" x="1450" y="250" width="50" height="50">
-   <properties>
-    <property name="id" value="6"/>
-    <property name="status" value="active"/>
-   </properties>
-  </object>
-  <object id="1143" name="spike" gid="92" x="1450" y="250" width="50" height="50">
-   <properties>
-    <property name="status" value="active"/>
-   </properties>
-  </object>
   <object id="1145" name="spike" gid="92" x="1450" y="350" width="50" height="50">
    <properties>
     <property name="status" value="active"/>
@@ -266,8 +255,10 @@
   <object id="1192" name="solid_block" gid="36" x="1600" y="350" width="50" height="50"/>
   <object id="1193" name="solid_block" gid="36" x="1650" y="550" width="50" height="50"/>
   <object id="1207" name="solid_block" gid="36" x="500" y="400" width="50" height="50"/>
+  <object id="1224" name="solid_block" gid="36" x="1450" y="200" width="50" height="50"/>
+  <object id="1225" name="solid_block" gid="33" x="1500" y="250" width="50" height="50"/>
  </objectgroup>
- <objectgroup id="29" name="redCoin">
+ <objectgroup id="29" name="redCoin" visible="0">
   <object id="1208" name="redCoin" gid="134" x="1450" y="250" width="50" height="50">
    <properties>
     <property name="id" value="TEST5"/>
@@ -411,6 +402,18 @@
    <properties>
     <property name="id" value="0"/>
     <property name="status" value="active"/>
+   </properties>
+  </object>
+  <object id="1142" name="spike" gid="91" x="1450" y="250" width="50" height="50">
+   <properties>
+    <property name="id" value="6"/>
+    <property name="status" value="disabled"/>
+   </properties>
+  </object>
+  <object id="1143" name="spike" gid="92" x="1450" y="250" width="50" height="50">
+   <properties>
+    <property name="id" value="7"/>
+    <property name="status" value="disabled"/>
    </properties>
   </object>
  </objectgroup>

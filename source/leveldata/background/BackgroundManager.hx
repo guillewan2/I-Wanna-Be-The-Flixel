@@ -200,7 +200,7 @@ public static function bgEffectDouble(state:ChapterState, tiledData:TiledMap):Vo
                 case "redMist":
                     state.doubleEffectObj = new FlxBackdrop(AssetPaths.redMist__png, X);
                     state.doubleEffectObj.velocity.set(-10, 0);
-                    state.doubleEffectObj.alpha = 0.1;
+                    state.doubleEffectObj.alpha = 0.15;
             }
 
             // Apply properties ONLY if the switch actually created a new object
