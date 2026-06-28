@@ -100,11 +100,15 @@ public function flipGravity():Void
     // Reset vertical velocity instantly
     velocity.y = 0;
 
+    // Set the facing flips to handle flipY correctly based on isFlipped
+    setFacingFlip(LEFT, true, isFlipped);
+    setFacingFlip(RIGHT, false, isFlipped);
+
     // Set the visual inversion instantly
     flipY = isFlipped;
 
     // Adjust offsets smoothly so the player doesn't clip into the ground/ceiling
-    var targetOffsetY:Float = isFlipped ? (height - 10) : baseOffsetY; 
+    var targetOffsetY:Float = isFlipped ? 0 : baseOffsetY; 
 
     FlxTween.tween(this.offset, { y: targetOffsetY }, 0.2, { ease: FlxEase.sineInOut });
 }
@@ -146,14 +150,14 @@ public function flipGravity():Void
         { 
             acceleration.x = -1500; 
             facing = LEFT;
-            offset.set(10, 20);
+            offset.x = 10;
             isFacingRIGHT = false;
         }
         else if (right) 
         { 
             acceleration.x = 1500; 
             facing = RIGHT;
-            offset.set(20, 20);
+            offset.x = 20;
             isFacingRIGHT = true;
         }
 
@@ -282,5 +286,12 @@ public function flipGravity():Void
             }
         }
         #end
+
+        if (isFlipped)
+        {
+            var temp = inputLeft;
+            inputLeft = inputRight;
+            inputRight = temp;
+        }
     }
 }
