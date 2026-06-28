@@ -1,5 +1,8 @@
 package gui;
 
+import openfl.media.Sound;
+import flixel.sound.FlxSound;
+import main.mods.ModLoader;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
@@ -72,7 +75,12 @@ class MenuState extends FlxState
         add(bg);
 
         player = new FlxSprite();
-        player.loadGraphic("assets/images/skins/" + PlayerData.currentSkin + ".png", true, 50, 50);
+        var skinPath = ModLoader.getAsset("images/skins/" + PlayerData.currentSkin + ".png");
+        #if sys
+        player.loadGraphic(openfl.display.BitmapData.fromFile(skinPath), true, 50, 50);
+        #else
+        player.loadGraphic(skinPath, true, 50, 50);
+        #end
         player.animation.add("walking", [8, 9, 10, 11, 12, 13], 14, true);
         player.animation.play("walking");
         player.scale.set(1.2, 1.2);
@@ -426,18 +434,40 @@ class MenuState extends FlxState
 
     function playMenuMusic():Void
     {
+        #if sys
+        var musicPath = ModLoader.getAsset("music/mainMenu.ogg");
+        trace("Music Path: " + musicPath);
+
+        var sound = Sound.fromFile(musicPath);
+
+        if (sound == null)
+        {
+            return;
+        }
+
+        FlxG.sound.music = new FlxSound();
+        FlxG.sound.music.loadEmbedded(sound, true, false);
+        FlxG.sound.music.volume = 0.7;
+        FlxG.sound.music.play();
+        #else
         if (FlxG.sound.music == null || !FlxG.sound.music.playing)
         {
             FlxG.sound.playMusic(AssetPaths.mainMenu__ogg, 0.7, true);
         }
-            
+        #end
+
     }
 
     override public function closeSubState():Void
     {
         super.closeSubState();
 
-        player.loadGraphic("assets/images/skins/" + PlayerData.currentSkin + ".png", true, 50, 50);
+        var skinPath = ModLoader.getAsset("images/skins/" + PlayerData.currentSkin + ".png");
+        #if sys
+        player.loadGraphic(openfl.display.BitmapData.fromFile(skinPath), true, 50, 50);
+        #else
+        player.loadGraphic(skinPath, true, 50, 50);
+        #end
 
         player.animation.add("walking", [8, 9, 10, 11, 12, 13], 14, true);
         player.animation.play("walking");

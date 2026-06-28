@@ -10,6 +10,9 @@ import flixel.util.FlxColor;
 import flixel.util.FlxDirectionFlags;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
+import main.mods.ModLoader;
+import openfl.display.BitmapData;
+
 
 class Player extends FlxSprite
 {
@@ -22,6 +25,7 @@ class Player extends FlxSprite
     public var currentOffsetY:Float = 20;
 
     public var isFlipped:Bool = false; 
+    static var baseOffsetY:Null<Float> = null;
     var tapTimer:Float = 0;
     var tapCount:Int = 0;
     var idleTimer:Float = 1;
@@ -42,8 +46,21 @@ class Player extends FlxSprite
     public function new(x:Float, y:Float)
     {
         super(x, y);
-        var skinPath = "assets/images/skins/" + PlayerData.currentSkin + ".png";
+        var skinPath = ModLoader.getAsset("images/skins/" + PlayerData.currentSkin + ".png");
+        var bmp = BitmapData.fromFile(skinPath);
 
+        if (bmp == null)
+        {
+            trace("FAILED TO LOAD MOD SPRITE: " + skinPath);
+            loadGraphic(AssetPaths.thekid__png, true, 50, 50);
+        }
+        else
+        {
+            loadGraphic(bmp, true, 50, 50);
+        }
+
+        trace("Loading: " + skinPath);
+        // trace("Exists: " + FileSystem.exists(skinPath));
         loadGraphic(skinPath, true, 50, 50);
         animation.add("idle", [0, 1, 2, 3], 11, true);
         animation.add("jumpUp", [6], 16, false);
@@ -70,19 +87,27 @@ class Player extends FlxSprite
         doubleJumpEffect.launchMode = CIRCLE;
     }
 
-    public function flipGravity():Void
-    {
-        isFlipped = !isFlipped;
-        velocity.y = 0;
-        var targetAngle:Float = isFlipped ? 180 : 0;
-        var targetOffset:Float = isFlipped ? 0 : 20;
-        offset.set(10, 0);
-        FlxTween.tween(this, {angle: targetAngle, currentOffsetY: targetOffset}, 0.5,
-        {
-            ease: FlxEase.sineInOut
-        });
+public function flipGravity():Void
+{
+    // Toggle the flip state exactly ONCE
+    isFlipped = !isFlipped;
 
+    // First time running, save the player's default factory offset
+    if (baseOffsetY == null) {
+        baseOffsetY = offset.y;
     }
+
+    // Reset vertical velocity instantly
+    velocity.y = 0;
+
+    // Set the visual inversion instantly
+    flipY = isFlipped;
+
+    // Adjust offsets smoothly so the player doesn't clip into the ground/ceiling
+    var targetOffsetY:Float = isFlipped ? (height - 10) : baseOffsetY; 
+
+    FlxTween.tween(this.offset, { y: targetOffsetY }, 0.2, { ease: FlxEase.sineInOut });
+}
 
     override public function update(elapsed:Float):Void
     {
@@ -183,15 +208,14 @@ class Player extends FlxSprite
         }
 
         var isMovingUp = isFlipped ? (velocity.y > 0) : (velocity.y < 0);
-
         if (inputJumpReleased && isMovingUp)
         {
             velocity.y *= 0.8;
             animationJumpDown = true;
             animationJumpUp = false;
         }
-
-        else if (!isTouching(DOWN) && Math.abs(velocity.y) > 50) 
+        // FIX: Use floorDir instead of DOWN so it knows you're in the air when upside down
+        else if (!isTouching(floorDir) && Math.abs(velocity.y) > 50) 
         {
             if (isMovingUp) animation.play("jumpUp");
             else animation.play("jumpDown");

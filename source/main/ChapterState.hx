@@ -1,5 +1,7 @@
 package main;
 
+import flixel.sound.FlxSound;
+import openfl.media.Sound;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -26,6 +28,7 @@ import leveldata.hazards.*;
 import leveldata.misc.*;
 import leveldata.collectibles.*;
 import flixel.addons.effects.FlxTrail;
+import main.mods.ModLoader;
 
 @:allow(main.RoomLoader)
 @:allow(leveldata.events.EventLoader)
@@ -178,7 +181,7 @@ override public function create():Void
     saveAnimation.scrollFactor.set(0,0);
     
     RoomLoader.loadRoom(this, PlayerData.currentRoom);
-    // FlxG.camera.follow(player, FlxCameraFollowStyle.LOCKON);
+    // ;
 
     switch(PlayerData.currentChapter)
     {
@@ -423,14 +426,27 @@ override public function update(elapsed:Float):Void
     }
     #end
 
-    #if !debug
-        if (player.x > map.width || player.y > map.height - 50) killPlayer();
-    #end
+    if (player.x > map.width + 100 || player.y > map.height + 100) 
+    {
+        killPlayer();
+    }
+
+    if (FlxG.keys.justPressed.T)
+    {
+        trace("PLAYER X: " + player.x + " ||| PLAYER Y: " + player.y);
+    }
+
+    if (FlxG.keys.justPressed.Y)
+    {
+        trace("MAP WIDTH: " + map.width);
+        trace("MAP HEIGHT: " + map.height);
+    }
+    
 
     #if !mobile
-        if (FlxG.keys.justPressed.ONE) RoomLoader.loadRoom(this, "cameratest");
-        if (FlxG.keys.justPressed.TWO) RoomLoader.loadRoom(this, "map35");
-        if (FlxG.keys.justPressed.THREE) RoomLoader.loadRoom(this, "map09");
+        if (FlxG.keys.justPressed.ONE) RoomLoader.loadRoom(this, "testing");
+        if (FlxG.keys.justPressed.TWO) RoomLoader.loadRoom(this, "map12");
+        if (FlxG.keys.justPressed.THREE) RoomLoader.loadRoom(this, "map37");
         if (FlxG.keys.justPressed.I) spawnTimer = 9999;
         if (FlxG.keys.justPressed.M)
         {
@@ -465,7 +481,6 @@ override public function update(elapsed:Float):Void
             }
 
             FlxG.camera.follow(cameraTarget, PLATFORMER, 1);
-            trace("Reducing from: " + cameraSnapTimer);
             cameraSnapTimer -= 1;
 
         }
@@ -531,15 +546,35 @@ function HandleWarp(w:WarpTrigger):Void
         PlayerData.currentChapter = Std.parseInt(w.newChapter);
     }
 
-    RoomLoader.loadRoom(this,w.targetRoom);
+    var oldWidth:Float = map.width;
+    var relativeX:Float = player.x - map.x;
+
+    RoomLoader.loadRoom(this, w.targetRoom);
 
     switch (w.direction)
     {
-        case "up":    player.y = FlxG.height - player.height - 10;
-        case "down":  player.y = 10;
-        case "left":  player.x = map.width - 140;
-        case "right": player.x = 10;
+        case "up":
+            player.y = map.y + map.height - player.height - 60; 
+            var widthDiff = oldWidth - map.width;
+            player.x = (map.x + relativeX) - widthDiff;
+
+        case "down":
+            player.y = map.y + 60;
+
+            // TODO: Hacer lo mismo que con el up
+
+        case "left":
+            player.x = map.x + map.width - player.width - 60;
+
+        case "right":
+            player.x = map.x + 60;
     }
+
+    var minX:Float = map.x + 20; 
+    var maxX:Float = map.x + map.width - player.width - 20;
+
+    if (player.x < minX) player.x = minX;
+    if (player.x > maxX) player.x = maxX;
 
     if (cameraTarget != null && cameraType != "normal")
     {
@@ -548,9 +583,9 @@ function HandleWarp(w:WarpTrigger):Void
         
         if (cameraType == "unlockX") cameraTarget.y = FlxG.height / 2;
         else cameraTarget.y = player.y;
-
-        FlxG.camera.focusOn(cameraTarget.getPosition());
     }
+    
+    spawnTimer = 0.15; 
 }
 
 function setupHUD():Void
@@ -652,22 +687,18 @@ function DoubleJumpLogic(doublejObj:DoubleJumpObj):Void
 
 function FlipSwitchObjLogic(flipSwitchObj:FlipSwitch):Void
 {
-    if (flipSwitchObj.alive)
-    {
-        flipSwitchObj.kill(); 
-        FlxG.sound.play(AssetPaths.flip__ogg);
-        player.flipGravity();
+    if (!flipSwitchObj.alive) return;
 
-        var targetAngle:Float = (FlxG.camera.angle % 360 == 0) ? 180 : 0;
+    flipSwitchObj.kill();
+    FlxG.sound.play(AssetPaths.flip__ogg);
 
-        FlxTween.tween(FlxG.camera, {angle: targetAngle}, 0.5,
-        {
-            ease: FlxEase.sineIn
-        });
+    player.flipGravity();
 
-        player.acceleration.y = -player.acceleration.y;
-        player.flipY = !player.flipY;
-    }
+    FlxTween.tween(FlxG.camera, {
+        angle: player.isFlipped ? 180 : 0
+    }, 0.5, {
+        ease: FlxEase.sineInOut
+    });
 }
 
 function PortalWarpLogic(portalLogic:PortalWarp):Void
@@ -735,16 +766,22 @@ function initLoopPoints():Void
 
 function updateMusic():Void
 {
+    #if sys
     var musicLayer = tiledData.getLayer("music");
     if (musicLayer == null) return;
 
     var songName:String = musicLayer.properties.get("songName");
-    var songPath = "assets/music/chapters/chapter" + PlayerData.currentChapter + "bgm/" + songName + ".ogg";
 
-    initLoopPoints();    
+    var basePath:String = "music/chapters/chapter" + PlayerData.currentChapter + "bgm/" + songName + ".ogg";
+
+    var songPath:String = ModLoader.getAsset(basePath);
+    trace("Music Path: " + songPath);
+
+    initLoopPoints();
+
     var loopStartMs:Float = 0;
-    
-    if (loopPoints.exists(songName)) 
+
+    if (loopPoints.exists(songName))
     {
         loopStartMs = loopPoints.get(songName) * 1000;
     }
@@ -756,11 +793,30 @@ function updateMusic():Void
             FlxG.sound.music.time = PlayerData.lastMusicTime;
             PlayerData.isRespawning = false;
         }
-        return; 
+        return;
     }
 
     PlayerData.currentSong = songPath;
-    FlxG.sound.playMusic(songPath, 0.5, true);
+
+    var musicPath = ModLoader.getAsset(basePath);
+
+    var sound = Sound.fromFile(musicPath);
+
+    if (sound == null)
+    {
+        trace("FAILED MUSIC: " + musicPath);
+        return;
+    }
+
+    if (FlxG.sound.music != null)
+    {
+        FlxG.sound.music.stop();
+    }
+
+    FlxG.sound.music = new FlxSound();
+    FlxG.sound.music.loadEmbedded(sound, true, false);
+    FlxG.sound.music.volume = 0.5;
+    FlxG.sound.music.play();
 
     if (FlxG.sound.music != null)
     {
@@ -772,6 +828,39 @@ function updateMusic():Void
         FlxG.sound.music.time = PlayerData.lastMusicTime;
         PlayerData.isRespawning = false;
     }
+
+    #else
+		var musicLayer = tiledData.getLayer("music");
+		if (musicLayer == null) return;
+		var songName:String = musicLayer.properties.get("songName");
+		var songPath = "assets/music/chapters/chapter" + PlayerData.currentChapter + "bgm/" + songName + ".ogg";
+		initLoopPoints();
+		var loopStartMs:Float = 0;
+		if (loopPoints.exists(songName))
+		{
+			loopStartMs = loopPoints.get(songName) * 1000;
+		}
+		if (PlayerData.currentSong == songPath && FlxG.sound.music != null && FlxG.sound.music.playing)
+		{
+			if (PlayerData.isRespawning)
+			{
+				FlxG.sound.music.time = PlayerData.lastMusicTime;
+				PlayerData.isRespawning = false;
+			}
+			return;
+		}
+		PlayerData.currentSong = songPath;
+		FlxG.sound.playMusic(songPath, 0.5, true);
+		if (FlxG.sound.music != null)
+		{
+			FlxG.sound.music.loopTime = loopStartMs;
+		}
+		if (PlayerData.isRespawning)
+		{
+			FlxG.sound.music.time = PlayerData.lastMusicTime;
+			PlayerData.isRespawning = false;
+		}
+    #end
 }
 
 function autoScroll():Void
@@ -823,6 +912,11 @@ function cameraScroll():Void
     {
         FlxG.camera.setScrollBoundsRect(map.x + 60, map.y + 65, map.width - 120, map.height + 65, false);
         FlxG.worldBounds.set(map.x - 200, map.y - 200, map.width + 400, map.height + 400);
+    }
+
+    else if (map != null && cameraType == "debug")
+    {
+        FlxG.camera.follow(player, FlxCameraFollowStyle.LOCKON);
     }
 
     if (cameraTarget == null)

@@ -117,7 +117,7 @@
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="9" name="spike-normal">
+ <objectgroup id="9" name="spike-normal" visible="0">
   <object id="1125" name="spike" gid="85" x="1100" y="350" width="50" height="50">
    <properties>
     <property name="id" value="0"/>
@@ -258,14 +258,14 @@
   <object id="1224" name="solid_block" gid="36" x="1450" y="200" width="50" height="50"/>
   <object id="1225" name="solid_block" gid="33" x="1500" y="250" width="50" height="50"/>
  </objectgroup>
- <objectgroup id="29" name="redCoin" visible="0">
+ <objectgroup id="29" name="redCoin">
   <object id="1208" name="redCoin" gid="134" x="1450" y="250" width="50" height="50">
    <properties>
     <property name="id" value="TEST5"/>
    </properties>
   </object>
  </objectgroup>
- <objectgroup id="27" name="switch-spike">
+ <objectgroup id="27" name="switch-spike" visible="0">
   <object id="1117" name="switch-spike" gid="86" x="700" y="400" width="50" height="50">
    <properties>
     <property name="id" value="1"/>

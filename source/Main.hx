@@ -4,6 +4,7 @@ import openfl.display.Sprite;
 // import main.ChapterState;
 import main.DebugState;
 import gui.MenuState;
+import main.mods.ModLoader;
 import openfl.Lib;
 
 class Main extends Sprite
@@ -24,13 +25,20 @@ class Main extends Sprite
 		var skipSplash:Bool = true;
 		var startFullscreen:Bool = false;
 
+		#if !html5
+		trace("======= ModLoader Active =======");
+		ModLoader.init();
+		trace("======= ModLoader Fin =======");
+		#end
+
 		#if html5
 			var document = js.Browser.document;
 			document.addEventListener("contextmenu", function(event:js.html.Event) { event.preventDefault(); });
 		#end
 		
 		#if !debug
-		addChild(new FlxGame(gameWidth, gameHeight, initialState, updateFramerate, drawFramerate, skipSplash, startFullscreen));
+			
+			addChild(new FlxGame(gameWidth, gameHeight, initialState, updateFramerate, drawFramerate, skipSplash, startFullscreen));
 			flixel.FlxG.fixedTimestep = true;
 		#end
 

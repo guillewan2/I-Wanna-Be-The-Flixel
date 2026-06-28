@@ -1,5 +1,7 @@
 package leveldata.background;
 
+import openfl.display.BitmapData;
+import main.mods.ModLoader;
 import main.ChapterState;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -41,21 +43,34 @@ class BackgroundManager
         if (bgLayer == null || !bgLayer.properties.contains("bgName")) return;
 
         var newBG:String = bgLayer.properties.get("bgName");
+
         if (newBG != state.currentBGName)
-            {
+        {
             if (state.bg != null)
-                {
-                    state.remove(state.bg);
-                    state.bg.destroy();
-                    state.bg = null;
-                }
+            {
+                state.remove(state.bg);
+                state.bg.destroy();
+                state.bg = null;
+            }
+
+            #if sys
+            var bgPath = ModLoader.getAsset("images/backgrounds/" + newBG + ".png");
+            var bmp = BitmapData.fromFile(bgPath);
+            if (bmp == null)
+            {
+                trace("FAILED TO LOAD BG: " + bgPath);
+                return;
+            }
+            state.bg = new FlxBackdrop(bmp);
+            #else
             state.bg = new FlxBackdrop("assets/images/backgrounds/" + newBG + ".png");
+            #end
             state.bg.velocity.set(0, 0);
             state.bg.scrollFactor.set(0.15, 0);
             state.bg.active = false;
+
             state.currentBGName = newBG;
             state.insert(0, state.bg);
-
         }
     }
 

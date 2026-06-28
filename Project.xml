@@ -43,8 +43,19 @@
 
 	<set name="BUILD_DIR" value="export" />
 	<source path="source" />
-	<assets path="assets" />
-	<assets path="assets/data/chapters_mobile" />
+
+	<assets path="assets/data" embed="true"/>
+	<assets path="assets/debug" embed="true"/>
+
+	<assets path="assets/images/shared"/>
+	<assets path="assets/images/backgrounds"/>
+	<assets path="assets/images/title"/>
+	<assets path="assets/images/skins" embed="true"/>
+	<assets path="assets/images/levels" embed="true"/>
+	<assets path="assets/images/foreground" embed="true"/>
+	<assets path="assets/images/bosses" embed="true"/>
+	<assets path="assets/music"/>
+	<assets path="assets/sounds"/>
 	
 	<template path="templates" />
 	<set name="KEYSTORE_FILE" value="../../release.keystore" />

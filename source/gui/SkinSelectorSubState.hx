@@ -1,5 +1,6 @@
 package gui;
 
+import main.mods.ModLoader;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
@@ -12,6 +13,7 @@ import flixel.ui.FlxButton;
 import main.PlayerData;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxParticle;
+import openfl.display.BitmapData;
 
 typedef SkinData =
 {
@@ -130,7 +132,14 @@ class SkinSelectorSubState extends FlxSubState
         }
 
         skinNameText.text = skin.name;
-        skinPreview.loadGraphic("assets/images/skins/" + skin.assetName + ".png", true, 50, 50);
+
+        var skinPath = ModLoader.getAsset("images/skins/" + skin.assetName + ".png");
+        #if sys
+            var bmp = BitmapData.fromFile(skinPath);
+            skinPreview.loadGraphic(bmp, true, 50, 50);
+        #else
+            skinPreview.loadGraphic(skinPath, true, 50, 50);
+        #end
         skinPreview.animation.add("idle", [0, 1, 2, 3], 11, true);
         skinPreview.animation.play("idle");
 

@@ -1,4 +1,5 @@
 package gui;
+import flixel.input.gamepad.id.SwitchJoyconLeftID;
 import main.ChapterState;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -74,21 +75,18 @@ class DeathState extends FlxSubState
 
         var proTip:String = FlxG.random.getObject(tips);
 
-        if (PlayerData.currentSkin == "boshy")
+        switch (PlayerData.currentSkin)
         {
-            FlxG.sound.play(AssetPaths.lol_u_died__ogg, 0.75, false);
-        }
+            case "boshy":
+                FlxG.sound.play(AssetPaths.lol_u_died__ogg, 1, false);
+                FlxG.sound.play(AssetPaths.kill_sound_effect__ogg, 0.5, false);
 
-        else if (PlayerData.currentSkin == "boyfriend")
-        {
-            FlxG.sound.play(AssetPaths.bf_death__ogg, 0.5, false);
-        }
+            case "boyfriend":
+                FlxG.sound.play(AssetPaths.bf_death__ogg, 0.5, false);
 
-        else
-        {
-            FlxG.sound.play(AssetPaths.death_bgm__ogg, 0.5, false);
+            default:
+                FlxG.sound.play(AssetPaths.death_bgm__ogg, 0.5, false);
         }
-
 
         blood = new FlxEmitter(PlayerData.deathX, PlayerData.deathY, 250);
         blood.makeParticles(3, 3, FlxColor.RED, 250);
