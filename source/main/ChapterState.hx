@@ -445,7 +445,7 @@ override public function update(elapsed:Float):Void
 
     #if !mobile
         if (FlxG.keys.justPressed.ONE) RoomLoader.loadRoom(this, "testing");
-        if (FlxG.keys.justPressed.TWO) RoomLoader.loadRoom(this, "map12");
+        if (FlxG.keys.justPressed.TWO) RoomLoader.loadRoom(this, "map11");
         if (FlxG.keys.justPressed.THREE) RoomLoader.loadRoom(this, "map37");
         if (FlxG.keys.justPressed.I) spawnTimer = 9999;
         if (FlxG.keys.justPressed.M)
