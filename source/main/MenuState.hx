@@ -20,6 +20,7 @@ import leveldata.misc.SaveManager;
 import main.ChapterState;
 import main.PlayerData;
 import coop.CoopSubstate;
+import coop.LocalCoopSubstate.LocalCoopSubState;
 import openfl.ui.MouseCursor;
 
 class MenuState extends FlxState
@@ -70,6 +71,7 @@ class MenuState extends FlxState
         FlxG.mouse.visible = true;
         FlxG.mouse.useSystemCursor = true;
         SaveManager.loadGame();
+        LocalCoopSubState.isMultiplayerActive = false;
 
         #if !mobile
         FlxG.mouse.visible = true;
