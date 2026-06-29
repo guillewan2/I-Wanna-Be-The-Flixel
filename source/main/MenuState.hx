@@ -46,6 +46,7 @@ class MenuState extends FlxState
     var btnOptions:FlxButton;
     var btnSkins:FlxButton;
     var btnExit:FlxButton;
+    #if sys var btnMods:FlxButton; #end
 
     var activeTweens:Map<FlxButton, FlxTween> = new Map();
     var activeLabelTweens:Map<FlxText, FlxTween> = new Map();
@@ -162,6 +163,15 @@ class MenuState extends FlxState
         btnStages = new FlxButton(850, 550, "Stages", clickStages);
         customizeButton(btnStages);
         add(btnStages);
+
+        #if sys
+        btnMods = new FlxButton(850, 450, "Mods", function()
+        {
+            openSubState(new main.mods.ModsSubState());
+        });
+        customizeButton(btnMods);
+        add(btnMods);
+        #end
 
         btnExit = new FlxButton(1020, 650, "Quit Game", clickQuit);
         btnExit.color = FlxColor.RED;

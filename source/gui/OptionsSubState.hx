@@ -88,8 +88,8 @@ class OptionsSubState extends FlxSubState
         
     }
 
-	override public function update(elapsed:Float)
-	{
+override public function update(elapsed:Float)
+    {
         super.update(elapsed);
 
         if (bg.alpha < 0.65)
@@ -99,42 +99,38 @@ class OptionsSubState extends FlxSubState
 
         if (FlxG.mouse.overlaps(closeBoton))
         {
-            openfl.ui.Mouse.cursor = openfl.ui.MouseCursor.BUTTON;
             closeBoton.animation.play("active");
         }
-
         else
         {
-            openfl.ui.Mouse.cursor = openfl.ui.MouseCursor.ARROW;
             closeBoton.animation.play("normal");
         }
 
-        if (FlxG.mouse.overlaps(closeBoton) && FlxG.mouse.justPressed || FlxG.keys.justPressed.ESCAPE)
+        if ((FlxG.mouse.overlaps(closeBoton) && FlxG.mouse.justPressed) || FlxG.keys.justPressed.ESCAPE)
         {   
             remove(assetsGroup, true);
             openfl.ui.Mouse.show();
             FlxG.camera.filters = [];
             close();
+            return;
         }
         
         fullScreenButton();
 
+        if (FlxG.mouse.overlaps(closeBoton) || FlxG.mouse.overlaps(buttonFullScreen))
+        {
+            openfl.ui.Mouse.cursor = openfl.ui.MouseCursor.BUTTON;
+        }
+        else
+        {
+            openfl.ui.Mouse.cursor = openfl.ui.MouseCursor.ARROW;
+        }
     }
 
     function fullScreenButton():Void
     {
         if (FlxG.fullscreen) buttonFullScreen.animation.play("active");
         else buttonFullScreen.animation.play("normal");
-
-        if (FlxG.mouse.overlaps(buttonFullScreen))
-        {
-            openfl.ui.Mouse.cursor = openfl.ui.MouseCursor.BUTTON;
-        }
-
-        else
-        {
-            openfl.ui.Mouse.cursor = openfl.ui.MouseCursor.ARROW;
-        }
 
         if (FlxG.mouse.overlaps(buttonFullScreen) && (FlxG.mouse.justPressed))
         {   
@@ -149,8 +145,6 @@ class OptionsSubState extends FlxSubState
                 buttonFullScreen.animation.play("normal");
             }
         }
-            
-
     }
 
 
