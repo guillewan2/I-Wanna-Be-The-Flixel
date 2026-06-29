@@ -9,9 +9,12 @@ import flixel.util.FlxColor;
 import flixel.ui.FlxButton;
 import openfl.display.BitmapData;
 import haxe.io.Path;
+import haxe.Json;
 
 #if sys
 import sys.FileSystem;
+import haxe.Json;
+import sys.io.File;
 #end
 
 class ModsSubState extends FlxSubState
@@ -21,6 +24,7 @@ class ModsSubState extends FlxSubState
     var title:FlxText;
     var closeBoton:FlxSprite;
     var previewSprite:FlxSprite;
+    var metadataText:FlxText;
     
     var modsList:Array<String> = [];
     var modTexts:Array<FlxText> = [];
@@ -57,11 +61,16 @@ class ModsSubState extends FlxSubState
         assetsGroup.add(closeBoton);
 
         previewSprite = new FlxSprite();
-        previewSprite.makeGraphic(350, 350, FlxColor.TRANSPARENT);
+        previewSprite.makeGraphic(300, 300, FlxColor.TRANSPARENT);
         assetsGroup.add(previewSprite);
+
+        metadataText = new FlxText(0, 0, 300, "");
+        metadataText.setFormat(null, 20, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+        assetsGroup.add(metadataText);
 
         #if sys
         var modsPath = Path.normalize(Sys.getCwd() + "../../../mods");
+        
         if (FileSystem.exists(modsPath))
         {
             for (mod in FileSystem.readDirectory(modsPath))
@@ -96,12 +105,15 @@ class ModsSubState extends FlxSubState
     function updatePreviewImage(modName:String):Void
     {
         var loaded = false;
+        var authorName:String = "Unknown";
+        var versionName:String = "-";
 
         #if sys
         if (modName != "")
         {
             var modsPath = Path.normalize(Sys.getCwd() + "../../../mods");
             var iconPath = modsPath + "/" + modName + "/mod-icon.png";
+            var jsonPath = modsPath + "/" + modName + "/metadata.json";
             
             if (FileSystem.exists(iconPath))
             {
@@ -110,6 +122,22 @@ class ModsSubState extends FlxSubState
                 {
                     previewSprite.loadGraphic(bmp);
                     loaded = true;
+                }
+            }
+
+            if (FileSystem.exists(jsonPath))
+            {
+                try
+                {
+                    var jsonString = File.getContent(jsonPath);
+                    var rawData:Dynamic = Json.parse(jsonString);
+                    
+                    if (rawData.author != null) authorName = rawData.author;
+                    if (rawData.version != null) versionName = rawData.version;
+                }
+                catch(e:Dynamic)
+                {
+                    trace("No metadata.json found: " + e);
                 }
             }
         }
@@ -133,13 +161,25 @@ class ModsSubState extends FlxSubState
 
         if (!loaded)
         {
-            previewSprite.makeGraphic(350, 350, FlxColor.GRAY);
+            previewSprite.makeGraphic(300, 300, FlxColor.GRAY);
         }
 
-        previewSprite.setGraphicSize(350, 350);
+        previewSprite.setGraphicSize(300, 300);
         previewSprite.updateHitbox();
-        previewSprite.x = bgOption.x + bgOption.width - 430;
-        previewSprite.y = bgOption.y + 160;
+        previewSprite.x = bgOption.x + bgOption.width - 380;
+        previewSprite.y = bgOption.y + 130;
+
+        if (modName == "")
+        {
+            metadataText.text = "";
+        }
+        else
+        {
+            metadataText.text = "Created by " + authorName + "\nVersion: " + versionName;
+        }
+
+        metadataText.x = previewSprite.x;
+        metadataText.y = previewSprite.y + previewSprite.height + 20;
     }
 
     override public function update(elapsed:Float)
