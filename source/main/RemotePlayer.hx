@@ -63,6 +63,15 @@ class RemotePlayer extends FlxSprite {
 			netVelY = (yVal - netY) / timeSincePacket;
 		}
 
+		// Si el jugador se teletransporta lejos (cambio de sala, spawn, etc.), reposicionar de inmediato
+		var distSq = (xVal - this.x) * (xVal - this.x) + (yVal - this.y) * (yVal - this.y);
+		if (distSq > 150 * 150) {
+			this.x = xVal;
+			this.y = yVal;
+			netVelX = 0;
+			netVelY = 0;
+		}
+
 		prevNetX = netX;
 		prevNetY = netY;
 		netX = xVal;
@@ -86,38 +95,32 @@ class RemotePlayer extends FlxSprite {
 		timeSincePacket += elapsed;
 
 		if (timeSincePacket < PACKET_TIMEOUT) {
-			// --- Dead reckoning: extrapolar posición ---
-			var extraX = netX;
-			var extraY = netY;
+			// --- Movimiento continuo por predicción local ---
+			var speedX = 0.0;
+			var speedY = 0.0;
 
-			switch (netAnim) {
-				case "walking":
-					// Continuar andando en la misma dirección horizontal
-					var walkVel = netFacingRight ? WALK_SPEED : -WALK_SPEED;
-					extraX = netX + walkVel * timeSincePacket;
-					// Pequeña caída si está andando (rozamiento suelo)
-					extraY = netY;
-
-				case "jumpUp":
-					// Simular arco de salto hacia arriba
-					var gravMult = netFlipped ? -1.0 : 1.0;
-					extraX = netX + netVelX * timeSincePacket;
-					extraY = netY + netVelY * timeSincePacket + 0.5 * GRAVITY * gravMult * timeSincePacket * timeSincePacket;
-
-				case "jumpDown":
-					// Caída: aplicar gravedad desde la velocidad vertical que traía
-					var gravMult = netFlipped ? -1.0 : 1.0;
-					extraX = netX + netVelX * timeSincePacket;
-					extraY = netY + netVelY * timeSincePacket + 0.5 * GRAVITY * gravMult * timeSincePacket * timeSincePacket;
-
-				default: // "idle"
-					extraX = netX;
-					extraY = netY;
+			if (netAnim == "walking") {
+				speedX = netFacingRight ? WALK_SPEED : -WALK_SPEED;
+			} else if (netAnim == "jumpUp" || netAnim == "jumpDown") {
+				speedX = netVelX;
+				// Simular gravedad localmente sobre la velocidad recibida
+				var gravMult = netFlipped ? -1.0 : 1.0;
+				netVelY += GRAVITY * gravMult * elapsed;
+				if (netFlipped) {
+					if (netVelY < -MAX_FALL_SPEED) netVelY = -MAX_FALL_SPEED;
+				} else {
+					if (netVelY > MAX_FALL_SPEED) netVelY = MAX_FALL_SPEED;
+				}
+				speedY = netVelY;
 			}
 
-			// Smoothly interpolate to the extrapolated position to avoid sudden jumps
-			this.x += (extraX - this.x) * LERP_SPEED * elapsed;
-			this.y += (extraY - this.y) * LERP_SPEED * elapsed;
+			// Aplicar movimiento físico predicho
+			this.x += speedX * elapsed;
+			this.y += speedY * elapsed;
+
+			// Corrección suave hacia la posición de red (para absorber errores de predicción)
+			this.x += (netX - this.x) * LERP_SPEED * elapsed;
+			this.y += (netY - this.y) * LERP_SPEED * elapsed;
 		}
 
 		if (netAnim != null && netAnim != "" && (animation.curAnim == null || animation.curAnim.name != netAnim))
