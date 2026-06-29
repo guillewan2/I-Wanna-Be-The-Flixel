@@ -514,7 +514,17 @@ class ChapterState extends FlxState {
 			while ((packet = udpClient.receive()) != null) {
 				try {
 					var data = haxe.Json.parse(packet);
-					if (data.x != null && data.y != null) {
+					if (data.death == true) {
+						if (data.currentRoom == currentRoomName) {
+							var spawnX = (data.x != null) ? data.x : (remotePlayer != null ? remotePlayer.x : 0);
+							var spawnY = (data.y != null) ? data.y : (remotePlayer != null ? remotePlayer.y : 0);
+							bloodParticles(spawnX, spawnY);
+							if (remotePlayer != null) {
+								remotePlayer.visible = false;
+								remotePlayer.exists = false;
+							}
+						}
+					} else if (data.x != null && data.y != null) {
 						if (remotePlayer == null) {
 							remotePlayer = new main.RemotePlayer(data.x, data.y);
 							add(remotePlayer);
@@ -776,6 +786,13 @@ class ChapterState extends FlxState {
 			PlayerData.totalDeaths -= 1;
 			bloodParticles();
 			openSubState(new DeathState());
+
+			/* if multiplayer */
+			if (udpClient != null) {
+				var payload:String = '{"death": true, "x": ' + player.x + ', "y": ' + player.y + ', "currentRoom": "' + currentRoomName + '"}';
+				udpClient.send(payload);
+				// sends a death to the server
+			}
 		}
 	}
 
@@ -949,8 +966,10 @@ class ChapterState extends FlxState {
 		}
 	}
 
-	function bloodParticles():Void {
-		blood = new flixel.effects.particles.FlxEmitter(PlayerData.deathX, PlayerData.deathY, 250);
+	function bloodParticles(?x:Float, ?y:Float):Void {
+		var spawnX = (x != null) ? x : PlayerData.deathX;
+		var spawnY = (y != null) ? y : PlayerData.deathY;
+		blood = new flixel.effects.particles.FlxEmitter(spawnX, spawnY, 250);
 		blood.makeParticles(3, 3, flixel.util.FlxColor.RED, 250);
 		blood.launchMode = CIRCLE;
 		blood.speed.set(300, 700);
