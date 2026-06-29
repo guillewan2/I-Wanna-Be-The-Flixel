@@ -36,6 +36,7 @@ import main.mods.ModLoader;
 class ChapterState extends FlxState {
 	var player:Player;
 	var currentDeaths = PlayerData.totalDeaths;
+	var blood:flixel.effects.particles.FlxEmitter;
 	var cameraSnapTimer:Int = 1;
 	var playerTrail:FlxTrail;
 	var virtualPad:FlxVirtualPad;
@@ -770,6 +771,7 @@ class ChapterState extends FlxState {
 				FlxG.sound.music.stop();
 			this.persistentUpdate = true;
 			PlayerData.totalDeaths -= 1;
+			bloodParticles();
 			openSubState(new DeathState());
 		}
 	}
@@ -942,6 +944,20 @@ class ChapterState extends FlxState {
 				FlxG.camera.scroll.set(-260, -265);
 			}
 		}
+	}
+
+	function bloodParticles():Void {
+		blood = new flixel.effects.particles.FlxEmitter(PlayerData.deathX, PlayerData.deathY, 250);
+		blood.makeParticles(3, 3, flixel.util.FlxColor.RED, 250);
+		blood.launchMode = CIRCLE;
+		blood.speed.set(300, 700);
+		blood.acceleration.set(0, 1200);
+		blood.lifespan.set(2, 4);
+		blood.alpha.set(1, 1, 0, 0);
+
+		blood.scale.set(0.5, 0.5, 1.5, 1.5);
+		add(blood);
+		blood.start(true, 0, 250);
 	}
 
 	function layoutVirtualPad():Void {
