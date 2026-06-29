@@ -503,7 +503,7 @@ class ChapterState extends FlxState {
 					networkTimer = 0;
 					var currentAnim = (player.animation.curAnim != null ? player.animation.curAnim.name : "idle");
 					var payload:String = '{"x":' + player.x + ',"y":' + player.y + ',"flip":' + player.isFlipped + ',"facingRight":' + Player.isFacingRIGHT
-						+ ',"skin":"' + PlayerData.currentSkin + '","anim":"' + currentAnim + ',"currentRoom":"' + currentRoomName + '"}';
+						+ ',"skin":"' + PlayerData.currentSkin + '","anim":"' + currentAnim + '","currentRoom":"' + currentRoomName + '"}';
 					udpClient.send(payload);
 				}
 			}
