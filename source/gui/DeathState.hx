@@ -1,4 +1,7 @@
 package gui;
+import flixel.sound.FlxSound;
+import openfl.media.Sound;
+import main.mods.ModLoader;
 import flixel.input.gamepad.id.SwitchJoyconLeftID;
 import main.ChapterState;
 import flixel.FlxG;
@@ -78,14 +81,14 @@ class DeathState extends FlxSubState
         switch (PlayerData.currentSkin)
         {
             case "boshy":
-                FlxG.sound.play(AssetPaths.lol_u_died__ogg, 1.5, false);
+                ModLoader.playModMusic("music/death/lol_u_died.ogg", 0.7, true);
                 FlxG.sound.play(AssetPaths.kill_sound_effect__ogg, 0.5, false);
 
             case "boyfriend":
-                FlxG.sound.play(AssetPaths.bf_death__ogg, 0.75, false);
+                ModLoader.playModMusic("music/death/bf_death.ogg", 0.7, true);
 
             default:
-                FlxG.sound.play(AssetPaths.death_bgm__ogg, 0.75, false);
+                ModLoader.playModMusic("music/death/death_bgm.ogg", 0.7, true);
         }
 
         blood = new FlxEmitter(PlayerData.deathX, PlayerData.deathY, 250);

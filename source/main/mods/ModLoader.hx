@@ -98,4 +98,22 @@ class ModLoader
         #end
         sprite.loadGraphic("assets/" + relativePath, true, frameWidth, frameHeight);
     }
+
+    public static function playModMusic(relativePath:String, volume:Float = 1.0, looped:Bool = true):Void
+    {
+        #if sys
+        if (overrides.exists(relativePath))
+        {
+            var modPath = overrides.get(relativePath);
+            var sound = openfl.media.Sound.fromFile(modPath);
+            if (sound != null)
+            {
+                flixel.FlxG.sound.playMusic(sound, volume, looped);
+                return;
+            }
+        }
+        #end
+        
+        flixel.FlxG.sound.playMusic("assets/" + relativePath, volume, looped);
+    }
 }
