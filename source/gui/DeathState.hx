@@ -21,7 +21,6 @@ class DeathState extends FlxSubState
     var bg:FlxSprite;
     var maintext:FlxText;
     var subtext:FlxText;
-    var blood:FlxEmitter;
     var timerTip:Float = 1;
 
     override public function create():Void
@@ -90,18 +89,6 @@ class DeathState extends FlxSubState
             default:
                 ModLoader.playModMusic("music/death/death_bgm.ogg", 0.7, true);
         }
-
-        blood = new FlxEmitter(PlayerData.deathX, PlayerData.deathY, 250);
-        blood.makeParticles(3, 3, FlxColor.RED, 250);
-        blood.launchMode = CIRCLE;
-        blood.speed.set(300, 700); 
-        blood.acceleration.set(0, 1200); 
-        blood.lifespan.set(2, 4);
-        blood.alpha.set(1, 1, 0, 0);
-        
-        blood.scale.set(0.5, 0.5, 1.5, 1.5);
-        add(blood);
-        blood.start(true, 0, 250);
 
         bg = new FlxSprite();
         bg.makeGraphic(FlxG.width + 1, FlxG.height, FlxColor.BLACK);
