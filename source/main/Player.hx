@@ -46,22 +46,8 @@ class Player extends FlxSprite
     public function new(x:Float, y:Float)
     {
         super(x, y);
-        var skinPath = ModLoader.getAsset("images/skins/" + PlayerData.currentSkin + ".png");
-        var bmp = BitmapData.fromFile(skinPath);
 
-        if (bmp == null)
-        {
-            trace("FAILED TO LOAD MOD SPRITE: " + skinPath);
-            loadGraphic(AssetPaths.thekid__png, true, 50, 50);
-        }
-        else
-        {
-            loadGraphic(bmp, true, 50, 50);
-        }
-
-        trace("Loading: " + skinPath);
-        // trace("Exists: " + FileSystem.exists(skinPath));
-        loadGraphic(skinPath, true, 50, 50);
+        ModLoader.loadModGraphic(this, "images/skins/" + PlayerData.currentSkin + ".png", "skin_" + PlayerData.currentSkin, 50, 50);
         animation.add("idle", [0, 1, 2, 3], 11, true);
         animation.add("jumpUp", [6], 16, false);
         animation.add("jumpDown", [7], 1, false);
@@ -89,25 +75,20 @@ class Player extends FlxSprite
 
 public function flipGravity():Void
 {
-    // Toggle the flip state exactly ONCE
     isFlipped = !isFlipped;
 
-    // First time running, save the player's default factory offset
-    if (baseOffsetY == null) {
+    if (baseOffsetY == null)
+    {
         baseOffsetY = offset.y;
     }
 
-    // Reset vertical velocity instantly
     velocity.y = 0;
 
-    // Set the facing flips to handle flipY correctly based on isFlipped
     setFacingFlip(LEFT, true, isFlipped);
     setFacingFlip(RIGHT, false, isFlipped);
 
-    // Set the visual inversion instantly
     flipY = isFlipped;
 
-    // Adjust offsets smoothly so the player doesn't clip into the ground/ceiling
     var targetOffsetY:Float = isFlipped ? 0 : baseOffsetY; 
 
     FlxTween.tween(this.offset, { y: targetOffsetY }, 0.2, { ease: FlxEase.sineInOut });

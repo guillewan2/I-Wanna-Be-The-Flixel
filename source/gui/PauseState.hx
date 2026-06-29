@@ -171,7 +171,7 @@ class PauseState extends FlxSubState
     {
         if (FlxG.sound.music != null) FlxG.sound.music.stop();        
         cleanup();
-        FlxG.switchState(MenuState.new);
+        FlxG.switchState(main.MenuState.new);
     }
 
     function clickRespawn():Void

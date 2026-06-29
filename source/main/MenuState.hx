@@ -1,4 +1,4 @@
-package gui;
+package main;
 
 import openfl.media.Sound;
 import flixel.sound.FlxSound;
@@ -75,12 +75,7 @@ class MenuState extends FlxState
         add(bg);
 
         player = new FlxSprite();
-        var skinPath = ModLoader.getAsset("images/skins/" + PlayerData.currentSkin + ".png");
-        #if sys
-        player.loadGraphic(openfl.display.BitmapData.fromFile(skinPath), true, 50, 50);
-        #else
-        player.loadGraphic(skinPath, true, 50, 50);
-        #end
+        ModLoader.loadModGraphic(player, "images/skins/" + PlayerData.currentSkin + ".png", "skin_" + PlayerData.currentSkin, 50, 50);
         player.animation.add("walking", [8, 9, 10, 11, 12, 13], 14, true);
         player.animation.play("walking");
         player.scale.set(1.2, 1.2);
@@ -462,12 +457,7 @@ class MenuState extends FlxState
     {
         super.closeSubState();
 
-        var skinPath = ModLoader.getAsset("images/skins/" + PlayerData.currentSkin + ".png");
-        #if sys
-        player.loadGraphic(openfl.display.BitmapData.fromFile(skinPath), true, 50, 50);
-        #else
-        player.loadGraphic(skinPath, true, 50, 50);
-        #end
+        ModLoader.loadModGraphic(player, "images/skins/" + PlayerData.currentSkin + ".png", "skin_" + PlayerData.currentSkin, 50, 50);
 
         player.animation.add("walking", [8, 9, 10, 11, 12, 13], 14, true);
         player.animation.play("walking");

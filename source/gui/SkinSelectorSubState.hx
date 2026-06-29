@@ -133,13 +133,7 @@ class SkinSelectorSubState extends FlxSubState
 
         skinNameText.text = skin.name;
 
-        var skinPath = ModLoader.getAsset("images/skins/" + skin.assetName + ".png");
-        #if sys
-            var bmp = BitmapData.fromFile(skinPath);
-            skinPreview.loadGraphic(bmp, true, 50, 50);
-        #else
-            skinPreview.loadGraphic(skinPath, true, 50, 50);
-        #end
+        ModLoader.loadModGraphic(skinPreview, "images/skins/" + skin.assetName + ".png", "skin_" + skin.assetName, 50, 50);
         skinPreview.animation.add("idle", [0, 1, 2, 3], 11, true);
         skinPreview.animation.play("idle");
 

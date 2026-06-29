@@ -78,14 +78,14 @@ class DeathState extends FlxSubState
         switch (PlayerData.currentSkin)
         {
             case "boshy":
-                FlxG.sound.play(AssetPaths.lol_u_died__ogg, 1, false);
+                FlxG.sound.play(AssetPaths.lol_u_died__ogg, 1.5, false);
                 FlxG.sound.play(AssetPaths.kill_sound_effect__ogg, 0.5, false);
 
             case "boyfriend":
-                FlxG.sound.play(AssetPaths.bf_death__ogg, 0.5, false);
+                FlxG.sound.play(AssetPaths.bf_death__ogg, 0.75, false);
 
             default:
-                FlxG.sound.play(AssetPaths.death_bgm__ogg, 0.5, false);
+                FlxG.sound.play(AssetPaths.death_bgm__ogg, 0.75, false);
         }
 
         blood = new FlxEmitter(PlayerData.deathX, PlayerData.deathY, 250);

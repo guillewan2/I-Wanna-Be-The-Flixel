@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="34" nextobjectid="83">
+<map version="1.10" tiledversion="1.12.1" orientation="orthogonal" renderorder="right-down" width="28" height="18" tilewidth="50" tileheight="50" infinite="0" nextlayerid="34" nextobjectid="84">
  <properties>
   <property name="doubleEffectType" value="dark-cloud"/>
  </properties>
@@ -161,6 +161,7 @@
  </objectgroup>
  <objectgroup id="29" name="flip">
   <object id="82" name="flip" gid="97" x="200" y="600" width="32" height="32"/>
+  <object id="83" name="flip" gid="97" x="350" y="600" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="30" name="small-spike"/>
  <objectgroup id="7" name="spike-normal"/>

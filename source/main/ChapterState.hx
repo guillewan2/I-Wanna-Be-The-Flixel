@@ -370,15 +370,15 @@ override public function update(elapsed:Float):Void
             FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug;
         }
 
-        if (FlxG.keys.justPressed.R)
-        {
+    if (FlxG.keys.justPressed.R)
+    {
             var currentSeconds = PlayerData.totalSeconds;
             PlayerData.totalDeaths++; 
             leveldata.misc.SaveManager.saveGameRestart();
             leveldata.misc.SaveManager.loadGame();
             PlayerData.totalSeconds = currentSeconds;
             FlxG.resetState();
-        }
+    }
 
         if (FlxG.keys.justPressed.K) { killPlayer(); }
 
@@ -441,7 +441,6 @@ override public function update(elapsed:Float):Void
         trace("MAP WIDTH: " + map.width);
         trace("MAP HEIGHT: " + map.height);
     }
-    
 
     #if !mobile
         if (FlxG.keys.justPressed.ONE) RoomLoader.loadRoom(this, "testing");
@@ -741,7 +740,7 @@ function killPlayer():Void
 
 function initLoopPoints():Void
 {
-    if (loopPoints != null) return; 
+    if (loopPoints != null) return;
     
     loopPoints = new Map<String, Float>();
     
@@ -766,22 +765,26 @@ function initLoopPoints():Void
 
 function updateMusic():Void
 {
-    #if sys
+    if (player != null && !player.alive) return;
+    if (subState != null) return;
+
     var musicLayer = tiledData.getLayer("music");
     if (musicLayer == null) return;
-
     var songName:String = musicLayer.properties.get("songName");
+    
+    var relativePath = "music/chapters/chapter" + PlayerData.currentChapter + "bgm/" + songName + ".ogg";
+    var songPath = ModLoader.getAsset(relativePath);
+    
+    #if sys
+    var isModded:Bool = ModLoader.overrides.exists(relativePath);
+    #else
+    var isModded:Bool = false;
+    #end
 
-    var basePath:String = "music/chapters/chapter" + PlayerData.currentChapter + "bgm/" + songName + ".ogg";
-
-    var songPath:String = ModLoader.getAsset(basePath);
-    trace("Music Path: " + songPath);
-
-    initLoopPoints();
-
+    initLoopPoints();    
     var loopStartMs:Float = 0;
-
-    if (loopPoints.exists(songName))
+    
+    if (!isModded && loopPoints.exists(songName)) 
     {
         loopStartMs = loopPoints.get(songName) * 1000;
     }
@@ -793,30 +796,31 @@ function updateMusic():Void
             FlxG.sound.music.time = PlayerData.lastMusicTime;
             PlayerData.isRespawning = false;
         }
-        return;
+        return; 
     }
 
     PlayerData.currentSong = songPath;
 
-    var musicPath = ModLoader.getAsset(basePath);
-
-    var sound = Sound.fromFile(musicPath);
-
-    if (sound == null)
+    #if sys
+    if (ModLoader.overrides.exists(relativePath))
     {
-        trace("FAILED MUSIC: " + musicPath);
-        return;
+        var customSound = openfl.media.Sound.fromFile(songPath);
+        if (customSound != null)
+        {
+            FlxG.sound.playMusic(customSound, 0.5, true);
+        }
+        else
+        {
+            FlxG.sound.playMusic("assets/" + relativePath, 0.5, true); // Fallback
+        }
     }
-
-    if (FlxG.sound.music != null)
+    else
     {
-        FlxG.sound.music.stop();
+        FlxG.sound.playMusic(songPath, 0.5, true);
     }
-
-    FlxG.sound.music = new FlxSound();
-    FlxG.sound.music.loadEmbedded(sound, true, false);
-    FlxG.sound.music.volume = 0.5;
-    FlxG.sound.music.play();
+    #else
+    FlxG.sound.playMusic(songPath, 0.5, true);
+    #end
 
     if (FlxG.sound.music != null)
     {
@@ -825,42 +829,11 @@ function updateMusic():Void
 
     if (PlayerData.isRespawning)
     {
+        if (FlxG.sound.music != null) FlxG.sound.music.update(0);
+        
         FlxG.sound.music.time = PlayerData.lastMusicTime;
         PlayerData.isRespawning = false;
     }
-
-    #else
-		var musicLayer = tiledData.getLayer("music");
-		if (musicLayer == null) return;
-		var songName:String = musicLayer.properties.get("songName");
-		var songPath = "assets/music/chapters/chapter" + PlayerData.currentChapter + "bgm/" + songName + ".ogg";
-		initLoopPoints();
-		var loopStartMs:Float = 0;
-		if (loopPoints.exists(songName))
-		{
-			loopStartMs = loopPoints.get(songName) * 1000;
-		}
-		if (PlayerData.currentSong == songPath && FlxG.sound.music != null && FlxG.sound.music.playing)
-		{
-			if (PlayerData.isRespawning)
-			{
-				FlxG.sound.music.time = PlayerData.lastMusicTime;
-				PlayerData.isRespawning = false;
-			}
-			return;
-		}
-		PlayerData.currentSong = songPath;
-		FlxG.sound.playMusic(songPath, 0.5, true);
-		if (FlxG.sound.music != null)
-		{
-			FlxG.sound.music.loopTime = loopStartMs;
-		}
-		if (PlayerData.isRespawning)
-		{
-			FlxG.sound.music.time = PlayerData.lastMusicTime;
-			PlayerData.isRespawning = false;
-		}
-    #end
 }
 
 function autoScroll():Void

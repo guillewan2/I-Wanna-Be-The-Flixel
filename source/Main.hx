@@ -3,7 +3,7 @@ import openfl.display.FPS;
 import openfl.display.Sprite;
 // import main.ChapterState;
 import main.DebugState;
-import gui.MenuState;
+import main.MenuState;
 import main.mods.ModLoader;
 import openfl.Lib;
 
@@ -25,11 +25,9 @@ class Main extends Sprite
 		var skipSplash:Bool = true;
 		var startFullscreen:Bool = false;
 
-		#if !html5
 		trace("======= ModLoader Active =======");
 		ModLoader.init();
 		trace("======= ModLoader Fin =======");
-		#end
 
 		#if html5
 			var document = js.Browser.document;

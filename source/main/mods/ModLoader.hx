@@ -80,4 +80,22 @@ class ModLoader
             
         return "assets/" + path;
     }
+
+    public static function loadModGraphic(sprite:flixel.FlxSprite, relativePath:String, cacheKey:String, frameWidth:Int = 50, frameHeight:Int = 50):Void
+    {
+        #if sys
+        if (overrides.exists(relativePath))
+        {
+            var modPath = overrides.get(relativePath);
+            var bmp = openfl.display.BitmapData.fromFile(modPath);
+            if (bmp != null)
+            {
+                var graphic = flixel.graphics.FlxGraphic.fromBitmapData(bmp, false, cacheKey, false);
+                sprite.loadGraphic(graphic, true, frameWidth, frameHeight);
+                return;
+            }
+        }
+        #end
+        sprite.loadGraphic("assets/" + relativePath, true, frameWidth, frameHeight);
+    }
 }
