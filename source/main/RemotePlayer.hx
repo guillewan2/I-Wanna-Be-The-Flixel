@@ -1,7 +1,6 @@
 package main;
 
 import flixel.FlxSprite;
-import flixel.util.FlxDirectionFlags;
 import main.mods.ModLoader;
 
 class RemotePlayer extends FlxSprite {
