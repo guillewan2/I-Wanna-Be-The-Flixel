@@ -32,6 +32,7 @@ class LocalCoopSubState extends FlxSubState
 
     public static var targetIP:String = "127.0.0.1";
     public static var targetPort:Int = 10690;
+    public static var isMultiplayerActive:Bool = false;
 
     override public function create() 
     {
@@ -107,6 +108,7 @@ class LocalCoopSubState extends FlxSubState
         targetIP = inputIP.text;
         var parsedPort:Null<Int> = Std.parseInt(inputPort.text);
         targetPort = (parsedPort != null) ? parsedPort : 10690;
+        isMultiplayerActive = true;
 
         trace("Connecting Socket Interface parameters -> IP Target: " + targetIP + " | Port: " + targetPort);
 
