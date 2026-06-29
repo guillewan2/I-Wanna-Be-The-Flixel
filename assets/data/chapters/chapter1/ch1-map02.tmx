@@ -17,7 +17,7 @@
 2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,
-0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,2,2,2,2,2,
+0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,2,2,2,2,2,
 0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,
 0,0,0,2,2,2,2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,0,0,0,0,0,0,
@@ -78,24 +78,9 @@
   </properties>
  </objectgroup>
  <objectgroup id="8" name="spike-normal">
-  <object id="1" name="spike" gid="81" x="350" y="600" width="50" height="50">
-   <properties>
-    <property name="id" value="0"/>
-   </properties>
-  </object>
-  <object id="4" name="spike" gid="84" x="1050" y="250" width="50" height="50">
+  <object id="4" name="spike" gid="84" x="1050" y="200" width="50" height="50">
    <properties>
     <property name="id" value="3"/>
-   </properties>
-  </object>
-  <object id="7" name="spike" gid="81" x="1000" y="650" width="50" height="50">
-   <properties>
-    <property name="id" value="0"/>
-   </properties>
-  </object>
-  <object id="8" name="spike" gid="81" x="950" y="650" width="50" height="50">
-   <properties>
-    <property name="id" value="0"/>
    </properties>
   </object>
   <object id="9" name="spike" gid="85" x="900" y="650" width="50" height="50">
@@ -104,21 +89,6 @@
    </properties>
   </object>
   <object id="11" name="spike" gid="81" x="850" y="650" width="50" height="50"/>
-  <object id="12" name="spike" gid="81" x="700" y="650" width="50" height="50">
-   <properties>
-    <property name="id" value="0"/>
-   </properties>
-  </object>
-  <object id="13" name="spike" gid="81" x="750" y="650" width="50" height="50">
-   <properties>
-    <property name="id" value="0"/>
-   </properties>
-  </object>
-  <object id="14" name="spike" gid="81" x="650" y="650" width="50" height="50">
-   <properties>
-    <property name="id" value="0"/>
-   </properties>
-  </object>
   <object id="15" name="spike" gid="81" x="500" y="600" width="50" height="50">
    <properties>
     <property name="id" value="0"/>
@@ -127,11 +97,6 @@
   <object id="16" name="spike" gid="81" x="450" y="600" width="50" height="50">
    <properties>
     <property name="id" value="0"/>
-   </properties>
-  </object>
-  <object id="18" name="spike" gid="85" x="400" y="600" width="50" height="50">
-   <properties>
-    <property name="id" value="4"/>
    </properties>
   </object>
   <object id="19" name="spike" gid="85" x="550" y="650" width="50" height="50">
@@ -159,21 +124,6 @@
     <property name="id" value="0"/>
    </properties>
   </object>
-  <object id="46" name="spike" gid="85" x="300" y="600" width="50" height="50">
-   <properties>
-    <property name="id" value="4"/>
-   </properties>
-  </object>
-  <object id="47" name="spike" gid="81" x="250" y="600" width="50" height="50">
-   <properties>
-    <property name="id" value="0"/>
-   </properties>
-  </object>
-  <object id="48" name="spike" gid="85" x="200" y="600" width="50" height="50">
-   <properties>
-    <property name="id" value="4"/>
-   </properties>
-  </object>
   <object id="49" name="spike" gid="87" x="350" y="200" width="50" height="50">
    <properties>
     <property name="id" value="6"/>
@@ -189,7 +139,7 @@
     <property name="id" value="6"/>
    </properties>
   </object>
-  <object id="60" name="spike" gid="88" x="1050" y="300" width="50" height="50">
+  <object id="60" name="spike" gid="88" x="1050" y="250" width="50" height="50">
    <properties>
     <property name="id" value="7"/>
    </properties>

@@ -107,12 +107,6 @@
     <property name="status" value="disabled"/>
    </properties>
   </object>
-  <object id="1846" name="switch-spike" gid="87" x="1676" y="350" width="50" height="50">
-   <properties>
-    <property name="id" value="2"/>
-    <property name="status" value="disabled"/>
-   </properties>
-  </object>
   <object id="1849" name="switch-spike" gid="85" x="1600" y="350" width="50" height="50">
    <properties>
     <property name="id" value="0"/>
