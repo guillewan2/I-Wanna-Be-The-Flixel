@@ -527,7 +527,7 @@ class ChapterState extends FlxState {
 				try {
 					var data = haxe.Json.parse(packet);
 					if (data.death == true) {
-						if (data.currentRoom == currentRoomName) {
+						if (data.currentRoom == null || data.currentRoom == currentRoomName) {
 							var spawnX = (data.x != null) ? data.x : (remotePlayer != null ? remotePlayer.x : 0);
 							var spawnY = (data.y != null) ? data.y : (remotePlayer != null ? remotePlayer.y : 0);
 							bloodParticles(spawnX, spawnY);
@@ -542,7 +542,7 @@ class ChapterState extends FlxState {
 							add(remotePlayer);
 						}
 						remotePlayer.loadSkin(data.skin != null ? data.skin : "thekid");
-						if (data.currentRoom == currentRoomName) {
+						if (data.currentRoom == null || data.currentRoom == currentRoomName) {
 							remotePlayer.exists = true;
 							remotePlayer.visible = true;
 							remotePlayer.applyNetworkPacket(data.x, data.y, data.flip == true, data.facingRight == true, data.anim);
