@@ -1,8 +1,8 @@
 .vs/
 .idea/
 .vscode/
-.mods/
 .builds/
+mods/
 export/
 mapeditor/
 screenshots/
