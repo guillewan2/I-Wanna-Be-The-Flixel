@@ -19,6 +19,7 @@ import flixel.util.FlxTimer;
 import leveldata.misc.SaveManager;
 import main.ChapterState;
 import main.PlayerData;
+import coop.CoopSubstate;
 import openfl.ui.MouseCursor;
 
 class MenuState extends FlxState
@@ -493,7 +494,7 @@ class MenuState extends FlxState
             currentPort = 10690;
             trace("Could not automatically resolve local network socket interface: " + e);
         }
-        #else
+        openSubState(new CoopSubState());
         #end
     }
 
