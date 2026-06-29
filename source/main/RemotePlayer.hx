@@ -120,8 +120,8 @@ class RemotePlayer extends FlxSprite {
 			this.y += (extraY - this.y) * LERP_SPEED * elapsed;
 		}
 
-		if (netAnim != null && netAnim != "")
-			animation.play(netAnim, false);
+		if (netAnim != null && netAnim != "" && (animation.curAnim == null || animation.curAnim.name != netAnim))
+			animation.play(netAnim);
 
 		super.update(elapsed);
 	}

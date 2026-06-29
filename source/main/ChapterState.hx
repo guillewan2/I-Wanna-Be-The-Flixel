@@ -520,10 +520,13 @@ class ChapterState extends FlxState {
 							add(remotePlayer);
 						}
 						remotePlayer.loadSkin(data.skin != null ? data.skin : "thekid");
-						if (data.currentRoom == currentRoomName)
+						if (data.currentRoom == currentRoomName) {
+							remotePlayer.exists = true;
+							remotePlayer.visible = true;
 							remotePlayer.applyNetworkPacket(data.x, data.y, data.flip == true, data.facingRight == true, data.anim);
-						else
+						} else {
 							remotePlayer.exists = false;
+						}
 					}
 				} catch (e:Dynamic) {
 					trace("Error al procesar el paquete recibido: " + e);
