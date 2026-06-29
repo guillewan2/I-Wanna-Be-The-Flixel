@@ -1,6 +1,7 @@
 package main;
 
 import main.Multiplayer.UdpClient;
+import coop.LocalCoopSubstate.LocalCoopSubState;
 import flixel.sound.FlxSound;
 import openfl.media.Sound;
 import flixel.FlxCamera;
@@ -150,9 +151,20 @@ class ChapterState extends FlxState {
 				+ " (bound to local port "
 				+ clientAddr.localPort
 				+ ")");
+		} else if (LocalCoopSubState.isMultiplayerActive) {
+			var host = LocalCoopSubState.targetIP;
+			var port = LocalCoopSubState.targetPort;
+			udpClient = new UdpClient(host, port, port);
+			trace("Multiplayer client active (via Coop Substate): "
+				+ host
+				+ ":"
+				+ port
+				+ " (bound to local port "
+				+ port
+				+ ")");
 		} else {
 			udpClient = null;
-			trace("Multiplayer client inactive (no -client IP:PORT argument)");
+			trace("Multiplayer client inactive");
 		}
 
 		hudGroup = new FlxGroup();
@@ -554,6 +566,7 @@ class ChapterState extends FlxState {
 			remotePlayer.destroy();
 			remotePlayer = null;
 		}
+		LocalCoopSubState.isMultiplayerActive = false;
 
 		super.destroy();
 	}
