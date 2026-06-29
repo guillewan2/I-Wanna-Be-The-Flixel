@@ -23,18 +23,15 @@ class LocalCoopSubState extends FlxSubState
 
     var labelIP:FlxText;
     var labelPort:FlxText;
-    var labelLocalPort:FlxText;
     
     var inputIP:FlxInputText;
     var inputPort:FlxInputText;
-    var inputLocalPort:FlxInputText;
     
     var btnConnect:FlxButton;
     var connectTween:FlxTween;
 
     public static var targetIP:String = "127.0.0.1";
-    public static var targetPort:Int = 10690;
-    public static var localPort:Int = 10690;
+    public static var targetPort:Int = 22336;
     public static var isMultiplayerActive:Bool = false;
 
     override public function create() 
@@ -82,19 +79,11 @@ class LocalCoopSubState extends FlxSubState
         labelPort.setFormat(null, 22, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
         assetsGroup.add(labelPort);
 
-        inputPort = new FlxInputText(centerX + 20, centerY - 25, 220, "10690", 20, FlxColor.BLACK, FlxColor.WHITE);
+        inputPort = new FlxInputText(centerX + 20, centerY - 25, 220, "22336", 20, FlxColor.BLACK, FlxColor.WHITE);
         inputPort.filterMode = FlxInputText.ONLY_NUMERIC;
         assetsGroup.add(inputPort);
 
-        labelLocalPort = new FlxText(centerX - 110, centerY + 15, 220, "Local Port");
-        labelLocalPort.setFormat(null, 22, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
-        assetsGroup.add(labelLocalPort);
-
-        inputLocalPort = new FlxInputText(centerX - 110, centerY + 45, 220, "10690", 20, FlxColor.BLACK, FlxColor.WHITE);
-        inputLocalPort.filterMode = FlxInputText.ONLY_NUMERIC;
-        assetsGroup.add(inputLocalPort);
-
-        btnConnect = new FlxButton(centerX - 110, centerY + 115, "Connect!", clickConnect);
+        btnConnect = new FlxButton(centerX - 110, centerY + 80, "Connect!", clickConnect);
         setupFancyButton(btnConnect);
         btnConnect.color = FlxColor.GREEN;
         assetsGroup.add(btnConnect);
@@ -118,19 +107,16 @@ class LocalCoopSubState extends FlxSubState
     {
         targetIP = inputIP.text;
         var parsedPort:Null<Int> = Std.parseInt(inputPort.text);
-        targetPort = (parsedPort != null) ? parsedPort : 10690;
-        var parsedLocalPort:Null<Int> = Std.parseInt(inputLocalPort.text);
-        localPort = (parsedLocalPort != null) ? parsedLocalPort : 10690;
+        targetPort = (parsedPort != null) ? parsedPort : 22336;
         isMultiplayerActive = true;
 
-        trace("Connecting Socket Interface parameters -> IP Target: " + targetIP + " | Port: " + targetPort + " | Local Port: " + localPort);
+        trace("Connecting Socket Interface parameters -> IP Target: " + targetIP + " | Port: " + targetPort);
 
         if (SaveManager.loadGame())
         {
             if (FlxG.sound.music != null) { FlxG.sound.music.stop(); }
             trace("IP INTRODUCED: " + inputIP.text);
-            trace("PORT INTRODUCED: " + inputPort);
-            trace("LOCAL PORT INTRODUCED: " + inputLocalPort.text);
+            trace("PORT INTRODUCED: " + inputPort.text);
             FlxG.switchState(ChapterState.new);
         }
         else if (PlayerData.currentRoom != "map01" && PlayerData.currentChapter != 1)

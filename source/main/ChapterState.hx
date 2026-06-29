@@ -154,14 +154,13 @@ class ChapterState extends FlxState {
 		} else if (LocalCoopSubState.isMultiplayerActive) {
 			var host = LocalCoopSubState.targetIP;
 			var port = LocalCoopSubState.targetPort;
-			var localPort = LocalCoopSubState.localPort;
-			udpClient = new UdpClient(host, port, localPort);
+			udpClient = new UdpClient(host, port, port);
 			trace("Multiplayer client active (via Coop Substate): "
 				+ host
 				+ ":"
 				+ port
 				+ " (bound to local port "
-				+ localPort
+				+ port
 				+ ")");
 		} else {
 			udpClient = null;
