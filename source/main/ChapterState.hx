@@ -1,5 +1,6 @@
 package main;
 
+import main.Multiplayer.UdpClient;
 import flixel.sound.FlxSound;
 import openfl.media.Sound;
 import flixel.FlxCamera;
@@ -32,982 +33,975 @@ import main.mods.ModLoader;
 
 @:allow(main.RoomLoader)
 @:allow(leveldata.events.EventLoader)
-class ChapterState extends FlxState
-{
-    var player:Player;
-    var currentDeaths = PlayerData.totalDeaths;
-    var blood:FlxEmitter;
-    var cameraSnapTimer:Int = 1;
-    var playerTrail:FlxTrail;
-    var virtualPad:FlxVirtualPad;
-    var padScale:Float = 2.5;
-    var targetAlpha:Float = 0.5;
-    var hudGroup:FlxGroup;
-    var bullets:FlxTypedGroup<FlxSprite>;
-    var playerGlow:FlxSprite;
-    var cameraTarget:FlxObject;
-    var scrollSpeed:Float = 0;
-    var isAutoscrolling:Bool = false;
-    public var cameraType:String = "normal";
-    public var isPaused:Bool = false;
-
-    public var bg:FlxSprite;
-    public var currentBGName:String = "";
-    public var mainTilesPath:String = "assets/images/levels/tiles/ch" + PlayerData.currentChapter + "tiles.png";
-    public var currentConfig:ChapterConfig;
-    var map:FlxTilemap;
-    var mapDeco:FlxTilemap;
-    var mapDeco2:FlxTilemap;
-
-    public var tilemapLayers:Map<String, FlxTilemap> = new Map();
-    public var tilemapGroup:flixel.group.FlxGroup;
-
-    public var currentRoomName:String;
-    public var warpsGroup:FlxTypedGroup<WarpTrigger>;
-    public var vignite:FlxSprite;
-
-    public var backEffectObj:FlxBackdrop;
-    public var currentBackEffectName:String = "";
-    public var lastBackScrollBoost:Float = 0;
-
-    public var backDecoEffectObj:FlxBackdrop;
-    public var currentBackDecoEffectName:String = "";
-    public var lastDecoScrollBoost:Float = 0;
-
-    public var doubleEffectObj:FlxBackdrop;
-    public var currentDoubleEffectName:String = "";
-    public var lastDoubleScrollBoost:Float = 0;
-
-    public var frontEffectObj:FlxBackdrop;
-    public var currentFrontEffectName:String = "";
-    public var lastFrontScrollBoost:Float = 0;
-
-    public var topEffectObj:FlxBackdrop;
-    public var currentTopEffectName:String = "";
-    public var lastTopScrollBoost:Float = 0;
-
-    public var eventEffectGroup:FlxGroup;
-    public var savesGroup:FlxTypedGroup<SavePoint>;
-    public var popups:FlxTypedGroup<FlxText>;
-    public var saveParticlesGroup:FlxTypedGroup<FlxEmitter>;
-    public var redCoinParticlesGroup:FlxTypedGroup<FlxEmitter>;
-    public var redCoinsGroup:FlxTypedGroup<RedCoin>;
-    public var doubleJumpGroup:FlxTypedGroup<DoubleJumpObj>;
-    public var flipGroup:FlxTypedGroup<FlipSwitch>;
-    public var portalGroup:FlxTypedGroup<PortalWarp>;
-    public var roomAcid:AcidFluid = null;
-    public var trampolines:FlxTypedGroup<NormalTrampoline>;
-    public var trampolinesMini:FlxTypedGroup<NormalTrampolineMini>;
-    public var platforms:FlxTypedGroup<MovingBlock>;
-    public var fallingBlock:FlxTypedGroup<FallingBlock>;
-    public var lightsGroup:FlxTypedGroup<LightTorch>;
-    public var dangerObjects:FlxGroup;
-    public var slabs:FlxTypedGroup<NormalSlab>;
-    public var solidBlock:FlxTypedGroup<SolidBlock>;
-
-    public var hud:FlxGroup;
-
-    var spikes:FlxGroup;
-    var saveAnimation:FlxSprite;
-    var tiledData:TiledMap;
-    var spawnTimer:Float = 0.1;
-    var timeElapsed:FlxText;
-    var currentChapter:FlxText;
-    var playerDeaths:FlxText;
-    var lastSave:FlxText;
-
-    static var loopPoints:Map<String, Float> = null;
-
-override public function create():Void
-{
-    #if !debug
-        #if !mobile
-        FlxG.mouse.visible = false;
-        #end
-    #end
-
-    #if debug
-        #if !mobile
-        FlxG.mouse.visible = true;
-        #end
-    #end
-
-    hudGroup = new FlxGroup();
-    virtualPad = new FlxVirtualPad(LEFT_RIGHT, A);
-
-    FlxG.bitmap.clearUnused();
-    imgCache();
-    sfxCache();
-
-    dangerObjects = new FlxGroup();
-    savesGroup = new FlxTypedGroup<SavePoint>();
-    popups = new FlxTypedGroup<FlxText>();
-    saveParticlesGroup = new FlxTypedGroup<FlxEmitter>();
-    redCoinsGroup = new FlxTypedGroup<RedCoin>();
-    redCoinParticlesGroup = new FlxTypedGroup<FlxEmitter>();
-    doubleJumpGroup = new FlxTypedGroup<DoubleJumpObj>();
-    eventEffectGroup = new FlxTypedGroup();
-    flipGroup = new FlxTypedGroup<FlipSwitch>();
-    portalGroup = new FlxTypedGroup<PortalWarp>();
-    trampolines = new FlxTypedGroup<NormalTrampoline>();
-    trampolinesMini = new FlxTypedGroup<NormalTrampolineMini>();
-    platforms = new FlxTypedGroup<MovingBlock>();
-    fallingBlock = new FlxTypedGroup<FallingBlock>();
-    lightsGroup = new FlxTypedGroup<LightTorch>();
-    slabs = new FlxTypedGroup<NormalSlab>();
-    solidBlock = new FlxTypedGroup<SolidBlock>();
-    bullets = new FlxTypedGroup<FlxSprite>();
-    hud = new FlxGroup();
-
-    playerGlow = new FlxSprite();
-    playerGlow.loadGraphic(AssetPaths.playerGlow__png, false);
-    playerGlow.blend = flash.display.BlendMode.ADD;
-    playerGlow.alpha = 0.15;
-
-    warpsGroup = new FlxTypedGroup<WarpTrigger>(); add(warpsGroup);
-    player = new Player(PlayerData.spawnX, PlayerData.spawnY);
-    playerTrail = new FlxTrail(player, null, 24, 0, 0.2, 0.02);
-    playerTrail.alpha = 0;
-
-    vignite = new FlxSprite();
-    vignite.loadGraphic(AssetPaths.vignite__png, false);
-    vignite.scrollFactor.set(0, 0);
-    vignite.alpha = 1;
-    vignite.visible = true;
-    vignite.screenCenter();
-
-    saveAnimation = new FlxSprite();
-    saveAnimation.makeGraphic(FlxG.width + 1, FlxG.height, FlxColor.WHITE, false);
-    saveAnimation.alpha = 0;
-    saveAnimation.scrollFactor.set(0,0);
-    
-    RoomLoader.loadRoom(this, PlayerData.currentRoom);
-    // ;
-
-    switch(PlayerData.currentChapter)
-    {
-        case 1: chapter1Cache();
-        case 2: currentConfig = new ChapterConfig(2, "");
-        default: currentConfig = new ChapterConfig(0, "");
-    }
-
-    // currentConfig.cacheAssets();
-
-    // FlxG.stage.addEventListener(openfl.events.Event.DEACTIVATE, onFocusLost);
-
-    super.create();
-
-}
-
-override public function update(elapsed:Float):Void
-{
-    if (isAutoscrolling && cameraTarget != null) 
-    {
-        cameraTarget.x += scrollSpeed * elapsed;
-        cameraTarget.y = 300;
-        
-        if (player.x + player.width < FlxG.camera.scroll.x) { killPlayer(); }
-    }
-
-    else if (!isAutoscrolling && cameraTarget != null)
-    {
-        if (cameraType == "unlockX")
-        {
-            cameraTarget.x = player.x;
-            // cameraTarget.y = map.y + (map.height / 2);
-            cameraTarget.y = map.y; 
-        }
-        else if (cameraType == "unlockY")
-        {
-            cameraTarget.x = map.x + (map.width / 2); 
-            cameraTarget.y = player.y;
-        }
-        else if (cameraType == "unlockXY")
-        {
-            cameraTarget.x = player.x;
-            cameraTarget.y = player.y;
-        }
-    }
-
-    #if !mobile
-    if (FlxG.keys.justPressed.F11)
-    {
-        if (FlxG.fullscreen == false) FlxG.fullscreen = true;
-        else FlxG.fullscreen = false;
-    }
-    #end
-
-    if (subState == null)
-    {
-        PlayerData.totalSeconds += elapsed;
-    }
-
-
-    super.update(elapsed);
-
-    FlxG.collide(player, map);
-    FlxG.collide(player, slabs);
-    FlxG.collide(player, solidBlock);
-
-    FlxG.overlap(player, warpsGroup, (p, w) -> { HandleWarp(cast w); });
-    FlxG.overlap(player, savesGroup, (p, s) -> { SaveLogicSprite(cast s); });
-    FlxG.overlap(player, redCoinsGroup, (p, c) -> { RedCoinLogic(cast c); });
-    FlxG.overlap(player, doubleJumpGroup, (p, d) -> { DoubleJumpLogic(cast d); });
-    FlxG.overlap(player, portalGroup, (p, pw) -> { PortalWarpLogic(cast pw); });
-    FlxG.overlap(player, flipGroup, (p, sw) -> { FlipSwitchObjLogic(cast sw); });
-
-    FlxG.collide(player, trampolines, (p, t) -> { var tramp:NormalTrampoline = cast t;
-        if (player.touching == DOWN && tramp.touching == UP)
-            {
-                player.velocity.y = -1000; tramp.launch();
-    FlxG.sound.play(AssetPaths.trampoline_bounce__ogg, 0.5, false); }});
-    FlxG.collide(player, trampolinesMini, (p:Player, t:NormalTrampolineMini) ->
-    { 
-        var trampMini:NormalTrampolineMini = cast t;
-        
-        if (trampMini.animation.curAnim != null && 
-            StringTools.startsWith(trampMini.animation.curAnim.name, "jump") && 
-            !trampMini.animation.finished) return;
-
-        var hitFloor = p.touching.has(DOWN);
-        var hitPlayerLeft = p.touching.has(LEFT);
-        var hitPlayerRight = p.touching.has(RIGHT);
-
-        switch (trampMini.launchDir) 
-        {
-            case "up":
-                if (hitFloor)
-                {
-                    p.velocity.y = -730;
-                    p.canDoubleJump = true; 
-                    trampMini.launch();
-                    FlxG.sound.play(AssetPaths.trampoline_bounce__ogg, 0.5);
-                }
-                
-            case "left":
-                if (hitPlayerLeft && !hitFloor)
-                {
-                    p.maxVelocity.x = 800;
-                    p.velocity.x = 800;
-                    p.velocity.y = -600;
-                    p.canDoubleJump = true;
-                    trampMini.launch();
-                    FlxG.sound.play(AssetPaths.big_bounce__ogg, 0.5);
-                    FlxG.sound.play(AssetPaths.lateral_bounce__ogg, 0.5);
-                }
-
-            case "right":
-                if (hitPlayerRight && !hitFloor)
-                {
-                    p.maxVelocity.x = 800; 
-                    p.velocity.x = -800; 
-                    p.velocity.y = -600;
-                    p.canDoubleJump = true;
-                    trampMini.launch();
-                    FlxG.sound.play(AssetPaths.big_bounce__ogg, 0.5);
-                    FlxG.sound.play(AssetPaths.lateral_bounce__ogg, 0.5);
-                }
-        }
-    });
-
-    FlxG.collide(player, platforms, function(p:Player, plat:MovingBlock)
-    {
-        if (p.touching.has(FlxDirectionFlags.DOWN) && plat.touching.has(FlxDirectionFlags.UP))
-        {
-            
-            if (plat.velocity.y != 0)
-            {
-                
-                p.y = plat.y - p.height;
-            }
-            p.velocity.y = 0;
-        }
-    });
-
-    FlxG.collide(platforms, map, function(plat:MovingBlock, wall:FlxObject)
-    { plat.stopMovement(); });
-
-    FlxG.collide(player, fallingBlock, function(p:Player, plat:FallingBlock)
-    {
-        if (p.touching.has(FlxDirectionFlags.DOWN) && plat.touching.has(FlxDirectionFlags.UP))
-        {
-            
-            if (plat.velocity.y != 0)
-            {
-                p.y = plat.y - p.height;
-            }
-
-            p.velocity.y = 0;
-        }
-    });
-            
-    if (spawnTimer > 0) { spawnTimer -= elapsed; }
-    
-    else
-    {
-        FlxG.overlap(player, dangerObjects, function(p:flixel.FlxObject, hazard:flixel.FlxObject)
-        {
-            if (FlxG.pixelPerfectOverlap(player, cast hazard))
-            {
-                killPlayer();
-            }
-        });
-    }
-
-    if (PlayerData.saveCooldown > 0)
-    {
-        PlayerData.saveCooldown -= elapsed;
-        if (PlayerData.saveCooldown < 0) PlayerData.saveCooldown = 0;
-    }
-
-    if (timeElapsed != null)
-    {
-        timeElapsed.text = "Time: " + PlayerData.formatTime();
-    }
-
-    #if !mobile
-        if (FlxG.keys.justPressed.TAB)
-        {
-            FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug;
-        }
-
-    if (FlxG.keys.justPressed.R)
-    {
-            var currentSeconds = PlayerData.totalSeconds;
-            PlayerData.totalDeaths++; 
-            leveldata.misc.SaveManager.saveGameRestart();
-            leveldata.misc.SaveManager.loadGame();
-            PlayerData.totalSeconds = currentSeconds;
-            FlxG.resetState();
-    }
-
-        if (FlxG.keys.justPressed.K) { killPlayer(); }
-
-        if (FlxG.keys.justPressed.Z) PlayerShoot();
-        {
-            FlxG.collide(bullets, map, (bullet, wall) -> { bullet.kill(); });
-        }
-
-        if (FlxG.keys.justPressed.ESCAPE && player.exists)
-        {
-            isPaused = true;
-            this.persistentUpdate = false;
-            openSubState(new gui.PauseState());
-        }
-    #end
-    
-    if (saveAnimation.alpha > 0) { saveAnimation.alpha -= 0.01; }
-    
-    bullets.forEachAlive((bullet) ->
-    {
-        if (!bullet.isOnScreen())
-        {
-            bullet.kill();
-        }
-    });
-
-    if (player != null && player.exists && playerGlow != null)
-    {
-        playerGlow.exists = true;
-        playerGlow.x = player.x + (player.width / 2) - (playerGlow.width / 2);
-        playerGlow.y = player.y + (player.height / 2) - (playerGlow.height / 2);
-    }
-    else if (playerGlow != null)
-    {
-        playerGlow.exists = false;
-    }
-
-    var trailTarget = player.velocity.y >= 800 ? 0.05 : 0.0;
-    playerTrail.alpha = flixel.math.FlxMath.lerp(playerTrail.alpha, trailTarget, 0.02);
-
-    #if mobile
-    if (virtualPad.buttonA.justPressed) PlayerShoot();
-    {
-        FlxG.collide(bullets, map, (bullet, wall) -> { bullet.kill(); });
-    }
-    #end
-
-    if (player.x > map.width + 100 || player.y > map.height + 100) 
-    {
-        killPlayer();
-    }
-
-    if (FlxG.keys.justPressed.T)
-    {
-        trace("PLAYER X: " + player.x + " ||| PLAYER Y: " + player.y);
-    }
-
-    if (FlxG.keys.justPressed.Y)
-    {
-        trace("MAP WIDTH: " + map.width);
-        trace("MAP HEIGHT: " + map.height);
-    }
-
-    #if !mobile
-        if (FlxG.keys.justPressed.ONE) RoomLoader.loadRoom(this, "testing");
-        if (FlxG.keys.justPressed.TWO) RoomLoader.loadRoom(this, "map11");
-        if (FlxG.keys.justPressed.THREE) RoomLoader.loadRoom(this, "map37");
-        if (FlxG.keys.justPressed.I) spawnTimer = 9999;
-        if (FlxG.keys.justPressed.M)
-        {
-            var current = currentRoomName; 
-            var numPart = Std.parseInt(current.substr(3));
-            numPart++;
-            var nextRoomNum = (numPart < 10) ? "0" + numPart : Std.string(numPart);
-            var nextRoomName = "map" + nextRoomNum;
-            
-            RoomLoader.loadRoom(this, nextRoomName);
-
-            trace("Teleported to: " + nextRoomName);
-            spawnTimer = 2.0;
-        }
-    #end
-
-    if (FlxG.keys.justPressed.P)
-    {
-        trace("--- COIN STATUS ---");
-        trace("Total Coins: " + PlayerData.getCoinCount());
-        trace("IDs in memory: " + PlayerData.collectedCoins);
-    }
-
-    if (cameraType != "normal")
-    {
-        if (cameraSnapTimer >= 0)
-        {
-            if (cameraSnapTimer <= 0)
-            {
-                FlxG.camera.follow(cameraTarget, PLATFORMER, 0.1);
-                return;
-            }
-
-            FlxG.camera.follow(cameraTarget, PLATFORMER, 1);
-            cameraSnapTimer -= 1;
-
-        }
-    }
-
-}   
-
-function imgCache():Void
-{
-    FlxG.bitmap.add(AssetPaths.save__png);
-    FlxG.bitmap.add(AssetPaths.playerGlow__png);
-
-}
-
-function sfxCache():Void
-{
-    FlxG.sound.cache(AssetPaths.jump__ogg);
-    FlxG.sound.cache(AssetPaths.doublejump__ogg);
-    FlxG.sound.cache(AssetPaths.break_block__ogg);
-    FlxG.sound.cache(AssetPaths.savedgame__ogg);
-    FlxG.sound.cache(AssetPaths.death_bgm__ogg);
-}
-
-function chapter1Cache():Void
-{
-    FlxG.bitmap.add(AssetPaths.ch1tiles__png);
-}
-
-function chapter2Cache():Void
-{
-    // TODO:
-}
-
-function PlayerShoot():Void
-{
-    var bullet = new FlxSprite();
-    bullet.loadGraphic(AssetPaths.bullet__png, false);
-    add(bullet);
-
-    if (Player.isFacingRIGHT == false)
-    {
-        bullet.velocity.x = -800;
-        bullet.x = player.x + -20;
-        bullet.y = player.y + 4;
-    }
-
-    else if (Player.isFacingRIGHT == true)
-    {
-        bullet.velocity.x = 800;
-        bullet.x = player.x + 30;
-        bullet.y = player.y + 4;
-    }
-
-    bullets.add(bullet);
-    FlxG.sound.play(AssetPaths.playershoot__ogg, 0.5, false);
-
-}
-
-function HandleWarp(w:WarpTrigger):Void
-{
-    if (w.newChapter != null && w.newChapter != "")
-    {
-        PlayerData.currentChapter = Std.parseInt(w.newChapter);
-    }
-
-    var oldWidth:Float = map.width;
-    var relativeX:Float = player.x - map.x;
-
-    RoomLoader.loadRoom(this, w.targetRoom);
-
-    switch (w.direction)
-    {
-        case "up":
-            player.y = map.y + map.height - player.height - 60; 
-            var widthDiff = oldWidth - map.width;
-            player.x = (map.x + relativeX) - widthDiff;
-
-        case "down":
-            player.y = map.y + 60;
-
-            // TODO: Hacer lo mismo que con el up
-
-        case "left":
-            player.x = map.x + map.width - player.width - 60;
-
-        case "right":
-            player.x = map.x + 60;
-    }
-
-    var minX:Float = map.x + 20; 
-    var maxX:Float = map.x + map.width - player.width - 20;
-
-    if (player.x < minX) player.x = minX;
-    if (player.x > maxX) player.x = maxX;
-
-    if (cameraTarget != null && cameraType != "normal")
-    {
-        if (cameraType == "unlockY") cameraTarget.x = FlxG.width / 2;
-        else cameraTarget.x = player.x;
-        
-        if (cameraType == "unlockX") cameraTarget.y = FlxG.height / 2;
-        else cameraTarget.y = player.y;
-    }
-    
-    spawnTimer = 0.15; 
-}
-
-function setupHUD():Void
-{
-
-    #if debug
-    currentChapter = new FlxText(50, FlxG.height - 90, 0, "Chapter: ", 18);
-    currentChapter.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
-    currentChapter.scrollFactor.set(0, 0);
-    currentChapter.alpha = 0.5;
-    add(hud);
-
-    lastSave = new FlxText(50, FlxG.height - 60, 0, "Last Save: ", 18);
-    lastSave.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
-    lastSave.scrollFactor.set(0, 0);
-    lastSave.alpha = 0.5;
-    add(hud);
-    #end
-
-    #if !mobile
-        playerDeaths = new FlxText(FlxG.width - 260, FlxG.height - 80, 0, "Total Resets: ", 22);
-        playerDeaths.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
-        playerDeaths.scrollFactor.set(0, 0);
-        playerDeaths.alpha = 0.5;
-        add(hud);
-    #end
-
-    #if mobile
-        playerDeaths = new FlxText(FlxG.width - 260, 30, 0, "Total Deaths: ", 22);
-        playerDeaths.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
-        playerDeaths.scrollFactor.set(0, 0);
-        playerDeaths.alpha = 0.5;
-        add(hud);
-    #end
-
-    timeElapsed = new FlxText(50, 20, 0, "Time: 00:00:00", 22);
-    timeElapsed.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
-    timeElapsed.scrollFactor.set(0, 0);
-    timeElapsed.visible = false;
-    add(timeElapsed);
-
-}
-
-function SaveLogicSprite(saveObj:SavePoint):Void
-{
-    if (saveObj.alive) 
-    {
-        if (PlayerData.currentRoom == currentRoomName)
-        {
-            saveObj.alive = false;
-            saveObj.visible = false;
-            saveObj.kill();
-            return;
-        }
-        PlayerData.spawnX = player.x; 
-        PlayerData.spawnY = player.y + 60;
-        PlayerData.currentRoom = currentRoomName;
-
-        if (PlayerData.saveCooldown <= 0)
-        {
-            saveObj.pop(player);
-            saveAnimation.alpha = 0.5;
-            FlxG.sound.play(AssetPaths.savedgame__ogg, 0.5, false);
-            SaveManager.saveGame();
-        }
-
-        saveObj.alive = false;
-        saveObj.visible = false;
-        saveObj.kill();
-    }
-}
-
-function RedCoinLogic(redCoin:RedCoin):Void
-{
-    if (redCoin == null || !redCoin.exists || !redCoin.alive) return;
-    if (redCoin.alive && redCoin.exists)
-    {
-        if (!PlayerData.isCoinCollected(redCoin.coinID))
-        {
-            trace("Pushing coin ID to memory: " + redCoin.coinID);
-            PlayerData.collectedCoins.push(redCoin.coinID);
-        }
-
-        saveAnimation.alpha = 0.5;
-        redCoin.pop(player);
-        trace("Collected coin with ID: " + redCoin.coinID);
-        FlxG.sound.play(AssetPaths.coin__ogg, 0.5, false);
-        redCoin.kill();
-    }
-}
-function DoubleJumpLogic(doublejObj:DoubleJumpObj):Void
-{
-    if (doublejObj.alive)
-    {
-        if (player.canDoubleJump == false) { player.canDoubleJump = true; }
-        doublejObj.kill();
-    }
-}
-
-function FlipSwitchObjLogic(flipSwitchObj:FlipSwitch):Void
-{
-    if (!flipSwitchObj.alive) return;
-
-    flipSwitchObj.kill();
-    FlxG.sound.play(AssetPaths.flip__ogg);
-
-    player.flipGravity();
-
-    FlxTween.tween(FlxG.camera, {
-        angle: player.isFlipped ? 180 : 0
-    }, 0.5, {
-        ease: FlxEase.sineInOut
-    });
-}
-
-function PortalWarpLogic(portalLogic:PortalWarp):Void
-{
-    RoomLoader.loadRoom(this, "map33");
-    FlxG.camera.shake(0.005, 0.25);
-    saveAnimation.alpha = 0.5;
-    FlxG.sound.play(AssetPaths.warp__ogg, 0.85, false);
-    player.x = 350;
-    player.y = 300;
-}
-
-function killPlayer():Void
-{
-		if (player != null && player.exists && player.alive)
-    {
-        if (FlxG.sound.music != null)
-        {
-            PlayerData.lastMusicTime = FlxG.sound.music.time;
-        }
-
-        PlayerData.isRespawning = true;
-        PlayerData.saveCooldown = 1.0;
-
-        PlayerData.deathX = player.x; PlayerData.deathY = player.y;
-        playerGlow.visible = false;
-		player.kill();
-		if (playerTrail != null)
-		{
-			playerTrail.kill();
+class ChapterState extends FlxState {
+	var player:Player;
+	var currentDeaths = PlayerData.totalDeaths;
+	var blood:flixel.effects.particles.FlxEmitter;
+	var cameraSnapTimer:Int = 1;
+	var playerTrail:FlxTrail;
+	var virtualPad:FlxVirtualPad;
+	var padScale:Float = 2.5;
+	var targetAlpha:Float = 0.5;
+	var hudGroup:FlxGroup;
+	var bullets:FlxTypedGroup<FlxSprite>;
+	var playerGlow:FlxSprite;
+	var cameraTarget:FlxObject;
+	var scrollSpeed:Float = 0;
+	var isAutoscrolling:Bool = false;
+
+	public var cameraType:String = "normal";
+	public var isPaused:Bool = false;
+
+	public var bg:FlxSprite;
+	public var currentBGName:String = "";
+	public var mainTilesPath:String = "assets/images/levels/tiles/ch" + PlayerData.currentChapter + "tiles.png";
+	public var currentConfig:ChapterConfig;
+
+	var map:FlxTilemap;
+	var mapDeco:FlxTilemap;
+	var mapDeco2:FlxTilemap;
+
+	public var tilemapLayers:Map<String, FlxTilemap> = new Map();
+	public var tilemapGroup:flixel.group.FlxGroup;
+
+	public var currentRoomName:String;
+	public var warpsGroup:FlxTypedGroup<WarpTrigger>;
+	public var vignite:FlxSprite;
+
+	public var backEffectObj:FlxBackdrop;
+	public var currentBackEffectName:String = "";
+	public var lastBackScrollBoost:Float = 0;
+
+	public var backDecoEffectObj:FlxBackdrop;
+	public var currentBackDecoEffectName:String = "";
+	public var lastDecoScrollBoost:Float = 0;
+
+	public var doubleEffectObj:FlxBackdrop;
+	public var currentDoubleEffectName:String = "";
+	public var lastDoubleScrollBoost:Float = 0;
+
+	public var frontEffectObj:FlxBackdrop;
+	public var currentFrontEffectName:String = "";
+	public var lastFrontScrollBoost:Float = 0;
+
+	public var topEffectObj:FlxBackdrop;
+	public var currentTopEffectName:String = "";
+	public var lastTopScrollBoost:Float = 0;
+
+	public var eventEffectGroup:FlxGroup;
+	public var savesGroup:FlxTypedGroup<SavePoint>;
+	public var popups:FlxTypedGroup<FlxText>;
+	public var saveParticlesGroup:FlxTypedGroup<FlxEmitter>;
+	public var redCoinParticlesGroup:FlxTypedGroup<FlxEmitter>;
+	public var redCoinsGroup:FlxTypedGroup<RedCoin>;
+	public var doubleJumpGroup:FlxTypedGroup<DoubleJumpObj>;
+	public var flipGroup:FlxTypedGroup<FlipSwitch>;
+	public var portalGroup:FlxTypedGroup<PortalWarp>;
+	public var roomAcid:AcidFluid = null;
+	public var trampolines:FlxTypedGroup<NormalTrampoline>;
+	public var trampolinesMini:FlxTypedGroup<NormalTrampolineMini>;
+	public var platforms:FlxTypedGroup<MovingBlock>;
+	public var fallingBlock:FlxTypedGroup<FallingBlock>;
+	public var lightsGroup:FlxTypedGroup<LightTorch>;
+	public var dangerObjects:FlxGroup;
+	public var slabs:FlxTypedGroup<NormalSlab>;
+	public var solidBlock:FlxTypedGroup<SolidBlock>;
+
+	public var hud:FlxGroup;
+
+	var spikes:FlxGroup;
+	var saveAnimation:FlxSprite;
+	var tiledData:TiledMap;
+	var spawnTimer:Float = 0.1;
+	var timeElapsed:FlxText;
+	var currentChapter:FlxText;
+	var playerDeaths:FlxText;
+	var lastSave:FlxText;
+
+	var udpClient:UdpClient;
+
+	public var remotePlayer:main.RemotePlayer = null;
+
+	var networkTimer:Float = 0;
+	var tickRate:Float = 0.05; // 20 ticks per second
+
+	static var loopPoints:Map<String, Float> = null;
+
+	override public function create():Void {
+		#if !debug
+		#if !mobile
+		FlxG.mouse.visible = false;
+		#end
+		#end
+
+		#if debug
+		#if !mobile
+		FlxG.mouse.visible = true;
+		#end
+		#end
+
+		var clientAddr = UdpClient.getClientAddress();
+		if (clientAddr != null) {
+			udpClient = new UdpClient(clientAddr.host, clientAddr.port, clientAddr.localPort);
+			trace("Multiplayer client active: "
+				+ clientAddr.host
+				+ ":"
+				+ clientAddr.port
+				+ " (bound to local port "
+				+ clientAddr.localPort
+				+ ")");
+		} else {
+			udpClient = null;
+			trace("Multiplayer client inactive (no -client IP:PORT argument)");
 		}
 
-        if (FlxG.sound.music != null) FlxG.sound.music.stop();
-		this.persistentUpdate = true;
-        PlayerData.totalDeaths -= 1;
-        bloodParticles();
-        openSubState(new DeathState());
-    }
+		hudGroup = new FlxGroup();
+		virtualPad = new FlxVirtualPad(LEFT_RIGHT, A);
 
-}
+		FlxG.bitmap.clearUnused();
+		imgCache();
+		sfxCache();
 
-function initLoopPoints():Void
-{
-    if (loopPoints != null) return;
-    
-    loopPoints = new Map<String, Float>();
-    
-    var fileContent:String = openfl.Assets.getText("assets/data/music/loopPoints.txt");
-    
-    if (fileContent != null)
-    {
-        var lines:Array<String> = fileContent.split("\n");
-        for (line in lines)
-        {
-            var parts:Array<String> = line.split(":");
-            if (parts.length == 2)
-            {
-                var songName:String = StringTools.trim(parts[0]);
-                var loopTime:Float = Std.parseFloat(StringTools.trim(parts[1]));
-                
-                loopPoints.set(songName, loopTime);
-            }
-        }
-    }
-}
+		dangerObjects = new FlxGroup();
+		savesGroup = new FlxTypedGroup<SavePoint>();
+		popups = new FlxTypedGroup<FlxText>();
+		saveParticlesGroup = new FlxTypedGroup<FlxEmitter>();
+		redCoinsGroup = new FlxTypedGroup<RedCoin>();
+		redCoinParticlesGroup = new FlxTypedGroup<FlxEmitter>();
+		doubleJumpGroup = new FlxTypedGroup<DoubleJumpObj>();
+		eventEffectGroup = new FlxTypedGroup();
+		flipGroup = new FlxTypedGroup<FlipSwitch>();
+		portalGroup = new FlxTypedGroup<PortalWarp>();
+		trampolines = new FlxTypedGroup<NormalTrampoline>();
+		trampolinesMini = new FlxTypedGroup<NormalTrampolineMini>();
+		platforms = new FlxTypedGroup<MovingBlock>();
+		fallingBlock = new FlxTypedGroup<FallingBlock>();
+		lightsGroup = new FlxTypedGroup<LightTorch>();
+		slabs = new FlxTypedGroup<NormalSlab>();
+		solidBlock = new FlxTypedGroup<SolidBlock>();
+		bullets = new FlxTypedGroup<FlxSprite>();
+		hud = new FlxGroup();
 
-function updateMusic():Void
-{
-    if (player != null && !player.alive) return;
-    if (subState != null) return;
+		playerGlow = new FlxSprite();
+		playerGlow.loadGraphic(AssetPaths.playerGlow__png, false);
+		playerGlow.blend = flash.display.BlendMode.ADD;
+		playerGlow.alpha = 0.15;
 
-    var musicLayer = tiledData.getLayer("music");
-    if (musicLayer == null) return;
-    var songName:String = musicLayer.properties.get("songName");
-    
-    var relativePath = "music/chapters/chapter" + PlayerData.currentChapter + "bgm/" + songName + ".ogg";
-    var songPath = ModLoader.getAsset(relativePath);
-    
-    #if sys
-    var isModded:Bool = ModLoader.overrides.exists(relativePath);
-    #else
-    var isModded:Bool = false;
-    #end
+		warpsGroup = new FlxTypedGroup<WarpTrigger>();
+		add(warpsGroup);
+		player = new Player(PlayerData.spawnX, PlayerData.spawnY);
+		playerTrail = new FlxTrail(player, null, 24, 0, 0.2, 0.02);
+		playerTrail.alpha = 0;
 
-    initLoopPoints();    
-    var loopStartMs:Float = 0;
-    
-    if (!isModded && loopPoints.exists(songName)) 
-    {
-        loopStartMs = loopPoints.get(songName) * 1000;
-    }
+		vignite = new FlxSprite();
+		vignite.loadGraphic(AssetPaths.vignite__png, false);
+		vignite.scrollFactor.set(0, 0);
+		vignite.alpha = 1;
+		vignite.visible = true;
+		vignite.screenCenter();
 
-    if (PlayerData.currentSong == songPath && FlxG.sound.music != null && FlxG.sound.music.playing)
-    {
-        if (PlayerData.isRespawning)
-        {
-            FlxG.sound.music.time = PlayerData.lastMusicTime;
-            PlayerData.isRespawning = false;
-        }
-        return; 
-    }
+		saveAnimation = new FlxSprite();
+		saveAnimation.makeGraphic(FlxG.width + 1, FlxG.height, FlxColor.WHITE, false);
+		saveAnimation.alpha = 0;
+		saveAnimation.scrollFactor.set(0, 0);
 
-    PlayerData.currentSong = songPath;
+		RoomLoader.loadRoom(this, PlayerData.currentRoom);
+		// ;
 
-    #if sys
-    if (ModLoader.overrides.exists(relativePath))
-    {
-        var customSound = openfl.media.Sound.fromFile(songPath);
-        if (customSound != null)
-        {
-            FlxG.sound.playMusic(customSound, 0.5, true);
-        }
-        else
-        {
-            FlxG.sound.playMusic("assets/" + relativePath, 0.5, true); // Fallback
-        }
-    }
-    else
-    {
-        FlxG.sound.playMusic(songPath, 0.5, true);
-    }
-    #else
-    FlxG.sound.playMusic(songPath, 0.5, true);
-    #end
+		switch (PlayerData.currentChapter) {
+			case 1:
+				chapter1Cache();
+			case 2:
+				currentConfig = new ChapterConfig(2, "");
+			default:
+				currentConfig = new ChapterConfig(0, "");
+		}
 
-    if (FlxG.sound.music != null)
-    {
-        FlxG.sound.music.loopTime = loopStartMs;
-    }
+		// currentConfig.cacheAssets();
 
-    if (PlayerData.isRespawning)
-    {
-        if (FlxG.sound.music != null) FlxG.sound.music.update(0);
-        
-        FlxG.sound.music.time = PlayerData.lastMusicTime;
-        PlayerData.isRespawning = false;
-    }
-}
+		// FlxG.stage.addEventListener(openfl.events.Event.DEACTIVATE, onFocusLost);
 
-function autoScroll():Void
-{
-    for (layer in tiledData.layers)
-    {
-        if (layer.name == "Autoscroll")
-        {
-            this.isAutoscrolling = true;
-        }
+		super.create();
+	}
 
-        if (layer.type == TiledLayerType.OBJECT)
-        {
-            var objLayer:TiledObjectLayer = cast layer;
-            
-            if (layer.name == "ScrollSettings" && objLayer.properties.contains("speed"))
-            {
-                this.scrollSpeed = Std.parseFloat(objLayer.properties.get("speed"));
-            }
-            
-            if (layer.name == "PlayerSpeed" && objLayer.properties.contains("value"))
-            {
-                var pSpeed = Std.parseFloat(objLayer.properties.get("value"));
-                player.mapMaxSpeed = pSpeed;
-                player.maxVelocity.x = pSpeed;
-            }
-        }
-    }
-}
+	override public function update(elapsed:Float):Void {
+		if (isAutoscrolling && cameraTarget != null) {
+			cameraTarget.x += scrollSpeed * elapsed;
+			cameraTarget.y = 300;
 
-function cameraScroll():Void
-{
-    cameraType = "normal"; 
-    FlxG.camera.target = null; 
+			if (player.x + player.width < FlxG.camera.scroll.x) {
+				killPlayer();
+			}
+		} else if (!isAutoscrolling && cameraTarget != null) {
+			if (cameraType == "unlockX") {
+				cameraTarget.x = player.x;
+				// cameraTarget.y = map.y + (map.height / 2);
+				cameraTarget.y = map.y;
+			} else if (cameraType == "unlockY") {
+				cameraTarget.x = map.x + (map.width / 2);
+				cameraTarget.y = player.y;
+			} else if (cameraType == "unlockXY") {
+				cameraTarget.x = player.x;
+				cameraTarget.y = player.y;
+			}
+		}
 
-    var camLayer = tiledData.getLayer("camera");
-    if (camLayer != null && camLayer.properties.contains("cameraType"))
-    {
-        cameraType = camLayer.properties.get("cameraType");
-    }
+		#if !mobile
+		if (FlxG.keys.justPressed.F11) {
+			if (FlxG.fullscreen == false)
+				FlxG.fullscreen = true;
+			else
+				FlxG.fullscreen = false;
+		}
+		#end
 
-    if (map != null && cameraType != "unlockX")
-    {
-        FlxG.camera.setScrollBoundsRect(map.x + 60, map.y + 65, map.width - 50, map.height + 65, false);
-        FlxG.worldBounds.set(map.x - 200, map.y - 200, map.width + 400, map.height + 400);
-    }
+		if (subState == null) {
+			PlayerData.totalSeconds += elapsed;
+		}
 
-    else if (map != null && cameraType == "unlockX")
-    {
-        FlxG.camera.setScrollBoundsRect(map.x + 60, map.y + 65, map.width - 120, map.height + 65, false);
-        FlxG.worldBounds.set(map.x - 200, map.y - 200, map.width + 400, map.height + 400);
-    }
+		super.update(elapsed);
 
-    else if (map != null && cameraType == "debug")
-    {
-        FlxG.camera.follow(player, FlxCameraFollowStyle.LOCKON);
-    }
+		FlxG.collide(player, map);
+		FlxG.collide(player, slabs);
+		FlxG.collide(player, solidBlock);
 
-    if (cameraTarget == null)
-    {
-        cameraTarget = new flixel.FlxObject(player.x, player.y, 1, 1);
-        add(cameraTarget);
-    }
+		FlxG.overlap(player, warpsGroup, (p, w) -> {
+			HandleWarp(cast w);
+		});
+		FlxG.overlap(player, savesGroup, (p, s) -> {
+			SaveLogicSprite(cast s);
+		});
+		FlxG.overlap(player, redCoinsGroup, (p, c) -> {
+			RedCoinLogic(cast c);
+		});
+		FlxG.overlap(player, doubleJumpGroup, (p, d) -> {
+			DoubleJumpLogic(cast d);
+		});
+		FlxG.overlap(player, portalGroup, (p, pw) -> {
+			PortalWarpLogic(cast pw);
+		});
+		FlxG.overlap(player, flipGroup, (p, sw) -> {
+			FlipSwitchObjLogic(cast sw);
+		});
 
-    // 5. Apply the correct Follow behavior
-    if (this.isAutoscrolling)
-    {
-        cameraTarget.setPosition(player.x + 465, player.y);
-        FlxG.camera.follow(cameraTarget, PLATFORMER, 1);
-    }
-    else if (cameraType != "normal")
-    {
+		FlxG.collide(player, trampolines, (p, t) -> {
+			var tramp:NormalTrampoline = cast t;
+			if (player.touching == DOWN && tramp.touching == UP) {
+				player.velocity.y = -1000;
+				tramp.launch();
+				FlxG.sound.play(AssetPaths.trampoline_bounce__ogg, 0.5, false);
+			}
+		});
+		FlxG.collide(player, trampolinesMini, (p:Player, t:NormalTrampolineMini) -> {
+			var trampMini:NormalTrampolineMini = cast t;
 
-        var cameraMarginX:Float = 0;
-        var cameraMarginY:Float = 0;
-        var cameraMarginW:Float = 0;
-        var cameraMarginH:Float = 0;
+			if (trampMini.animation.curAnim != null
+				&& StringTools.startsWith(trampMini.animation.curAnim.name, "jump")
+				&& !trampMini.animation.finished)
+				return;
 
-        if (cameraType == "unlockX")
-        {
-            cameraMarginX = FlxG.width * 0.3;
-            cameraMarginW = FlxG.width * 0.3; // 30% + 40% = 70%
-            
-            cameraMarginY = FlxG.height / 2;
-            cameraMarginH = 0;
-        }
-        else if (cameraType == "unlockY")
-        {
-            cameraMarginX = FlxG.width / 2;
-            cameraMarginW = 0; 
-            
-            cameraMarginY = FlxG.height * 0.3;
-            cameraMarginH = FlxG.height * 0.4;
-        }
-        else if (cameraType == "unlockXY")
-        {
-            cameraMarginX = FlxG.width * 0.3;
-            cameraMarginW = FlxG.width * 0.4;
-            cameraMarginY = FlxG.height * 0.3;
-            cameraMarginH = FlxG.height * 0.4;
-        }
+			var hitFloor = p.touching.has(DOWN);
+			var hitPlayerLeft = p.touching.has(LEFT);
+			var hitPlayerRight = p.touching.has(RIGHT);
 
-        FlxG.camera.deadzone = flixel.math.FlxRect.get(cameraMarginX, cameraMarginY, cameraMarginW, cameraMarginH);
-    }
-    else 
-    {
-        if (map != null) 
-        {
-            FlxG.camera.scroll.set(-260, -265);
-        }
-    }
+			switch (trampMini.launchDir) {
+				case "up":
+					if (hitFloor) {
+						p.velocity.y = -730;
+						p.canDoubleJump = true;
+						trampMini.launch();
+						FlxG.sound.play(AssetPaths.trampoline_bounce__ogg, 0.5);
+					}
 
-    
-}
+				case "left":
+					if (hitPlayerLeft && !hitFloor) {
+						p.maxVelocity.x = 800;
+						p.velocity.x = 800;
+						p.velocity.y = -600;
+						p.canDoubleJump = true;
+						trampMini.launch();
+						FlxG.sound.play(AssetPaths.big_bounce__ogg, 0.5);
+						FlxG.sound.play(AssetPaths.lateral_bounce__ogg, 0.5);
+					}
 
-function bloodParticles():Void
-{
-    blood = new FlxEmitter(PlayerData.deathX, PlayerData.deathY, 250);
-    blood.makeParticles(3, 3, FlxColor.RED, 250);
-    blood.launchMode = CIRCLE;
-    blood.speed.set(300, 700); 
-    blood.acceleration.set(0, 1200); 
-    blood.lifespan.set(2, 4);
-    blood.alpha.set(1, 1, 0, 0);
-        
-    blood.scale.set(0.5, 0.5, 1.5, 1.5);
-    add(blood);
-    blood.start(true, 0, 250);
-}
+				case "right":
+					if (hitPlayerRight && !hitFloor) {
+						p.maxVelocity.x = 800;
+						p.velocity.x = -800;
+						p.velocity.y = -600;
+						p.canDoubleJump = true;
+						trampMini.launch();
+						FlxG.sound.play(AssetPaths.big_bounce__ogg, 0.5);
+						FlxG.sound.play(AssetPaths.lateral_bounce__ogg, 0.5);
+					}
+			}
+		});
 
-function layoutVirtualPad():Void
-{
-        if (virtualPad == null) return;
-        var padScale:Float = 2.5;
-        var hitboxPadding:Float = 40;
+		FlxG.collide(player, platforms, function(p:Player, plat:MovingBlock) {
+			if (p.touching.has(FlxDirectionFlags.DOWN) && plat.touching.has(FlxDirectionFlags.UP)) {
+				if (plat.velocity.y != 0) {
+					p.y = plat.y - p.height;
+				}
+				p.velocity.y = 0;
+			}
+		});
 
-        var allButtons = [ virtualPad.getButton(LEFT), virtualPad.getButton(RIGHT), virtualPad.getButton(A)];
-        
-        for (button in allButtons)
-        {
-            if (button == null) continue;
-            button.scale.set(padScale, padScale);
-            button.updateHitbox();
-            button.width += hitboxPadding;
-            button.height += hitboxPadding;
+		FlxG.collide(platforms, map, function(plat:MovingBlock, wall:FlxObject) {
+			plat.stopMovement();
+		});
 
-            button.offset.x -= hitboxPadding / 2;
-            button.offset.y -= hitboxPadding / 2;
+		FlxG.collide(player, fallingBlock, function(p:Player, plat:FallingBlock) {
+			if (p.touching.has(FlxDirectionFlags.DOWN) && plat.touching.has(FlxDirectionFlags.UP)) {
+				if (plat.velocity.y != 0) {
+					p.y = plat.y - p.height;
+				}
 
-            button.scrollFactor.set(0, 0);
-            button.alpha = targetAlpha;
-        }
+				p.velocity.y = 0;
+			}
+		});
 
-        if (virtualPad.getButton(LEFT) != null)
-        {
-            virtualPad.getButton(LEFT).x = 100;
-            virtualPad.getButton(LEFT).y = FlxG.height - virtualPad.getButton(LEFT).height - 90;
-        }
+		if (spawnTimer > 0) {
+			spawnTimer -= elapsed;
+		} else {
+			FlxG.overlap(player, dangerObjects, function(p:flixel.FlxObject, hazard:flixel.FlxObject) {
+				if (FlxG.pixelPerfectOverlap(player, cast hazard)) {
+					killPlayer();
+				}
+			});
+		}
 
-        if (virtualPad.getButton(RIGHT) != null && virtualPad.getButton(LEFT) != null)
-        {
-            virtualPad.getButton(RIGHT).x = virtualPad.getButton(LEFT).x + virtualPad.getButton(LEFT).width + 40; 
-            virtualPad.getButton(RIGHT).y = virtualPad.getButton(LEFT).y;
-        }
+		if (PlayerData.saveCooldown > 0) {
+			PlayerData.saveCooldown -= elapsed;
+			if (PlayerData.saveCooldown < 0)
+				PlayerData.saveCooldown = 0;
+		}
 
-        if (virtualPad.getButton(A) != null)
-        {
-            virtualPad.getButton(A).x = FlxG.width - virtualPad.getButton(A).width - 140;
-            virtualPad.getButton(A).y = FlxG.height - virtualPad.getButton(A).height - 200;
-        }
-}
+		if (timeElapsed != null) {
+			timeElapsed.text = "Time: " + PlayerData.formatTime();
+		}
 
+		#if !mobile
+		if (FlxG.keys.justPressed.TAB) {
+			FlxG.debugger.drawDebug = !FlxG.debugger.drawDebug;
+		}
 
+		if (FlxG.keys.justPressed.R) {
+			var currentSeconds = PlayerData.totalSeconds;
+			PlayerData.totalDeaths++;
+			leveldata.misc.SaveManager.saveGameRestart();
+			leveldata.misc.SaveManager.loadGame();
+			PlayerData.totalSeconds = currentSeconds;
+			FlxG.resetState();
+		}
 
+		if (FlxG.keys.justPressed.K) {
+			killPlayer();
+		}
+
+		if (FlxG.keys.justPressed.Z)
+			PlayerShoot();
+		{
+			FlxG.collide(bullets, map, (bullet, wall) -> {
+				bullet.kill();
+			});
+		}
+
+		if (FlxG.keys.justPressed.ESCAPE && player.exists) {
+			isPaused = true;
+			this.persistentUpdate = false;
+			openSubState(new gui.PauseState());
+		}
+		#end
+
+		if (saveAnimation.alpha > 0) {
+			saveAnimation.alpha -= 0.01;
+		}
+
+		bullets.forEachAlive((bullet) -> {
+			if (!bullet.isOnScreen()) {
+				bullet.kill();
+			}
+		});
+
+		if (player != null && player.exists && playerGlow != null) {
+			playerGlow.exists = true;
+			playerGlow.x = player.x + (player.width / 2) - (playerGlow.width / 2);
+			playerGlow.y = player.y + (player.height / 2) - (playerGlow.height / 2);
+		} else if (playerGlow != null) {
+			playerGlow.exists = false;
+		}
+
+		var trailTarget = player.velocity.y >= 800 ? 0.05 : 0.0;
+		playerTrail.alpha = flixel.math.FlxMath.lerp(playerTrail.alpha, trailTarget, 0.02);
+
+		#if mobile
+		if (virtualPad.buttonA.justPressed)
+			PlayerShoot();
+		{
+			FlxG.collide(bullets, map, (bullet, wall) -> {
+				bullet.kill();
+			});
+		}
+		#end
+
+		if (player.x > map.width + 100 || player.y > map.height + 100) {
+			killPlayer();
+		}
+
+		if (FlxG.keys.justPressed.T) {
+			trace("PLAYER X: " + player.x + " ||| PLAYER Y: " + player.y);
+		}
+
+		if (FlxG.keys.justPressed.Y) {
+			trace("MAP WIDTH: " + map.width);
+			trace("MAP HEIGHT: " + map.height);
+		}
+
+		#if !mobile
+		if (FlxG.keys.justPressed.ONE)
+			RoomLoader.loadRoom(this, "testing");
+		if (FlxG.keys.justPressed.TWO)
+			RoomLoader.loadRoom(this, "map11");
+		if (FlxG.keys.justPressed.THREE)
+			RoomLoader.loadRoom(this, "map37");
+		if (FlxG.keys.justPressed.I)
+			spawnTimer = 9999;
+		if (FlxG.keys.justPressed.M) {
+			var current = currentRoomName;
+			var numPart = Std.parseInt(current.substr(3));
+			numPart++;
+			var nextRoomNum = (numPart < 10) ? "0" + numPart : Std.string(numPart);
+			var nextRoomName = "map" + nextRoomNum;
+
+			RoomLoader.loadRoom(this, nextRoomName);
+
+			trace("Teleported to: " + nextRoomName);
+			spawnTimer = 2.0;
+		}
+		#end
+
+		if (FlxG.keys.justPressed.P) {
+			trace("--- COIN STATUS ---");
+			trace("Total Coins: " + PlayerData.getCoinCount());
+			trace("IDs in memory: " + PlayerData.collectedCoins);
+		}
+
+		if (cameraType != "normal") {
+			if (cameraSnapTimer >= 0) {
+				if (cameraSnapTimer <= 0) {
+					FlxG.camera.follow(cameraTarget, PLATFORMER, 0.1);
+					return;
+				}
+
+				FlxG.camera.follow(cameraTarget, PLATFORMER, 1);
+				cameraSnapTimer -= 1;
+			}
+		}
+		if (udpClient != null) {
+			if (player != null && player.alive) {
+				networkTimer += elapsed;
+				if (networkTimer >= tickRate) {
+					networkTimer = 0;
+					var currentAnim = (player.animation.curAnim != null ? player.animation.curAnim.name : "idle");
+					var payload:String = '{"x":' + player.x + ',"y":' + player.y + ',"flip":' + player.isFlipped + ',"facingRight":' + Player.isFacingRIGHT
+						+ ',"skin":"' + PlayerData.currentSkin + '","anim":"' + currentAnim + '","currentRoom":"' + currentRoomName + '"}';
+					udpClient.send(payload);
+				}
+			}
+
+			// Recibir todos los paquetes pendientes
+			var packet:String = null;
+			while ((packet = udpClient.receive()) != null) {
+				try {
+					var data = haxe.Json.parse(packet);
+					if (data.x != null && data.y != null) {
+						if (remotePlayer == null) {
+							remotePlayer = new main.RemotePlayer(data.x, data.y);
+							add(remotePlayer);
+						}
+						remotePlayer.loadSkin(data.skin != null ? data.skin : "thekid");
+						if (data.currentRoom == currentRoomName) {
+							remotePlayer.exists = true;
+							remotePlayer.visible = true;
+							remotePlayer.applyNetworkPacket(data.x, data.y, data.flip == true, data.facingRight == true, data.anim);
+						} else {
+							remotePlayer.exists = false;
+						}
+					}
+				} catch (e:Dynamic) {
+					trace("Error al procesar el paquete recibido: " + e);
+				}
+			}
+		}
+	}
+
+	override public function destroy():Void {
+		if (udpClient != null) {
+			udpClient.close();
+			udpClient = null;
+		}
+		if (remotePlayer != null) {
+			remotePlayer.destroy();
+			remotePlayer = null;
+		}
+
+		super.destroy();
+	}
+
+	function imgCache():Void {
+		FlxG.bitmap.add(AssetPaths.save__png);
+		FlxG.bitmap.add(AssetPaths.playerGlow__png);
+	}
+
+	function sfxCache():Void {
+		FlxG.sound.cache(AssetPaths.jump__ogg);
+		FlxG.sound.cache(AssetPaths.doublejump__ogg);
+		FlxG.sound.cache(AssetPaths.break_block__ogg);
+		FlxG.sound.cache(AssetPaths.savedgame__ogg);
+		FlxG.sound.cache(AssetPaths.death_bgm__ogg);
+	}
+
+	function chapter1Cache():Void {
+		FlxG.bitmap.add(AssetPaths.ch1tiles__png);
+	}
+
+	function chapter2Cache():Void {
+		// TODO:
+	}
+
+	function PlayerShoot():Void {
+		var bullet = new FlxSprite();
+		bullet.loadGraphic(AssetPaths.bullet__png, false);
+		add(bullet);
+
+		if (Player.isFacingRIGHT == false) {
+			bullet.velocity.x = -800;
+			bullet.x = player.x + -20;
+			bullet.y = player.y + 4;
+		} else if (Player.isFacingRIGHT == true) {
+			bullet.velocity.x = 800;
+			bullet.x = player.x + 30;
+			bullet.y = player.y + 4;
+		}
+
+		bullets.add(bullet);
+		FlxG.sound.play(AssetPaths.playershoot__ogg, 0.5, false);
+	}
+
+	function HandleWarp(w:WarpTrigger):Void {
+		if (w.newChapter != null && w.newChapter != "") {
+			PlayerData.currentChapter = Std.parseInt(w.newChapter);
+		}
+
+		var oldWidth:Float = map.width;
+		var relativeX:Float = player.x - map.x;
+
+		RoomLoader.loadRoom(this, w.targetRoom);
+
+		switch (w.direction) {
+			case "up":
+				player.y = map.y + map.height - player.height - 60;
+				var widthDiff = oldWidth - map.width;
+				player.x = (map.x + relativeX) - widthDiff;
+
+			case "down":
+				player.y = map.y + 60;
+
+			// TODO: Hacer lo mismo que con el up
+
+			case "left":
+				player.x = map.x + map.width - player.width - 60;
+
+			case "right":
+				player.x = map.x + 60;
+		}
+
+		var minX:Float = map.x + 20;
+		var maxX:Float = map.x + map.width - player.width - 20;
+
+		if (player.x < minX)
+			player.x = minX;
+		if (player.x > maxX)
+			player.x = maxX;
+
+		if (cameraTarget != null && cameraType != "normal") {
+			if (cameraType == "unlockY")
+				cameraTarget.x = FlxG.width / 2;
+			else
+				cameraTarget.x = player.x;
+
+			if (cameraType == "unlockX")
+				cameraTarget.y = FlxG.height / 2;
+			else
+				cameraTarget.y = player.y;
+		}
+
+		spawnTimer = 0.15;
+	}
+
+	function setupHUD():Void {
+		#if debug
+		currentChapter = new FlxText(50, FlxG.height - 90, 0, "Chapter: ", 18);
+		currentChapter.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
+		currentChapter.scrollFactor.set(0, 0);
+		currentChapter.alpha = 0.5;
+		add(hud);
+
+		lastSave = new FlxText(50, FlxG.height - 60, 0, "Last Save: ", 18);
+		lastSave.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
+		lastSave.scrollFactor.set(0, 0);
+		lastSave.alpha = 0.5;
+		add(hud);
+		#end
+
+		#if !mobile
+		playerDeaths = new FlxText(FlxG.width - 260, FlxG.height - 80, 0, "Total Resets: ", 22);
+		playerDeaths.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
+		playerDeaths.scrollFactor.set(0, 0);
+		playerDeaths.alpha = 0.5;
+		add(hud);
+		#end
+
+		#if mobile
+		playerDeaths = new FlxText(FlxG.width - 260, 30, 0, "Total Deaths: ", 22);
+		playerDeaths.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
+		playerDeaths.scrollFactor.set(0, 0);
+		playerDeaths.alpha = 0.5;
+		add(hud);
+		#end
+
+		timeElapsed = new FlxText(50, 20, 0, "Time: 00:00:00", 22);
+		timeElapsed.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
+		timeElapsed.scrollFactor.set(0, 0);
+		timeElapsed.visible = false;
+		add(timeElapsed);
+	}
+
+	function SaveLogicSprite(saveObj:SavePoint):Void {
+		if (saveObj.alive) {
+			if (PlayerData.currentRoom == currentRoomName) {
+				saveObj.alive = false;
+				saveObj.visible = false;
+				saveObj.kill();
+				return;
+			}
+			PlayerData.spawnX = player.x;
+			PlayerData.spawnY = player.y + 60;
+			PlayerData.currentRoom = currentRoomName;
+
+			if (PlayerData.saveCooldown <= 0) {
+				saveObj.pop(player);
+				saveAnimation.alpha = 0.5;
+				FlxG.sound.play(AssetPaths.savedgame__ogg, 0.5, false);
+				SaveManager.saveGame();
+			}
+
+			saveObj.alive = false;
+			saveObj.visible = false;
+			saveObj.kill();
+		}
+	}
+
+	function RedCoinLogic(redCoin:RedCoin):Void {
+		if (redCoin == null || !redCoin.exists || !redCoin.alive)
+			return;
+		if (redCoin.alive && redCoin.exists) {
+			if (!PlayerData.isCoinCollected(redCoin.coinID)) {
+				trace("Pushing coin ID to memory: " + redCoin.coinID);
+				PlayerData.collectedCoins.push(redCoin.coinID);
+			}
+
+			saveAnimation.alpha = 0.5;
+			redCoin.pop(player);
+			trace("Collected coin with ID: " + redCoin.coinID);
+			FlxG.sound.play(AssetPaths.coin__ogg, 0.5, false);
+			redCoin.kill();
+		}
+	}
+
+	function DoubleJumpLogic(doublejObj:DoubleJumpObj):Void {
+		if (doublejObj.alive) {
+			if (player.canDoubleJump == false) {
+				player.canDoubleJump = true;
+			}
+			doublejObj.kill();
+		}
+	}
+
+	function FlipSwitchObjLogic(flipSwitchObj:FlipSwitch):Void {
+		if (!flipSwitchObj.alive)
+			return;
+
+		flipSwitchObj.kill();
+		FlxG.sound.play(AssetPaths.flip__ogg);
+
+		player.flipGravity();
+
+		FlxTween.tween(FlxG.camera, {
+			angle: player.isFlipped ? 180 : 0
+		}, 0.5, {
+			ease: FlxEase.sineInOut
+		});
+	}
+
+	function PortalWarpLogic(portalLogic:PortalWarp):Void {
+		RoomLoader.loadRoom(this, "map33");
+		FlxG.camera.shake(0.005, 0.25);
+		saveAnimation.alpha = 0.5;
+		FlxG.sound.play(AssetPaths.warp__ogg, 0.85, false);
+		player.x = 350;
+		player.y = 300;
+	}
+
+	function killPlayer():Void {
+		if (player != null && player.exists && player.alive) {
+			if (FlxG.sound.music != null) {
+				PlayerData.lastMusicTime = FlxG.sound.music.time;
+			}
+
+			PlayerData.isRespawning = true;
+			PlayerData.saveCooldown = 1.0;
+
+			PlayerData.deathX = player.x;
+			PlayerData.deathY = player.y;
+			playerGlow.visible = false;
+			player.kill();
+			if (playerTrail != null) {
+				playerTrail.kill();
+			}
+
+			if (FlxG.sound.music != null)
+				FlxG.sound.music.stop();
+			this.persistentUpdate = true;
+			PlayerData.totalDeaths -= 1;
+			bloodParticles();
+			openSubState(new DeathState());
+		}
+	}
+
+	function initLoopPoints():Void {
+		if (loopPoints != null)
+			return;
+
+		loopPoints = new Map<String, Float>();
+
+		var fileContent:String = openfl.Assets.getText("assets/data/music/loopPoints.txt");
+
+		if (fileContent != null) {
+			var lines:Array<String> = fileContent.split("\n");
+			for (line in lines) {
+				var parts:Array<String> = line.split(":");
+				if (parts.length == 2) {
+					var songName:String = StringTools.trim(parts[0]);
+					var loopTime:Float = Std.parseFloat(StringTools.trim(parts[1]));
+
+					loopPoints.set(songName, loopTime);
+				}
+			}
+		}
+	}
+
+	function updateMusic():Void {
+		if (player != null && !player.alive)
+			return;
+		if (subState != null)
+			return;
+
+		var musicLayer = tiledData.getLayer("music");
+		if (musicLayer == null)
+			return;
+		var songName:String = musicLayer.properties.get("songName");
+
+		var relativePath = "music/chapters/chapter" + PlayerData.currentChapter + "bgm/" + songName + ".ogg";
+		var songPath = ModLoader.getAsset(relativePath);
+
+		#if sys
+		var isModded:Bool = ModLoader.overrides.exists(relativePath);
+		#else
+		var isModded:Bool = false;
+		#end
+
+		initLoopPoints();
+		var loopStartMs:Float = 0;
+
+		if (!isModded && loopPoints.exists(songName)) {
+			loopStartMs = loopPoints.get(songName) * 1000;
+		}
+
+		if (PlayerData.currentSong == songPath && FlxG.sound.music != null && FlxG.sound.music.playing) {
+			if (PlayerData.isRespawning) {
+				FlxG.sound.music.time = PlayerData.lastMusicTime;
+				PlayerData.isRespawning = false;
+			}
+			return;
+		}
+
+		PlayerData.currentSong = songPath;
+
+		#if sys
+		if (ModLoader.overrides.exists(relativePath)) {
+			var customSound = openfl.media.Sound.fromFile(songPath);
+			if (customSound != null) {
+				FlxG.sound.playMusic(customSound, 0.5, true);
+			} else {
+				FlxG.sound.playMusic("assets/" + relativePath, 0.5, true); // Fallback
+			}
+		} else {
+			FlxG.sound.playMusic(songPath, 0.5, true);
+		}
+		#else
+		FlxG.sound.playMusic(songPath, 0.5, true);
+		#end
+
+		if (FlxG.sound.music != null) {
+			FlxG.sound.music.loopTime = loopStartMs;
+		}
+
+		if (PlayerData.isRespawning) {
+			if (FlxG.sound.music != null)
+				FlxG.sound.music.update(0);
+
+			FlxG.sound.music.time = PlayerData.lastMusicTime;
+			PlayerData.isRespawning = false;
+		}
+	}
+
+	function autoScroll():Void {
+		for (layer in tiledData.layers) {
+			if (layer.name == "Autoscroll") {
+				this.isAutoscrolling = true;
+			}
+
+			if (layer.type == TiledLayerType.OBJECT) {
+				var objLayer:TiledObjectLayer = cast layer;
+
+				if (layer.name == "ScrollSettings" && objLayer.properties.contains("speed")) {
+					this.scrollSpeed = Std.parseFloat(objLayer.properties.get("speed"));
+				}
+
+				if (layer.name == "PlayerSpeed" && objLayer.properties.contains("value")) {
+					var pSpeed = Std.parseFloat(objLayer.properties.get("value"));
+					player.mapMaxSpeed = pSpeed;
+					player.maxVelocity.x = pSpeed;
+				}
+			}
+		}
+	}
+
+	function cameraScroll():Void {
+		cameraType = "normal";
+		FlxG.camera.target = null;
+
+		var camLayer = tiledData.getLayer("camera");
+		if (camLayer != null && camLayer.properties.contains("cameraType")) {
+			cameraType = camLayer.properties.get("cameraType");
+		}
+
+		if (map != null && cameraType != "unlockX") {
+			FlxG.camera.setScrollBoundsRect(map.x + 60, map.y + 65, map.width - 50, map.height + 65, false);
+			FlxG.worldBounds.set(map.x - 200, map.y - 200, map.width + 400, map.height + 400);
+		} else if (map != null && cameraType == "unlockX") {
+			FlxG.camera.setScrollBoundsRect(map.x + 60, map.y + 65, map.width - 120, map.height + 65, false);
+			FlxG.worldBounds.set(map.x - 200, map.y - 200, map.width + 400, map.height + 400);
+		} else if (map != null && cameraType == "debug") {
+			FlxG.camera.follow(player, FlxCameraFollowStyle.LOCKON);
+		}
+
+		if (cameraTarget == null) {
+			cameraTarget = new flixel.FlxObject(player.x, player.y, 1, 1);
+			add(cameraTarget);
+		}
+
+		// 5. Apply the correct Follow behavior
+		if (this.isAutoscrolling) {
+			cameraTarget.setPosition(player.x + 465, player.y);
+			FlxG.camera.follow(cameraTarget, PLATFORMER, 1);
+		} else if (cameraType != "normal") {
+			var cameraMarginX:Float = 0;
+			var cameraMarginY:Float = 0;
+			var cameraMarginW:Float = 0;
+			var cameraMarginH:Float = 0;
+
+			if (cameraType == "unlockX") {
+				cameraMarginX = FlxG.width * 0.3;
+				cameraMarginW = FlxG.width * 0.3; // 30% + 40% = 70%
+
+				cameraMarginY = FlxG.height / 2;
+				cameraMarginH = 0;
+			} else if (cameraType == "unlockY") {
+				cameraMarginX = FlxG.width / 2;
+				cameraMarginW = 0;
+
+				cameraMarginY = FlxG.height * 0.3;
+				cameraMarginH = FlxG.height * 0.4;
+			} else if (cameraType == "unlockXY") {
+				cameraMarginX = FlxG.width * 0.3;
+				cameraMarginW = FlxG.width * 0.4;
+				cameraMarginY = FlxG.height * 0.3;
+				cameraMarginH = FlxG.height * 0.4;
+			}
+
+			FlxG.camera.deadzone = flixel.math.FlxRect.get(cameraMarginX, cameraMarginY, cameraMarginW, cameraMarginH);
+		} else {
+			if (map != null) {
+				FlxG.camera.scroll.set(-260, -265);
+			}
+		}
+	}
+
+	function bloodParticles():Void {
+		blood = new flixel.effects.particles.FlxEmitter(PlayerData.deathX, PlayerData.deathY, 250);
+		blood.makeParticles(3, 3, flixel.util.FlxColor.RED, 250);
+		blood.launchMode = CIRCLE;
+		blood.speed.set(300, 700);
+		blood.acceleration.set(0, 1200);
+		blood.lifespan.set(2, 4);
+		blood.alpha.set(1, 1, 0, 0);
+
+		blood.scale.set(0.5, 0.5, 1.5, 1.5);
+		add(blood);
+		blood.start(true, 0, 250);
+	}
+
+	function layoutVirtualPad():Void {
+		if (virtualPad == null)
+			return;
+		var padScale:Float = 2.5;
+		var hitboxPadding:Float = 40;
+
+		var allButtons = [virtualPad.getButton(LEFT), virtualPad.getButton(RIGHT), virtualPad.getButton(A)];
+
+		for (button in allButtons) {
+			if (button == null)
+				continue;
+			button.scale.set(padScale, padScale);
+			button.updateHitbox();
+			button.width += hitboxPadding;
+			button.height += hitboxPadding;
+
+			button.offset.x -= hitboxPadding / 2;
+			button.offset.y -= hitboxPadding / 2;
+
+			button.scrollFactor.set(0, 0);
+			button.alpha = targetAlpha;
+		}
+
+		if (virtualPad.getButton(LEFT) != null) {
+			virtualPad.getButton(LEFT).x = 100;
+			virtualPad.getButton(LEFT).y = FlxG.height - virtualPad.getButton(LEFT).height - 90;
+		}
+
+		if (virtualPad.getButton(RIGHT) != null && virtualPad.getButton(LEFT) != null) {
+			virtualPad.getButton(RIGHT)
+				.x = virtualPad.getButton(LEFT)
+					.x + virtualPad.getButton(LEFT)
+					.width + 40;
+			virtualPad.getButton(RIGHT).y = virtualPad.getButton(LEFT).y;
+		}
+
+		if (virtualPad.getButton(A) != null) {
+			virtualPad.getButton(A).x = FlxG.width - virtualPad.getButton(A).width - 140;
+			virtualPad.getButton(A).y = FlxG.height - virtualPad.getButton(A).height - 200;
+		}
+	}
 }
