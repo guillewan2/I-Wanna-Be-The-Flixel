@@ -1,5 +1,6 @@
 package main;
 
+import main.Multiplayer.UdpClient;
 import flixel.sound.FlxSound;
 import openfl.media.Sound;
 import flixel.FlxCamera;
@@ -115,6 +116,11 @@ class ChapterState extends FlxState
     var playerDeaths:FlxText;
     var lastSave:FlxText;
 
+    var udpClient:UdpClient;
+    public var remotePlayer:main.RemotePlayer = null;
+    var networkTimer:Float = 0;
+    var tickRate:Float = 0.05; // 20 ticks per second
+
     static var loopPoints:Map<String, Float> = null;
 
 override public function create():Void
@@ -130,6 +136,18 @@ override public function create():Void
         FlxG.mouse.visible = true;
         #end
     #end
+
+    var clientAddr = UdpClient.getClientAddress();
+    if (clientAddr != null)
+    {
+        udpClient = new UdpClient(clientAddr.host, clientAddr.port, clientAddr.localPort);
+        trace("Multiplayer client active: " + clientAddr.host + ":" + clientAddr.port + " (bound to local port " + clientAddr.localPort + ")");
+    }
+    else
+    {
+        udpClient = null;
+        trace("Multiplayer client inactive (no -client IP:PORT argument)");
+    }
 
     hudGroup = new FlxGroup();
     virtualPad = new FlxVirtualPad(LEFT_RIGHT, A);
@@ -484,8 +502,62 @@ override public function update(elapsed:Float):Void
 
         }
     }
+    if (udpClient != null)
+    {
+        if (player != null && player.alive)
+        {
+            networkTimer += elapsed;
+            if (networkTimer >= tickRate)
+            {
+                networkTimer = 0;
+                var currentAnim = (player.animation.curAnim != null ? player.animation.curAnim.name : "idle");
+                var payload:String = '{"x":' + player.x + ',"y":' + player.y + ',"flip":' + player.isFlipped + ',"facingRight":' + Player.isFacingRIGHT + ',"skin":"' + PlayerData.currentSkin + '","anim":"' + currentAnim + '"}';
+                udpClient.send(payload);
+            }
+        }
+
+        // Recibir todos los paquetes pendientes
+        var packet:String = null;
+        while ((packet = udpClient.receive()) != null)
+        {
+            try
+            {
+                var data = haxe.Json.parse(packet);
+                if (data.x != null && data.y != null)
+                {
+                    if (remotePlayer == null)
+                    {
+                        remotePlayer = new main.RemotePlayer(data.x, data.y);
+                        add(remotePlayer);
+                    }
+                    remotePlayer.loadSkin(data.skin != null ? data.skin : "thekid");
+                    remotePlayer.updateProperties(data.x, data.y, data.flip == true, data.facingRight == true, data.anim);
+                }
+            }
+            catch (e:Dynamic)
+            {
+                trace("Error al procesar el paquete recibido: " + e);
+            }
+        }
+    }
 
 }   
+
+override public function destroy():Void
+    {
+        if (udpClient != null)
+        {
+            udpClient.close();
+            udpClient = null;
+        }
+        if (remotePlayer != null)
+        {
+            remotePlayer.destroy();
+            remotePlayer = null;
+        }
+        
+        super.destroy();
+    }
 
 function imgCache():Void
 {
