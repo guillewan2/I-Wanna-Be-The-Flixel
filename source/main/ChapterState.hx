@@ -566,7 +566,6 @@ class ChapterState extends FlxState {
 			remotePlayer.destroy();
 			remotePlayer = null;
 		}
-		LocalCoopSubState.isMultiplayerActive = false;
 
 		super.destroy();
 	}
