@@ -35,15 +35,11 @@ class Main extends Sprite
 		#end
 		
 		#if !debug
-			
 			addChild(new FlxGame(gameWidth, gameHeight, initialState, updateFramerate, drawFramerate, skipSplash, startFullscreen));
-			flixel.FlxG.fixedTimestep = true;
+			flixel.FlxG.fixedTimestep = false;
 		#end
+		
 
-		#if debug
-			addChild(new FlxGame(gameWidth, gameHeight, initialState, updateFramerate, drawFramerate, skipSplash, startFullscreen));
-			flixel.FlxG.fixedTimestep = true;
-		#end
 
 		#if !mobile
 			addChild(new FPS(10, 10, 0xffffff));
