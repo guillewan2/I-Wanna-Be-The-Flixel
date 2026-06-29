@@ -531,7 +531,7 @@ override public function update(elapsed:Float):Void
                         add(remotePlayer);
                     }
                     remotePlayer.loadSkin(data.skin != null ? data.skin : "thekid");
-                    remotePlayer.updateProperties(data.x, data.y, data.flip == true, data.facingRight == true, data.anim);
+                    remotePlayer.applyNetworkPacket(data.x, data.y, data.flip == true, data.facingRight == true, data.anim);
                 }
             }
             catch (e:Dynamic)
