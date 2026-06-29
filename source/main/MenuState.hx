@@ -46,7 +46,13 @@ class MenuState extends FlxState
     var btnOptions:FlxButton;
     var btnSkins:FlxButton;
     var btnExit:FlxButton;
-    #if sys var btnMods:FlxButton; #end
+
+    #if sys
+    var btnMods:FlxButton;
+    var btnCoop:FlxButton;
+    public var currentIP:String = "";
+    public var currentPort:Int = 7777;
+    #end
 
     var activeTweens:Map<FlxButton, FlxTween> = new Map();
     var activeLabelTweens:Map<FlxText, FlxTween> = new Map();
@@ -165,6 +171,11 @@ class MenuState extends FlxState
         add(btnStages);
 
         #if sys
+
+        btnCoop = new FlxButton(850, 350, "Coop", clickCoop);
+        customizeButton(btnCoop);
+        add(btnCoop);
+        
         btnMods = new FlxButton(850, 450, "Mods", function()
         {
             openSubState(new main.mods.ModsSubState());
@@ -461,6 +472,29 @@ class MenuState extends FlxState
         }
         #end
 
+    }
+
+    function clickCoop():Void
+    {
+        #if sys
+        try 
+        {
+            var hostName:String = sys.net.Host.localhost();
+            var hostInstance:sys.net.Host = new sys.net.Host(hostName);
+            
+            currentIP = hostInstance.toString();
+            currentPort = 10690; 
+
+            trace("IPv4: " + currentIP + " ||| Port: " + currentPort);
+        } 
+        catch (e:Dynamic) 
+        {
+            currentIP = "127.0.0.1";
+            currentPort = 10690;
+            trace("Could not automatically resolve local network socket interface: " + e);
+        }
+        #else
+        #end
     }
 
     override public function closeSubState():Void
