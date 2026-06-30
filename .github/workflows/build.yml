@@ -7,7 +7,9 @@ on:
 
 jobs:
   build:
+    if: github.repository == 'guillewan2/I-Wanna-Be-The-Flixel'
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
@@ -51,7 +53,7 @@ jobs:
           haxelib install hxcpp
           
       - name: Build project
-        run: haxelib run lime build ${{ matrix.target }} -release
+        run: haxelib run lime build ${{ matrix.target }} -release -verbose
 
       - name: Compress app bundle (macOS only)
         if: matrix.os == 'macos-latest'
