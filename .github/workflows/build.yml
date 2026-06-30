@@ -23,15 +23,13 @@ jobs:
           - os: macos-latest
             target: mac
             name: macOS
-            path: export/mac/bin
-
+            path: export/macos/bin 
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Forzamos Xcode 16.0 para evitar errores con SDKs experimentales
       - name: Select Xcode Version
         if: matrix.target == 'mac'
         run: sudo xcode-select -s /Applications/Xcode_16.0.app/Contents/Developer
