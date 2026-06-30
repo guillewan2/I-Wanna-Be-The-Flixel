@@ -57,6 +57,12 @@ jobs:
         if: matrix.target == 'mac'
         run: haxelib run lime build mac -release -verbose -D universal
 
+      - name: List export directory
+        if: matrix.target == 'mac'
+        run: |
+          echo "=== Export Directory Structure ==="
+          find export -type d -maxdepth 4 || true
+
       - name: Compress app bundle (macOS only)
         if: matrix.target == 'mac'
         run: |
