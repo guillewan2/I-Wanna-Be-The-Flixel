@@ -12,18 +12,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
-            target: linux
-            name: Linux
-            path: export/linux/bin
-          - os: windows-latest
-            target: windows
-            name: Windows
-            path: export/windows/bin
           - os: macos-latest
             target: mac
             name: macOS
-            path: export/macos/bin 
+            path: export/mac/bin
     runs-on: ${{ matrix.os }}
 
     steps:
