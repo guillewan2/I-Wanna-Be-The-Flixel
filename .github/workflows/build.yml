@@ -47,6 +47,7 @@ jobs:
           haxelib install openfl
           haxelib install flixel
           haxelib install flixel-addons
+          haxelib install flixel-ui
           
       - name: Build project
         run: haxelib run lime build ${{ matrix.target }} -release
