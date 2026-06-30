@@ -15,7 +15,7 @@ jobs:
           - os: macos-latest
             target: mac
             name: macOS
-            path: export/mac/bin
+            path: export/mac64/bin
     runs-on: ${{ matrix.os }}
 
     steps:
