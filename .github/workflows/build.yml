@@ -49,13 +49,19 @@ jobs:
           haxelib install flixel-ui
           haxelib install hxcpp
           
-      - name: Build project (Linux & Windows)
-        if: matrix.target != 'mac'
-        run: haxelib run lime build ${{ matrix.target }} -release -verbose
-          
-      - name: Build project (macOS Universal)
+      - name: Cache HXCPP and export
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.hxcpp
+            export
+          key: ${{ runner.os }}-hxcpp-${{ hashFiles('**/*.hx', 'Project.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-hxcpp-
+
+      - name: Build project (macOS)
         if: matrix.target == 'mac'
-        run: haxelib run lime build mac -release -verbose -D universal
+        run: haxelib run lime build mac -release
 
       - name: List export directory
         if: matrix.target == 'mac'
