@@ -1,0 +1,71 @@
+name: Cross-Platform Build
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: linux
+            name: Linux
+            path: export/release/linux/bin
+          - os: windows-latest
+            target: windows
+            name: Windows
+            path: export/release/windows/bin
+          - os: macos-latest
+            target: mac
+            name: macOS
+            path: export/release/mac/bin
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Haxe environment
+        uses: krdlab/setup-haxe@v3
+        with:
+          haxe-version: 4.3.4
+
+      - name: Install system dependencies (Linux only)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgl1-mesa-dev libasound2-dev libx11-dev libxext-dev libxi-dev libxrandr-dev libxinerama-dev
+
+      - name: Install Haxe dependencies
+        run: |
+          haxelib setup ~/haxelib
+          haxelib install lime
+          haxelib install openfl
+          haxelib install flixel
+          
+      - name: Build project
+        run: haxelib run lime build ${{ matrix.target }} -release
+
+      - name: Compress app bundle (macOS only)
+        if: matrix.os == 'macos-latest'
+        run: |
+          cd ${{ matrix.path }}
+          zip -r macOS-Release.zip *.app
+
+      - name: Upload artifact (Windows and Linux)
+        if: matrix.os != 'macos-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: App-${{ matrix.name }}
+          path: ${{ matrix.path }}/*
+
+      - name: Upload artifact (macOS)
+        if: matrix.os == 'macos-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: App-${{ matrix.name }}
+          path: ${{ matrix.path }}/macOS-Release.zip
