@@ -15,7 +15,7 @@ jobs:
           - os: macos-latest
             target: mac
             name: macOS
-            path: export/mac64/bin
+            path: export/macos/bin
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -63,11 +63,6 @@ jobs:
         if: matrix.target == 'mac'
         run: haxelib run lime build mac -release
 
-      - name: List export directory
-        if: matrix.target == 'mac'
-        run: |
-          echo "=== Export Directory Structure ==="
-          find export -type d -maxdepth 4 || true
 
       - name: Compress app bundle (macOS only)
         if: matrix.target == 'mac'
